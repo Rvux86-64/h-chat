@@ -638,26 +638,39 @@
         }
     });
 
-    createChatBtn.addEventListener('click', async () => {
+createChatBtn.addEventListener('click', async () => {
         const roomName = prompt("Enter a name for this chat:");
         if (!roomName) return;
         
         const invitees = prompt("Enter usernames to invite (optional, comma-separated):");
-        const finalRoomName = invitees ? `${roomName} — [${invitees}]` : roomName;
+        const myUsername = currentUser.user_metadata?.username;
+        
+        // Ensure the creator is always added to the room list so they aren't locked out
+        const finalInvitees = invitees ? `${myUsername}, ${invitees}` : myUsername;
+        const finalRoomName = `${roomName} — [${finalInvitees}]`;
 
         const { error } = await supabase2.from('rooms').insert([{ name: finalRoomName }]);
         if (error) alert("Error creating room: " + error.message);
         else fetchRooms();
     });
-
     async function fetchRooms() {
         const { data: rooms, error } = await supabase2.from('rooms').select('*').order('name', { ascending: true });
         if (error) return console.error('Error loading chat groups:', error);
 
         channelsList.innerHTML = ''; 
         if (rooms && rooms.length > 0) {
+            const myUsername = currentUser.user_metadata?.username;
+            
             rooms.forEach((room) => {
+                // Check if it's a private group chat and if the user is in the bracketed list
+                if (room.name.includes(' — [')) {
+                    const membersStr = room.name.split(' — [')[1].replace(']', '');
+                    const members = membersStr.split(',').map(s => s.trim());
+                    if (!members.includes(myUsername)) return; // Skip showing this room to uninvited users
+                }
+
                 const roomEl = document.createElement('div');
+                // ... (keep the rest of your roomEl creation code the same)
                 roomEl.classList.add('channel-item');
                 roomEl.setAttribute('data-id', room.id);
                 roomEl.innerHTML = `<i class="fa-solid fa-hashtag" style="margin-right: 8px;"></i> ${room.name.split(' — ')[0]}`;
@@ -715,10 +728,9 @@
         const msgUsername = msg.username || 'Anonymous';
         const isSelf = msgUsername === currentUser.user_metadata?.username; 
         
-        const timeString = msg.created_at 
-            ? new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-            : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
+       const timeString = msg.created_at 
+            ? new Date(msg.created_at).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) 
+            : new Date().toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         const rowElement = document.createElement('div');
         rowElement.classList.add('message-row');
         rowElement.setAttribute('id', `msg-${msg.id}`);
@@ -901,7 +913,42 @@
                     if (renameErr) alert("Error: " + renameErr.message);
                     else alert(`Successfully renamed ${oldName} to ${newName}.`);
                     break;
+                case 'addtogc':
+                    if (!isMod) return alert("Only mods can add to GC.");
+                    if (!target) return alert("Usage: /addtogc [username]");
+                    if (!activeRoomRawName.includes(' — [')) return alert("Not a private group chat.");
 
+                    let addBase = activeRoomRawName.split(' — [')[0];
+                    let addExisting = activeRoomRawName.split(' — [')[1].replace(']', '');
+                    let addUpdatedName = `${addBase} — [${addExisting}, ${target}]`;
+
+                    const { error: addGcErr } = await supabase2.from('rooms').update({ name: addUpdatedName }).eq('id', activeRoomId);
+                    if (addGcErr) alert("Error: " + addGcErr.message);
+                    else {
+                        activeRoomRawName = addUpdatedName;
+                        currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`;
+                        fetchRooms();
+                    }
+                    break;
+
+                case 'removefromgc':
+                    if (!isMod) return alert("Only mods can remove from GC.");
+                    if (!target) return alert("Usage: /removefromgc [username]");
+                    if (!activeRoomRawName.includes(' — [')) return alert("Not a private group chat.");
+
+                    let rmBase = activeRoomRawName.split(' — [')[0];
+                    let rmExisting = activeRoomRawName.split(' — [')[1].replace(']', '').split(',').map(s => s.trim());
+                    let rmFiltered = rmExisting.filter(user => user !== target);
+                    let rmUpdatedName = `${rmBase} — [${rmFiltered.join(', ')}]`;
+
+                    const { error: rmGcErr } = await supabase2.from('rooms').update({ name: rmUpdatedName }).eq('id', activeRoomId);
+                    if (rmGcErr) alert("Error: " + rmGcErr.message);
+                    else {
+                        activeRoomRawName = rmUpdatedName;
+                        currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`;
+                        fetchRooms();
+                    }
+                    break;
                 default:
                     alert(`Unknown command: /${command}`);
             }
