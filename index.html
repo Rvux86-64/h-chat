@@ -519,7 +519,7 @@
         if (error) alert("Failed to delete message: " + error.message);
     }
 
-    messageForm.addEventListener('submit', async (e) => {
+ messageForm.addEventListener('submit', async (e) => {
         e.preventDefault(); const content = messageInput.value.trim();
         if (!content || !activeRoomId || !currentUser) return;
 
