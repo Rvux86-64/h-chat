@@ -350,22 +350,59 @@
 
     function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission().catch(err => console.log("Permission skipped:", err)); }
     function showNotification(username, message) { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(`New message from ${username}`, { body: message, icon: getAvatarUrl(username) }); }
+let typingChannel = null;
 
+function initRealtime() {
+    if (window.msgChannel) return; // Prevent duplicate connections
+
+    // Setup Typing Channel
+    typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
+    typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
+        if (payload.room_id === activeRoomId) {
+            typingIndicator.textContent = `${payload.username} is typing...`;
+            typingIndicator.style.display = 'block';
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2000);
+        }
+    }).subscribe();
+
+    // Setup Database Changes Channel (Paste your existing .on() chain here)
+    window.msgChannel = supabase2
+        .channel('db-changes')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+            if (activeRoomId && payload.new.room_id == activeRoomId) {
+                if (!document.getElementById(`msg-${payload.new.id}`)) appendMessage(payload.new);
+            } else {
+                const unreadEl = document.querySelector(`.channel-item[data-id="${payload.new.room_id}"]`);
+                if (unreadEl) unreadEl.classList.add('unread');
+            }
+            try { if (currentUser && payload.new.username !== currentUser.user_metadata?.username) showNotification(payload.new.username, payload.new.content); } catch (err) {}
+        })
+        // ... (Keep your UPDATE messages, DELETE messages, and UPDATE rooms listeners here) ...
+        .subscribe();
+}
     async function checkSession() {
         const { data: { session } } = await supabase2.auth.getSession();
         if (session) {
             currentUser = session.user; authModal.style.display = "none"; mainApp.style.display = "flex";
             const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
             currentUserName.textContent = uname; currentUserAvatar.src = getAvatarUrl(uname, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
-            fetchRooms(); requestNotificationPermission(); 
+            fetchRooms(); requestNotificationPermission(); initRealtime();
         } else { authModal.style.display = "flex"; mainApp.style.display = "none"; }
     }
 
-    logoutBtn.addEventListener('click', async () => {
-        await supabase2.auth.signOut(); currentUser = null; activeRoomId = null; chatBox.innerHTML = '';
-        chatPlaceholder.style.display = 'flex'; chatBox.style.display = 'none'; messageForm.style.display = 'none'; chatActions.style.display = 'none'; currentChannelName.textContent = "No Chat Selected"; currentChannelDesc.textContent = "Select a chat to begin messaging";
-        checkSession();
-    });
+   logoutBtn.addEventListener('click', async () => {
+    await supabase2.auth.signOut(); 
+    
+    // Paste these cleanup lines here:
+    if (window.msgChannel) supabase2.removeChannel(window.msgChannel);
+    if (typingChannel) supabase2.removeChannel(typingChannel);
+    window.msgChannel = null;
+    typingChannel = null;
+    
+    // ... keep the rest of your existing logout logic here
+    checkSession();
+});
 
     async function sendSystemMessage(roomId, content) {
         await supabase2.from('messages').insert([{ room_id: roomId, content: content, username: 'System' }]);
