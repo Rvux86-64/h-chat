@@ -618,6 +618,7 @@
         messageInput.value = ''; messageInput.style.height = 'auto';
         const { error } = await supabase2.from('messages').insert([{ room_id: activeRoomId, content: content, username: myUsername }]);
         if (error) alert("Failed to send message.");
+         window.location.reload(); // Forces permission refresh
     });
 
     attachBtn.addEventListener('click', () => { if (!activeRoomId) return alert("Select a chat first."); fileInput.click(); });
