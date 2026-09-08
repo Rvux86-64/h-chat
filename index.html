@@ -519,18 +519,52 @@
         if (error) alert("Failed to delete message: " + error.message);
     }
 
- messageForm.addEventListener('submit', async (e) => {
+
+     messageForm.addEventListener('submit', async (e) => {
         e.preventDefault(); const content = messageInput.value.trim();
         if (!content || !activeRoomId || !currentUser) return;
 
         const { data: { user } } = await supabase2.auth.getUser(); currentUser = user;
         const myUsername = currentUser.user_metadata?.username;
+        
+        // Define hierarchical roles
         const { data: roleData } = await supabase2.from('user_roles').select('role').eq('username', myUsername).single();
-        const userRole = roleData?.role || 'user', isSuperMod = userRole === 'supermod' || myUsername === 'hamzaperson2026', isMod = isSuperMod || userRole === 'mod';
+        const userRole = roleData?.role || 'user';
+        const isOwner = myUsername === 'hamzaperson2026';
+        const isSuperMod = isOwner || userRole === 'supermod';
+        const isMod = isSuperMod || userRole === 'mod';
 
         async function handleCommand(inputString) {
             const parts = inputString.trim().replace(/^\//, '').split(/\s+/), command = parts[0].toLowerCase(), target = parts[1];
+            
             switch (command) {
+                // Mod Commands
+                case 'help':
+                    if (!isMod) return alert("Only mods and above can use /help.");
+                    let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user]\n";
+                    if (isSuperMod) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user]\n";
+                    if (isOwner) helpMsg += "Owner Commands: /unsupermod [user]";
+                    alert(helpMsg);
+                    break;
+                case 'block': 
+                    if (!isMod) return alert("Only mods can block.");
+                    if (!target) return alert("Usage: /block [username]");
+                    const { error: blockErr } = await supabase2.from('banned_users').upsert({ username: target }, { onConflict: 'username', ignoreDuplicates: true });
+                    if (!blockErr) { alert(`${target} has been blocked.`); sendSystemMessage(activeRoomId, `System: ${target} was banned from the server.`); }
+                    break;
+                case 'unblock':
+                    if (!isMod) return alert("Only mods can unblock.");
+                    if (!target) return alert("Usage: /unblock [username]");
+                    await supabase2.from('banned_users').delete().eq('username', target); alert(`${target} has been unblocked.`);
+                    break;
+                case 'lock': 
+                    if (!isMod) return alert("Only mods can lock rooms.");
+                    await supabase2.from('rooms').update({ is_locked: true }).eq('id', activeRoomId); alert("Room locked."); sendSystemMessage(activeRoomId, `System: Room has been locked.`); 
+                    break;
+                case 'unlock': 
+                    if (!isMod) return alert("Only mods can unlock rooms.");
+                    await supabase2.from('rooms').update({ is_locked: false }).eq('id', activeRoomId); alert("Room unlocked."); sendSystemMessage(activeRoomId, `System: Room has been unlocked.`); 
+                    break;
                 case 'addtogc':
                     if (!isMod) return alert("Only mods can add to GC."); if (!target) return alert("Usage: /addtogc [username]");
                     if (!activeRoomRawName.includes(' — [')) return alert("Not a private group chat.");
@@ -546,17 +580,35 @@
                     const { error: rmGcErr } = await supabase2.from('rooms').update({ name: rmUpdatedName }).eq('id', activeRoomId);
                     if (!rmGcErr) { activeRoomRawName = rmUpdatedName; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; sendSystemMessage(activeRoomId, `System: ${target} was removed by a moderator.`); fetchRooms(); }
                     break;
-                case 'block': 
-                    if (!target) return alert("Usage: /block [username]");
-                    const { error: blockErr } = await supabase2.from('banned_users').upsert({ username: target }, { onConflict: 'username', ignoreDuplicates: true });
-                    if (!blockErr) { alert(`${target} has been blocked.`); sendSystemMessage(activeRoomId, `System: ${target} was banned from the server.`); }
+
+                // Supermod Commands
+                case 'mod':
+                    if (!isSuperMod) return alert("Only supermods can make people mods.");
+                    if (!target) return alert("Usage: /mod [username]");
+                    await supabase2.from('user_roles').upsert({ username: target, role: 'mod' });
+                    alert(`${target} is now a mod.`);
                     break;
-                case 'unblock':
-                    if (!target) return alert("Usage: /unblock [username]");
-                    await supabase2.from('banned_users').delete().eq('username', target); alert(`${target} has been unblocked.`);
+                case 'unmod':
+                    if (!isSuperMod) return alert("Only supermods can unmod people.");
+                    if (!target) return alert("Usage: /unmod [username]");
+                    await supabase2.from('user_roles').delete().eq('username', target);
+                    alert(`${target} is no longer a mod.`);
                     break;
-                case 'lock': await supabase2.from('rooms').update({ is_locked: true }).eq('id', activeRoomId); alert("Room locked."); sendSystemMessage(activeRoomId, `System: Room has been locked.`); break;
-                case 'unlock': await supabase2.from('rooms').update({ is_locked: false }).eq('id', activeRoomId); alert("Room unlocked."); sendSystemMessage(activeRoomId, `System: Room has been unlocked.`); break;
+                case 'supermod':
+                    if (!isSuperMod) return alert("Only supermods can make people supermods.");
+                    if (!target) return alert("Usage: /supermod [username]");
+                    await supabase2.from('user_roles').upsert({ username: target, role: 'supermod' });
+                    alert(`${target} is now a supermod.`);
+                    break;
+
+                // Owner Command
+                case 'unsupermod':
+                    if (!isOwner) return alert("Only hamzaperson2026 can execute /unsupermod.");
+                    if (!target) return alert("Usage: /unsupermod [username]");
+                    await supabase2.from('user_roles').delete().eq('username', target);
+                    alert(`${target} is no longer a supermod.`);
+                    break;
+
                 default: alert(`Unknown command: /${command}`);
             }
         }
