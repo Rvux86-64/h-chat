@@ -247,9 +247,9 @@
         </div>
     </div>
 
-    <script>
+  <script>
     const SB_URL = "https://jziqxqpvgeiwbthdxbze.supabase.co";
-    const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6aXF4cXB2Z2Vpd2J0aGR4YnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NjMwMTEsImV4cCI6MjEwMzMzOTAxMX0.opW1zH8ivEFbPTkn5r1EaINzvfH8fUflU8TPL9QVaw0"
+    const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6aXF4cXB2Z2Vpd2J0aGR4YnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NjMwMTEsImV4cCI6MjEwMzMzOTAxMX0.opW1zH8ivEFbPTkn5r1EaINzvfH8fUflU8TPL9QVaw0";
     const supabase2 = window.supabase.createClient(SB_URL, SB_KEY);
 
     const authModal = document.getElementById('authModal'), mainApp = document.getElementById('mainApp'), authForm = document.getElementById('authForm'), toggleAuthBtn = document.getElementById('toggleAuth'), registerFields = document.getElementById('registerFields'), authTitle = document.getElementById('authTitle'), authBtn = document.getElementById('authBtn');
@@ -262,20 +262,10 @@
     const attachBtn = document.getElementById('attachBtn'), fileInput = document.getElementById('fileInput'), typingIndicator = document.getElementById('typingIndicator');
 
     let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null;
-
-    // Realtime Broadcasting for Typing Indicator
-    const typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
-    typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
-        if (payload.room_id === activeRoomId) {
-            typingIndicator.textContent = `${payload.username} is typing...`;
-            typingIndicator.style.display = 'block';
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2000);
-        }
-    }).subscribe();
+    let typingChannel = null;
 
     messageInput.addEventListener('input', () => {
-        if (activeRoomId && currentUser) {
+        if (activeRoomId && currentUser && typingChannel) {
             typingChannel.send({ type: 'broadcast', event: 'typing', payload: { room_id: activeRoomId, username: currentUser.user_metadata?.username } });
         }
         messageInput.style.height = 'auto';
@@ -350,37 +340,51 @@
 
     function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission().catch(err => console.log("Permission skipped:", err)); }
     function showNotification(username, message) { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(`New message from ${username}`, { body: message, icon: getAvatarUrl(username) }); }
-let typingChannel = null;
 
-function initRealtime() {
-    if (window.msgChannel) return; // Prevent duplicate connections
+    function initRealtime() {
+        if (window.msgChannel) return;
 
-    // Setup Typing Channel
-    typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
-    typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
-        if (payload.room_id === activeRoomId) {
-            typingIndicator.textContent = `${payload.username} is typing...`;
-            typingIndicator.style.display = 'block';
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2000);
-        }
-    }).subscribe();
-
-    // Setup Database Changes Channel (Paste your existing .on() chain here)
-    window.msgChannel = supabase2
-        .channel('db-changes')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-            if (activeRoomId && payload.new.room_id == activeRoomId) {
-                if (!document.getElementById(`msg-${payload.new.id}`)) appendMessage(payload.new);
-            } else {
-                const unreadEl = document.querySelector(`.channel-item[data-id="${payload.new.room_id}"]`);
-                if (unreadEl) unreadEl.classList.add('unread');
+        typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
+        typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
+            if (payload.room_id === activeRoomId) {
+                typingIndicator.textContent = `${payload.username} is typing...`;
+                typingIndicator.style.display = 'block';
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2000);
             }
-            try { if (currentUser && payload.new.username !== currentUser.user_metadata?.username) showNotification(payload.new.username, payload.new.content); } catch (err) {}
-        })
-        // ... (Keep your UPDATE messages, DELETE messages, and UPDATE rooms listeners here) ...
-        .subscribe();
-}
+        }).subscribe();
+
+        window.msgChannel = supabase2
+            .channel('db-changes')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+                if (activeRoomId && payload.new.room_id == activeRoomId) {
+                    if (!document.getElementById(`msg-${payload.new.id}`)) appendMessage(payload.new);
+                } else {
+                    const unreadEl = document.querySelector(`.channel-item[data-id="${payload.new.room_id}"]`);
+                    if (unreadEl) unreadEl.classList.add('unread');
+                }
+                try { if (currentUser && payload.new.username !== currentUser.user_metadata?.username) showNotification(payload.new.username, payload.new.content); } catch (err) {}
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, (payload) => {
+                const textElem = document.getElementById(`msg-text-${payload.new.id}`); if (textElem) textElem.textContent = payload.new.content;
+            })
+            .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
+                const rowElem = document.getElementById(`msg-${payload.old.id}`); if (rowElem) rowElem.remove();
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms' }, (payload) => {
+                const updatedRoom = payload.new;
+                if (activeRoomId === updatedRoom.id && updatedRoom.name.includes(' — [')) {
+                    const members = updatedRoom.name.split(' — [')[1].replace(']', '').split(',').map(s => s.trim());
+                    if (!members.includes(currentUser.user_metadata?.username)) {
+                        activeRoomId = null; chatPlaceholder.style.display = 'flex'; chatBox.style.display = 'none'; messageForm.style.display = 'none'; chatActions.style.display = 'none'; currentChannelName.textContent = "No Chat Selected"; currentChannelDesc.textContent = "Select a chat to begin messaging";
+                        alert("You have been removed from this group chat.");
+                    } else { activeRoomRawName = updatedRoom.name; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; }
+                }
+                fetchRooms();
+            })
+            .subscribe();
+    }
+
     async function checkSession() {
         const { data: { session } } = await supabase2.auth.getSession();
         if (session) {
@@ -391,18 +395,14 @@ function initRealtime() {
         } else { authModal.style.display = "flex"; mainApp.style.display = "none"; }
     }
 
-   logoutBtn.addEventListener('click', async () => {
-    await supabase2.auth.signOut(); 
-    
-    // Paste these cleanup lines here:
-    if (window.msgChannel) supabase2.removeChannel(window.msgChannel);
-    if (typingChannel) supabase2.removeChannel(typingChannel);
-    window.msgChannel = null;
-    typingChannel = null;
-    
-    // ... keep the rest of your existing logout logic here
-    checkSession();
-});
+    logoutBtn.addEventListener('click', async () => {
+        await supabase2.auth.signOut(); 
+        if (window.msgChannel) supabase2.removeChannel(window.msgChannel);
+        if (typingChannel) supabase2.removeChannel(typingChannel);
+        window.msgChannel = null;
+        typingChannel = null;
+        checkSession();
+    });
 
     async function sendSystemMessage(roomId, content) {
         await supabase2.from('messages').insert([{ room_id: roomId, content: content, username: 'System' }]);
@@ -582,41 +582,9 @@ function initRealtime() {
         attachBtn.innerHTML = '<i class="fa-solid fa-paperclip"></i>'; attachBtn.disabled = false; fileInput.value = ''; 
     });
 
-    if (window.msgChannel) supabase2.removeChannel(window.msgChannel);
-    
-    // Realtime listeners for Messages and Rooms
-    window.msgChannel = supabase2
-        .channel('db-changes')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-            if (activeRoomId && payload.new.room_id == activeRoomId) {
-                if (!document.getElementById(`msg-${payload.new.id}`)) appendMessage(payload.new);
-            } else {
-                const unreadEl = document.querySelector(`.channel-item[data-id="${payload.new.room_id}"]`);
-                if (unreadEl) unreadEl.classList.add('unread');
-            }
-            try { if (currentUser && payload.new.username !== currentUser.user_metadata?.username) showNotification(payload.new.username, payload.new.content); } catch (err) {}
-        })
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, (payload) => {
-            const textElem = document.getElementById(`msg-text-${payload.new.id}`); if (textElem) textElem.textContent = payload.new.content;
-        })
-        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
-            const rowElem = document.getElementById(`msg-${payload.old.id}`); if (rowElem) rowElem.remove();
-        })
-        // Auto-kick Listener
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms' }, (payload) => {
-            const updatedRoom = payload.new;
-            if (activeRoomId === updatedRoom.id && updatedRoom.name.includes(' — [')) {
-                const members = updatedRoom.name.split(' — [')[1].replace(']', '').split(',').map(s => s.trim());
-                if (!members.includes(currentUser.user_metadata?.username)) {
-                    activeRoomId = null; chatPlaceholder.style.display = 'flex'; chatBox.style.display = 'none'; messageForm.style.display = 'none'; chatActions.style.display = 'none'; currentChannelName.textContent = "No Chat Selected"; currentChannelDesc.textContent = "Select a chat to begin messaging";
-                    alert("You have been removed from this group chat.");
-                } else { activeRoomRawName = updatedRoom.name; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; }
-            }
-            fetchRooms();
-        })
-        .subscribe();
-
-    applySavedPreferences(); checkSession();
+    applySavedPreferences(); 
+    checkSession();
+</script>
     </script>
 </body>
 </html>
