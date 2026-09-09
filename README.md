@@ -5,3 +5,4 @@ Asher Goodman
 Hakan Ergur 
 Lukas Leung
 Ramsey Kitterman
+SomeoneCoding158 pls remove your fork of h-chat.
