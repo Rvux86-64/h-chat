@@ -586,8 +586,9 @@
         // Define hierarchical roles
         const { data: roleData } = await supabase2.from('user_roles').select('role').eq('username', myUsername).single();
         const userRole = roleData?.role || 'user';
+        const isCoOwner = myUsername === 'someone';
         const isOwner = myUsername === 'hamzaperson2026';
-        const isSuperMod = isOwner || userRole === 'supermod';
+        const isSuperMod = isOwner  || userRole === 'supermod';
         const isMod = isSuperMod || userRole === 'mod';
 
         async function handleCommand(inputString) {
