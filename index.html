@@ -20,7 +20,7 @@
           --msg-self: var(--accent);
           --msg-other: #1f2937;
         } 
-/* Ocean Theme */
+        /* Ocean Theme */
         body.theme-ocean {
           --bg-main: #0f172a;
           --panel-bg: #1e293b;
@@ -300,11 +300,13 @@
     const startVoiceCallBtn = document.getElementById('startVoiceCallBtn'), startVideoCallBtn = document.getElementById('startVideoCallBtn'), callOverlay = document.getElementById('callOverlay'), endCallBtn = document.getElementById('endCallBtn'), jitsiContainer = document.getElementById('jitsiContainer');
     const attachBtn = document.getElementById('attachBtn'), fileInput = document.getElementById('fileInput'), typingIndicator = document.getElementById('typingIndicator');
 
-    let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null;
+    let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null, lastTypingTime = 0;
     let typingChannel = null;
 
     messageInput.addEventListener('input', () => {
-        if (activeRoomId && currentUser && typingChannel) {
+        const now = Date.now();
+        if (activeRoomId && currentUser && typingChannel && (now - lastTypingTime > 1500)) {
+            lastTypingTime = now;
             typingChannel.send({ type: 'broadcast', event: 'typing', payload: { room_id: activeRoomId, username: currentUser.user_metadata?.username } });
         }
         messageInput.style.height = 'auto';
@@ -323,7 +325,7 @@
         return `https://ui-avatars.com/api/?name=${cleanName}&background=${backgroundHex.replace('#', '')}&color=${colorHex.replace('#', '')}&bold=true&rounded=true`;
     }
 
-  function applySavedPreferences() {
+    function applySavedPreferences() {
         const savedTheme = localStorage.getItem('supachat_theme') || 'default';
         const savedColor = localStorage.getItem('supachat_color');
         
@@ -352,7 +354,6 @@
         localStorage.setItem('supachat_theme', selected);
     });
 
-    
     accentColorPicker.addEventListener('input', (e) => {
         const newColor = e.target.value;
         document.documentElement.style.setProperty('--accent', newColor); localStorage.setItem('supachat_color', newColor);
@@ -401,11 +402,11 @@
 
         typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
         typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
-            if (payload.room_id === activeRoomId) {
+            if (payload.room_id === activeRoomId && payload.username !== currentUser?.user_metadata?.username) {
                 typingIndicator.textContent = `${payload.username} is typing...`;
                 typingIndicator.style.display = 'block';
                 clearTimeout(typingTimeout);
-                typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2000);
+                typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2500);
             }
         }).subscribe();
 
@@ -518,6 +519,7 @@
     async function switchRoom(roomId, roomName) {
         if (activeRoomId === roomId) return;
         activeRoomId = roomId; activeRoomRawName = roomName;
+        typingIndicator.style.display = 'none';
         chatPlaceholder.style.display = 'none'; chatBox.style.display = 'flex'; messageForm.style.display = 'flex'; chatActions.style.display = 'flex';
         currentChannelName.textContent = `# ${roomName.split(' — ')[0]}`;
         currentChannelDesc.textContent = roomName.includes(' — ') ? `Members: ${roomName.split(' — ')[1]}` : "Real-time end-to-end database sync";
@@ -597,10 +599,47 @@
                 // Mod Commands
                 case 'help':
                     if (!isMod) return alert("Only mods and above can use /help.");
-                    let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user]\n";
+                    let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user], /rename [olduser] [newuser]\n";
                     if (isSuperMod) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user]\n";
                     if (isOwner) helpMsg += "Owner Commands: /unsupermod [user]";
                     alert(helpMsg);
+                    break;
+                case 'rename':
+                    if (!isMod) return alert("Only mods and above can rename users.");
+                    const oldUser = parts[1];
+                    const newUser = parts[2];
+                    if (!oldUser || !newUser) return alert("Usage: /rename [olduser] [newuser]");
+
+                    await supabase2.from('messages').update({ username: newUser }).eq('username', oldUser);
+                    await supabase2.from('user_roles').update({ username: newUser }).eq('username', oldUser);
+                    await supabase2.from('banned_users').update({ username: newUser }).eq('username', oldUser);
+
+                    const { data: allRooms } = await supabase2.from('rooms').select('*');
+                    if (allRooms) {
+                        for (const rm of allRooms) {
+                            if (rm.name.includes(' — [')) {
+                                const rmParts = rm.name.split(' — [');
+                                const members = rmParts[1].replace(']', '').split(',').map(s => s.trim());
+                                if (members.includes(oldUser)) {
+                                    const updatedMembers = members.map(m => m === oldUser ? newUser : m).join(', ');
+                                    const updatedRoomName = `${rmParts[0]} — [${updatedMembers}]`;
+                                    await supabase2.from('rooms').update({ name: updatedRoomName }).eq('id', rm.id);
+                                }
+                            }
+                        }
+                    }
+
+                    if (currentUser?.user_metadata?.username === oldUser) {
+                        await supabase2.auth.updateUser({ data: { ...currentUser.user_metadata, username: newUser } });
+                        currentUser.user_metadata.username = newUser;
+                        currentUserName.textContent = newUser;
+                        currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+                    }
+
+                    await sendSystemMessage(activeRoomId, `System: ${oldUser} was renamed to ${newUser}.`);
+                    alert(`Renamed ${oldUser} to ${newUser}.`);
+                    fetchRooms();
+                    if (activeRoomId) fetchMessages();
                     break;
                 case 'block': 
                     if (!isMod) return alert("Only mods can block.");
@@ -676,6 +715,7 @@
             return; 
         }
 
+        typingIndicator.style.display = 'none';
         messageInput.value = ''; 
         messageInput.style.height = 'auto';
         
@@ -687,7 +727,6 @@
         if (error) {
             alert("Failed to send message: " + error.message);
         } else {
-            // Instantly display the message on your screen instead of waiting for Realtime sync
             if (!document.getElementById(`msg-${data.id}`)) {
                 appendMessage(data);
             }
