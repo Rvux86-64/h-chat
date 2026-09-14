@@ -584,13 +584,11 @@
         const { data: { user } } = await supabase2.auth.getUser(); 
         currentUser = user;
         const myUsername = currentUser.user_metadata?.username;
-        
-        // Define hierarchical roles
         const { data: roleData } = await supabase2.from('user_roles').select('role').eq('username', myUsername).single();
         const userRole = roleData?.role || 'user';
-        const isOwner = myUsername === 'hamzaperson2026';
-        const isSuperMod = isOwner || userRole === 'supermod';
-        const isMod = isSuperMod || userRole === 'mod';
+        const adkjnhdsfhfsdkjhsdj = myUsername === 'hamzaperson2026';
+        const dalkjadfksljfdsjkhaskjdjkfh = adkjnhdsfhfsdkjhsdj || userRole === 'supermod';
+        const isMod = dalkjadfksljfdsjkhaskjdjkfh || userRole === 'mod';
 
         async function handleCommand(inputString) {
             const parts = inputString.trim().replace(/^\//, '').split(/\s+/), command = parts[0].toLowerCase(), target = parts[1];
@@ -600,8 +598,8 @@
                 case 'help':
                     if (!isMod) return alert("Only mods and above can use /help.");
                     let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user], /rename [olduser] [newuser]\n";
-                    if (isSuperMod) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user]\n";
-                    if (isOwner) helpMsg += "Owner Commands: /unsupermod [user]";
+                    if (dalkjadfksljfdsjkhaskjdjkfh) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user]\n";
+                    if (adkjnhdsfhfsdkjhsdj) helpMsg += "Owner Commands: /unsupermod [user]";
                     alert(helpMsg);
                     break;
                 case 'rename':
@@ -678,19 +676,19 @@
 
                 // Supermod Commands
                 case 'mod':
-                    if (!isSuperMod) return alert("Only supermods can make people mods.");
+                    if (!dalkjadfksljfdsjkhaskjdjkfh) return alert("Only supermods can make people mods.");
                     if (!target) return alert("Usage: /mod [username]");
                     await supabase2.from('user_roles').upsert({ username: target, role: 'mod' });
                     alert(`${target} is now a mod.`);
                     break;
                 case 'unmod':
-                    if (!isSuperMod) return alert("Only supermods can unmod people.");
+                    if (!dalkjadfksljfdsjkhaskjdjkfh) return alert("Only supermods can unmod people.");
                     if (!target) return alert("Usage: /unmod [username]");
                     await supabase2.from('user_roles').delete().eq('username', target);
                     alert(`${target} is no longer a mod.`);
                     break;
                 case 'supermod':
-                    if (!isSuperMod) return alert("Only supermods can make people supermods.");
+                    if (!dalkjadfksljfdsjkhaskjdjkfh) return alert("Only supermods can make people supermods.");
                     if (!target) return alert("Usage: /supermod [username]");
                     await supabase2.from('user_roles').upsert({ username: target, role: 'supermod' });
                     alert(`${target} is now a supermod.`);
@@ -698,7 +696,7 @@
 
                 // Owner Command
                 case 'unsupermod':
-                    if (!isOwner) return alert("Only hamzaperson2026 can execute /unsupermod.");
+                    if (!adkjnhdsfhfsdkjhsdj) return alert("Only hamzaperson2026 can execute /unsupermod.");
                     if (!target) return alert("Usage: /unsupermod [username]");
                     await supabase2.from('user_roles').delete().eq('username', target);
                     alert(`${target} is no longer a supermod.`);
