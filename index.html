@@ -291,6 +291,7 @@
       
     const SB_URL = "https://uiovommiqfbinfmmeuns.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpb3ZvbW1pcWZiaW5mbW1ldW5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NzQzODQsImV4cCI6MjEwNTA1MDM4NH0.axlgUmkmkdoqzmt_3VFMwLP8lh2iyJym0zOggC56X9s";
+    const supabase2 = window.supabase.createClient(SB_URL, SB_KEY);
     const authModal = document.getElementById('authModal'), mainApp = document.getElementById('mainApp'), authForm = document.getElementById('authForm'), toggleAuthBtn = document.getElementById('toggleAuth'), registerFields = document.getElementById('registerFields'), authTitle = document.getElementById('authTitle'), authBtn = document.getElementById('authBtn');
     const currentUserName = document.getElementById('currentUserName'), currentUserAvatar = document.getElementById('currentUserAvatar');
     const logoutBtn = document.getElementById('logoutBtn'), createChatBtn = document.getElementById('createChatBtn'), addUserBtn = document.getElementById('addUserBtn');
