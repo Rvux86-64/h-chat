@@ -401,7 +401,7 @@
     function initRealtime() {
         if (window.msgChannel) return;
 
-        typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
+        typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: true } } });
         typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
             if (payload.room_id === activeRoomId && payload.username !== currentUser?.user_metadata?.username) {
                 typingIndicator.textContent = `${payload.username} is typing...`;
@@ -409,6 +409,24 @@
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2500);
             }
+        }).on('broadcast', { event: 'user_renamed' }, (payload) => {
+            const { oldUser, newUser } = payload;
+            
+            // 1. Update active user profile if this logged-in user was renamed
+            if (currentUser?.user_metadata?.username === oldUser) {
+                currentUser.user_metadata.username = newUser;
+                currentUserName.textContent = newUser;
+                currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+            }
+
+            // 2. Dynamically update typing indicator if old user was actively typing
+            if (typingIndicator.textContent.includes(oldUser)) {
+                typingIndicator.textContent = typingIndicator.textContent.replace(oldUser, newUser);
+            }
+
+            // 3. Refresh chat view to sync all rendered message headers and avatars
+            fetchRooms();
+            if (activeRoomId) fetchMessages();
         }).subscribe();
 
         window.msgChannel = supabase2
@@ -423,7 +441,22 @@
                 try { if (currentUser && payload.new.username !== currentUser.user_metadata?.username) showNotification(payload.new.username, payload.new.content); } catch (err) {}
             })
             .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, (payload) => {
-                const textElem = document.getElementById(`msg-text-${payload.new.id}`); if (textElem) textElem.textContent = payload.new.content;
+                const rowElem = document.getElementById(`msg-${payload.new.id}`);
+                if (rowElem) {
+                    const textElem = document.getElementById(`msg-text-${payload.new.id}`);
+                    if (textElem && textElem.textContent !== payload.new.content) textElem.textContent = payload.new.content;
+
+                    const userElem = rowElem.querySelector('.msg-user');
+                    const avatarElem = rowElem.querySelector('.chat-avatar');
+                    const isSelf = currentUser && payload.new.username === currentUser.user_metadata?.username;
+                    
+                    if (userElem) userElem.textContent = isSelf ? 'You' : payload.new.username;
+                    if (avatarElem) {
+                        const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : '374151';
+                        avatarElem.src = getAvatarUrl(payload.new.username, avatarColor);
+                        avatarElem.alt = payload.new.username;
+                    }
+                }
             })
             .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
                 const rowElem = document.getElementById(`msg-${payload.old.id}`); if (rowElem) rowElem.remove();
@@ -532,7 +565,10 @@
     async function fetchMessages() {
         if (!activeRoomId) return;
         const { data, error } = await supabase2.from('messages').select('*').eq('room_id', activeRoomId).order('created_at', { ascending: true });
-        if (error) console.error('Error loading history:', error); else data.forEach(msg => appendMessage(msg));
+        if (error) console.error('Error loading history:', error); else {
+            chatBox.innerHTML = '';
+            data.forEach(msg => appendMessage(msg));
+        }
     }
 
     function appendMessage(msg) {
@@ -609,6 +645,7 @@
                     const newUser = parts[2];
                     if (!oldUser || !newUser) return alert("Usage: /rename [olduser] [newuser]");
 
+                    // Update database records across all tables
                     await supabase2.from('messages').update({ username: newUser }).eq('username', oldUser);
                     await supabase2.from('user_roles').update({ username: newUser }).eq('username', oldUser);
                     await supabase2.from('banned_users').update({ username: newUser }).eq('username', oldUser);
@@ -628,11 +665,21 @@
                         }
                     }
 
+                    // Update local state if executor was renamed
                     if (currentUser?.user_metadata?.username === oldUser) {
                         await supabase2.auth.updateUser({ data: { ...currentUser.user_metadata, username: newUser } });
                         currentUser.user_metadata.username = newUser;
                         currentUserName.textContent = newUser;
                         currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+                    }
+
+                    // Broadcast rename event so all clients instantly update active state & typing indicators
+                    if (typingChannel) {
+                        typingChannel.send({
+                            type: 'broadcast',
+                            event: 'user_renamed',
+                            payload: { oldUser, newUser }
+                        });
                     }
 
                     await sendSystemMessage(activeRoomId, `System: ${oldUser} was renamed to ${newUser}.`);
