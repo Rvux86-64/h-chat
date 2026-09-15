@@ -639,54 +639,44 @@
                     if (adkjnhdsfhfsdkjhsdj) helpMsg += "Owner Commands: /unsupermod [user]";
                     alert(helpMsg);
                     break;
-                case 'rename':
-                    if (!isMod) return alert("Only mods and above can rename users.");
-                    const oldUser = parts[1];
-                    const newUser = parts[2];
-                    if (!oldUser || !newUser) return alert("Usage: /rename [olduser] [newuser]");
+              case 'rename':
+    if (!isMod) return alert("Only mods and above can rename users.");
+    const oldUser = parts[1];
+    const newUser = parts[2];
+    if (!oldUser || !newUser) return alert("Usage: /rename [olduser] [newuser]");
 
-                    // Update database records across all tables
-                    await supabase2.from('messages').update({ username: newUser }).eq('username', oldUser);
-                    await supabase2.from('user_roles').update({ username: newUser }).eq('username', oldUser);
-                    await supabase2.from('banned_users').update({ username: newUser }).eq('username', oldUser);
+    // Execute atomic rename via Supabase RPC function
+    const { error: rpcError } = await supabase2.rpc('rename_user_account', {
+        old_username: oldUser,
+        new_username: newUser
+    });
 
-                    const { data: allRooms } = await supabase2.from('rooms').select('*');
-                    if (allRooms) {
-                        for (const rm of allRooms) {
-                            if (rm.name.includes(' — [')) {
-                                const rmParts = rm.name.split(' — [');
-                                const members = rmParts[1].replace(']', '').split(',').map(s => s.trim());
-                                if (members.includes(oldUser)) {
-                                    const updatedMembers = members.map(m => m === oldUser ? newUser : m).join(', ');
-                                    const updatedRoomName = `${rmParts[0]} — [${updatedMembers}]`;
-                                    await supabase2.from('rooms').update({ name: updatedRoomName }).eq('id', rm.id);
-                                }
-                            }
-                        }
-                    }
+    if (rpcError) {
+        return alert("Failed to rename user: " + rpcError.message);
+    }
 
-                    // Update local state if executor was renamed
-                    if (currentUser?.user_metadata?.username === oldUser) {
-                        await supabase2.auth.updateUser({ data: { ...currentUser.user_metadata, username: newUser } });
-                        currentUser.user_metadata.username = newUser;
-                        currentUserName.textContent = newUser;
-                        currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
-                    }
+    // Update local session if the executor renamed themselves
+    if (currentUser?.user_metadata?.username === oldUser) {
+        currentUser.user_metadata.username = newUser;
+        currentUserName.textContent = newUser;
+        currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+    }
 
-                    // Broadcast rename event so all clients instantly update active state & typing indicators
-                    if (typingChannel) {
-                        typingChannel.send({
-                            type: 'broadcast',
-                            event: 'user_renamed',
-                            payload: { oldUser, newUser }
-                        });
-                    }
+    // Broadcast change to all connected clients
+    if (typingChannel) {
+        typingChannel.send({
+            type: 'broadcast',
+            event: 'user_renamed',
+            payload: { oldUser, newUser }
+        });
+    }
 
-                    await sendSystemMessage(activeRoomId, `System: ${oldUser} was renamed to ${newUser}.`);
-                    alert(`Renamed ${oldUser} to ${newUser}.`);
-                    fetchRooms();
-                    if (activeRoomId) fetchMessages();
-                    break;
+    await sendSystemMessage(activeRoomId, `System: ${oldUser} was renamed to ${newUser}.`);
+    alert(`Successfully renamed ${oldUser} to ${newUser}.`);
+    
+    fetchRooms();
+    if (activeRoomId) fetchMessages();
+    break;
                 case 'block': 
                     if (!isMod) return alert("Only mods can block.");
                     if (!target) return alert("Usage: /block [username]");
