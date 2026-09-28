@@ -853,19 +853,30 @@
     });
 
     attachBtn.addEventListener('click', () => { if (!activeRoomId) return alert("Select a chat first."); fileInput.click(); });
-    fileInput.addEventListener('change', async (e) => {
+   fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0]; if (!file || !activeRoomId || !currentUser) return;
         attachBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; attachBtn.disabled = true;
         const filePath = `${activeRoomId}/${Date.now()}-${Math.random().toString(36).substring(2)}.${file.name.split('.').pop()}`;
         const { error: uploadError } = await supabase2.storage.from('chat-files').upload(filePath, file);
+        
         if (uploadError) alert("Upload failed: " + uploadError.message);
         else {
             const fileUrl = supabase2.storage.from('chat-files').getPublicUrl(filePath).data.publicUrl;
-            await supabase2.from('messages').insert([{ room_id: activeRoomId, content: file.type.startsWith('image/') ? `[IMG]${fileUrl}[/IMG]` : `[FILE=${file.name}]${fileUrl}[/FILE]`, username: currentUser.user_metadata?.username }]);
+            let msgFormat = '';
+            
+            // Check file type to determine formatting
+            if (file.type.startsWith('image/')) {
+                msgFormat = `[IMG]${fileUrl}[/IMG]`;
+            } else if (file.name.toLowerCase().endsWith('.html') || file.type === 'text/html') {
+                msgFormat = `[HTML=${file.name}]${fileUrl}[/HTML]`;
+            } else {
+                msgFormat = `[FILE=${file.name}]${fileUrl}[/FILE]`;
+            }
+            
+            await supabase2.from('messages').insert([{ room_id: activeRoomId, content: msgFormat, username: currentUser.user_metadata?.username }]);
         }
         attachBtn.innerHTML = '<i class="fa-solid fa-paperclip"></i>'; attachBtn.disabled = false; fileInput.value = ''; 
     });
-
     applySavedPreferences(); 
     checkSession();
   </script>
