@@ -602,7 +602,7 @@
         }
     }
 
-    function appendMessage(msg) {
+   function appendMessage(msg) {
     if (!currentUser) return;
     const msgUsername = msg.username || 'Anonymous', isSelf = msgUsername === currentUser.user_metadata?.username; 
     
@@ -615,12 +615,11 @@
     const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : '374151';
     const actionsHtml = isSelf && msgUsername !== 'System' ? `<div class="msg-actions"><button class="msg-action-btn" onclick="editMessage('${msg.id}', '${encodeURIComponent(msg.content)}')"><i class="fa-solid fa-pen"></i></button><button class="msg-action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fa-solid fa-trash"></i></button></div>` : '';
 
-   let formattedContent = msg.content;
+    let formattedContent = msg.content;
     if (typeof formattedContent === 'string') {
         if (formattedContent.startsWith('[IMG]') && formattedContent.endsWith('[/IMG]')) {
             formattedContent = `<img src="${formattedContent.replace('[IMG]', '').replace('[/IMG]', '')}" class="msg-attachment-img" alt="Uploaded Image">`;
         } else if (formattedContent.match(/\[HTML=(.*?)\](.*?)\[\/HTML\]/)) {
-            // New logic for HTML previews
             const match = formattedContent.match(/\[HTML=(.*?)\](.*?)\[\/HTML\]/);
             if (match) {
                 formattedContent = `
@@ -637,7 +636,21 @@
             const tempDiv = document.createElement('div'); tempDiv.textContent = formattedContent; formattedContent = tempDiv.innerHTML; 
         }
     }
-        
+
+    rowElement.innerHTML = `
+        <img src="${getAvatarUrl(msgUsername, avatarColor)}" class="chat-avatar" alt="${msgUsername}">
+        <div class="message">
+            ${actionsHtml}
+            <div class="msg-header">
+                <span class="msg-user">${isSelf ? 'You' : msgUsername}</span>
+                <span class="msg-time">${timeString}</span>
+            </div>
+            <span class="msg-text" id="msg-text-${msg.id}">${formattedContent}</span>
+        </div>
+    `;
+
+    chatBox.appendChild(rowElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
     async function editMessage(msgId, encodedContent) {
         const currentContent = decodeURIComponent(encodedContent), newContent = prompt("Edit your message:", currentContent);
