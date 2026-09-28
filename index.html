@@ -101,7 +101,30 @@
         .chat-wrapper { display: flex; width: 950px; height: 700px; background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); overflow: hidden; }
         .sidebar { width: 280px; background: #0d1321; border-right: 1px solid var(--border-color); padding: 24px; display: flex; flex-direction: column; gap: 24px; }
         .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+        /* Container to wrap avatars with status badges */
+        .avatar-wrapper {
+          position: relative;
+          display: inline-block;
+          flex-shrink: 0;
+        }
         
+        /* Base online indicator dot */
+        .online-badge {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 10px;
+          height: 10px;
+          background-color: #10b981; /* Green for online */
+          border: 2px solid var(--panel-bg);
+          border-radius: 50%;
+          transition: background-color 0.3s ease;
+        }
+        
+        /* Offline state styling */
+        .online-badge.offline {
+          background-color: #6b7280; /* Grey for offline */
+        }
         .channels-section { display: flex; flex-direction: column; gap: 10px; flex: 1; overflow-y: auto; }
         .section-header { display: flex; justify-content: space-between; align-items: center; }
         .section-title { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
@@ -476,21 +499,26 @@
     }
 
     async function checkSession() {
-        const { data: { session } } = await supabase2.auth.getSession();
-        if (session) {
-            currentUser = session.user; authModal.style.display = "none"; mainApp.style.display = "flex";
-            const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
-            currentUserName.textContent = uname; currentUserAvatar.src = getAvatarUrl(uname, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
-            fetchRooms(); requestNotificationPermission(); initRealtime();
-        } else { authModal.style.display = "flex"; mainApp.style.display = "none"; }
-    }
+    const { data: { session } } = await supabase2.auth.getSession();
+    if (session) {
+        currentUser = session.user; authModal.style.display = "none"; mainApp.style.display = "flex";
+        const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
+        currentUserName.textContent = uname; currentUserAvatar.src = getAvatarUrl(uname, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+        fetchRooms(); requestNotificationPermission(); initRealtime(); initPresence();
+    } else { authModal.style.display = "flex"; mainApp.style.display = "none"; }
+}
 
     logoutBtn.addEventListener('click', async () => {
         await supabase2.auth.signOut(); 
         if (window.msgChannel) supabase2.removeChannel(window.msgChannel);
         if (typingChannel) supabase2.removeChannel(typingChannel);
+        if (presenceChannel) supabase2.removeChannel(presenceChannel);
+        
         window.msgChannel = null;
         typingChannel = null;
+        presenceChannel = null;
+        onlineUsers.clear();
+        
         checkSession();
     });
 
@@ -572,34 +600,42 @@
     }
 
     function appendMessage(msg) {
-        if (!currentUser) return;
-        const msgUsername = msg.username || 'Anonymous', isSelf = msgUsername === currentUser.user_metadata?.username; 
-        
-        const timeString = msg.created_at ? new Date(msg.created_at).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        
-        const rowElement = document.createElement('div'); rowElement.classList.add('message-row'); rowElement.setAttribute('id', `msg-${msg.id}`);
-        if (isSelf) rowElement.classList.add('self');
-        if (msgUsername === 'System') rowElement.classList.add('system');
+    if (!currentUser) return;
+    const msgUsername = msg.username || 'Anonymous', isSelf = msgUsername === currentUser.user_metadata?.username; 
+    
+    const timeString = msg.created_at ? new Date(msg.created_at).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    
+    const rowElement = document.createElement('div'); rowElement.classList.add('message-row'); rowElement.setAttribute('id', `msg-${msg.id}`);
+    if (isSelf) rowElement.classList.add('self');
+    if (msgUsername === 'System') rowElement.classList.add('system');
 
-        const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : '374151';
-        const actionsHtml = isSelf && msgUsername !== 'System' ? `<div class="msg-actions"><button class="msg-action-btn" onclick="editMessage('${msg.id}', '${encodeURIComponent(msg.content)}')"><i class="fa-solid fa-pen"></i></button><button class="msg-action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fa-solid fa-trash"></i></button></div>` : '';
+    const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : '374151';
+    const actionsHtml = isSelf && msgUsername !== 'System' ? `<div class="msg-actions"><button class="msg-action-btn" onclick="editMessage('${msg.id}', '${encodeURIComponent(msg.content)}')"><i class="fa-solid fa-pen"></i></button><button class="msg-action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fa-solid fa-trash"></i></button></div>` : '';
 
-        let formattedContent = msg.content;
-        if (typeof formattedContent === 'string') {
-            if (formattedContent.startsWith('[IMG]') && formattedContent.endsWith('[/IMG]')) formattedContent = `<img src="${formattedContent.replace('[IMG]', '').replace('[/IMG]', '')}" class="msg-attachment-img" alt="Uploaded Image">`;
-            else if (formattedContent.startsWith('[FILE=') && formattedContent.endsWith('[/FILE]')) {
-                const match = formattedContent.match(/\[FILE=(.*?)\](.*?)\[\/FILE\]/);
-                if (match) formattedContent = `<a href="${match[2]}" target="_blank" class="msg-attachment-link"><i class="fa-solid fa-file-arrow-down"></i> Download: ${match[1]}</a>`;
-            } else { const tempDiv = document.createElement('div'); tempDiv.textContent = formattedContent; formattedContent = tempDiv.innerHTML; }
-        }
-
-        rowElement.innerHTML = msgUsername === 'System' 
-            ? `<div class="message"><span class="msg-text">${formattedContent}</span></div>`
-            : `<img src="${getAvatarUrl(msgUsername, avatarColor)}" alt="${msgUsername}" class="chat-avatar"><div class="message">${actionsHtml}<div class="msg-header"><span class="msg-user">${isSelf ? 'You' : msgUsername}</span><span class="msg-time">${timeString}</span></div><span class="msg-text" id="msg-text-${msg.id}">${formattedContent}</span></div>`;
-        
-        chatBox.appendChild(rowElement); chatBox.scrollTop = chatBox.scrollHeight;
+    let formattedContent = msg.content;
+    if (typeof formattedContent === 'string') {
+        if (formattedContent.startsWith('[IMG]') && formattedContent.endsWith('[/IMG]')) formattedContent = `<img src="${formattedContent.replace('[IMG]', '').replace('[/IMG]', '')}" class="msg-attachment-img" alt="Uploaded Image">`;
+        else if (formattedContent.startsWith('[FILE=') && formattedContent.endsWith('[/FILE]')) {
+            const match = formattedContent.match(/\[FILE=(.*?)\](.*?)\[\/FILE\]/);
+            if (match) formattedContent = `<a href="${match[2]}" target="_blank" class="msg-attachment-link"><i class="fa-solid fa-file-arrow-down"></i> Download: ${match[1]}</a>`;
+        } else { const tempDiv = document.createElement('div'); tempDiv.textContent = formattedContent; formattedContent = tempDiv.innerHTML; }
     }
 
+    const isOnline = onlineUsers.has(msgUsername);
+    const badgeClass = isOnline ? 'online-badge' : 'online-badge offline';
+
+    const avatarHtml = `
+        <div class="avatar-wrapper" data-username="${msgUsername}">
+            <img src="${getAvatarUrl(msgUsername, avatarColor)}" alt="${msgUsername}" class="chat-avatar">
+            <span class="${badgeClass}"></span>
+        </div>`;
+
+    rowElement.innerHTML = msgUsername === 'System' 
+        ? `<div class="message"><span class="msg-text">${formattedContent}</span></div>`
+        : `${avatarHtml}<div class="message">${actionsHtml}<div class="msg-header"><span class="msg-user">${isSelf ? 'You' : msgUsername}</span><span class="msg-time">${timeString}</span></div><span class="msg-text" id="msg-text-${msg.id}">${formattedContent}</span></div>`;
+    
+    chatBox.appendChild(rowElement); chatBox.scrollTop = chatBox.scrollHeight;
+}
     async function editMessage(msgId, encodedContent) {
         const currentContent = decodeURIComponent(encodedContent), newContent = prompt("Edit your message:", currentContent);
         if (!newContent || newContent === currentContent) return;
@@ -612,7 +648,51 @@
         const { error } = await supabase2.from('messages').delete().eq('id', msgId);
         if (error) alert("Failed to delete message: " + error.message);
     }
+    function initPresence() {
+        if (presenceChannel || !currentUser) return;
+        
+        const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
+    
+        presenceChannel = supabase2.channel('online-presence', {
+            config: { presence: { key: uname } }
+        });
+    
+        presenceChannel
+            .on('presence', { event: 'sync' }, () => {
+                const state = presenceChannel.presenceState();
+                onlineUsers.clear();
+                
+                // Extract all currently connected usernames
+                Object.keys(state).forEach(username => {
+                    onlineUsers.add(username);
+                });
+    
+                updateOnlineStatusUI();
+            })
+            .subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') {
+                    await presenceChannel.track({
+                        online_at: new Date().toISOString(),
+                        username: uname
+                    });
+                }
+            });
+    }
 
+    function updateOnlineStatusUI() {
+        // Update all rendered message avatars with their current online state
+        document.querySelectorAll('.avatar-wrapper').forEach(wrapper => {
+            const username = wrapper.getAttribute('data-username');
+            const badge = wrapper.querySelector('.online-badge');
+            if (badge && username) {
+                if (onlineUsers.has(username)) {
+                    badge.classList.remove('offline');
+                } else {
+                    badge.classList.add('offline');
+                }
+            }
+        });
+    }
     messageForm.addEventListener('submit', async (e) => {
         e.preventDefault(); 
         const content = messageInput.value.trim();
