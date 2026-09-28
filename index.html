@@ -300,7 +300,7 @@
             <div class="typing-indicator" id="typingIndicator"></div>
 
             <form class="chat-input-container" id="messageForm" style="display: none;">
-                <input type="file" id="fileInput" style="display: none;" accept="image/*, .pdf, .doc, .txt, .zip">
+                <input type="file" id="fileInput" style="display: none;" accept="image/*, .pdf, .doc, .txt, .zip, .html">
                 <button type="button" id="attachBtn" title="Attach File" style="background: #1f2937; margin-right: 8px;">
                     <i class="fa-solid fa-paperclip"></i>
                 </button>
@@ -615,29 +615,29 @@
     const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : '374151';
     const actionsHtml = isSelf && msgUsername !== 'System' ? `<div class="msg-actions"><button class="msg-action-btn" onclick="editMessage('${msg.id}', '${encodeURIComponent(msg.content)}')"><i class="fa-solid fa-pen"></i></button><button class="msg-action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fa-solid fa-trash"></i></button></div>` : '';
 
-    let formattedContent = msg.content;
+   let formattedContent = msg.content;
     if (typeof formattedContent === 'string') {
-        if (formattedContent.startsWith('[IMG]') && formattedContent.endsWith('[/IMG]')) formattedContent = `<img src="${formattedContent.replace('[IMG]', '').replace('[/IMG]', '')}" class="msg-attachment-img" alt="Uploaded Image">`;
-        else if (formattedContent.startsWith('[FILE=') && formattedContent.endsWith('[/FILE]')) {
+        if (formattedContent.startsWith('[IMG]') && formattedContent.endsWith('[/IMG]')) {
+            formattedContent = `<img src="${formattedContent.replace('[IMG]', '').replace('[/IMG]', '')}" class="msg-attachment-img" alt="Uploaded Image">`;
+        } else if (formattedContent.match(/\[HTML=(.*?)\](.*?)\[\/HTML\]/)) {
+            // New logic for HTML previews
+            const match = formattedContent.match(/\[HTML=(.*?)\](.*?)\[\/HTML\]/);
+            if (match) {
+                formattedContent = `
+                <div style="margin-top: 8px; width: 100%; min-width: 250px;">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-code"></i> Preview: ${match[1]}</span>
+                    <iframe src="${match[2]}" sandbox style="width: 100%; height: 250px; border: 1px solid var(--border-color); border-radius: 8px; background: white; margin-top: 4px;"></iframe>
+                    <a href="${match[2]}" target="_blank" class="msg-attachment-link" style="display: block; margin-top: 4px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open in new tab</a>
+                </div>`;
+            }
+        } else if (formattedContent.startsWith('[FILE=') && formattedContent.endsWith('[/FILE]')) {
             const match = formattedContent.match(/\[FILE=(.*?)\](.*?)\[\/FILE\]/);
             if (match) formattedContent = `<a href="${match[2]}" target="_blank" class="msg-attachment-link"><i class="fa-solid fa-file-arrow-down"></i> Download: ${match[1]}</a>`;
-        } else { const tempDiv = document.createElement('div'); tempDiv.textContent = formattedContent; formattedContent = tempDiv.innerHTML; }
+        } else { 
+            const tempDiv = document.createElement('div'); tempDiv.textContent = formattedContent; formattedContent = tempDiv.innerHTML; 
+        }
     }
-
-    const isOnline = onlineUsers.has(msgUsername);
-    const badgeClass = isOnline ? 'online-badge' : 'online-badge offline';
-
-    const avatarHtml = `
-        <div class="avatar-wrapper" data-username="${msgUsername}">
-            <img src="${getAvatarUrl(msgUsername, avatarColor)}" alt="${msgUsername}" class="chat-avatar">
-            <span class="${badgeClass}"></span>
-        </div>`;
-
-    rowElement.innerHTML = msgUsername === 'System' 
-        ? `<div class="message"><span class="msg-text">${formattedContent}</span></div>`
-        : `${avatarHtml}<div class="message">${actionsHtml}<div class="msg-header"><span class="msg-user">${isSelf ? 'You' : msgUsername}</span><span class="msg-time">${timeString}</span></div><span class="msg-text" id="msg-text-${msg.id}">${formattedContent}</span></div>`;
-    
-    chatBox.appendChild(rowElement); chatBox.scrollTop = chatBox.scrollHeight;
+        
 }
     async function editMessage(msgId, encodedContent) {
         const currentContent = decodeURIComponent(encodedContent), newContent = prompt("Edit your message:", currentContent);
