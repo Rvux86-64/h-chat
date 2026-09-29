@@ -598,15 +598,28 @@
     let presenceChannel = null;
     const onlineUsers = new Set();
 
-    messageInput.addEventListener('input', () => {
-        const now = Date.now();
-        if (activeRoomId && currentUser && typingChannel && (now - lastTypingTime > 1200)) {
-            lastTypingTime = now;
-            typingChannel.send({ type: 'broadcast', event: 'typing', payload: { room_id: activeRoomId, username: currentUser.user_metadata?.username } });
-        }
-        messageInput.style.height = 'auto';
-        messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
-    });
+   // Helper to safely get current username with fallback
+function getCurrentUsername() {
+    return currentUser?.user_metadata?.username || currentUser?.email?.split('@')[0] || 'Anonymous';
+}
+
+// Fixed Input Listener
+messageInput.addEventListener('input', () => {
+    const now = Date.now();
+    const username = getCurrentUsername();
+    
+    if (activeRoomId && username && typingChannel && (now - lastTypingTime > 1200)) {
+        lastTypingTime = now;
+        typingChannel.send({
+            type: 'broadcast',
+            event: 'typing',
+            payload: { room_id: String(activeRoomId), username: username }
+        });
+    }
+    
+    messageInput.style.height = 'auto';
+    messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+});
 
     messageInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) { 
@@ -696,34 +709,40 @@
     function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission().catch(err => console.log("Permission skipped:", err)); }
     function showNotification(username, message) { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(`New message from ${username}`, { body: message, icon: getAvatarUrl(username) }); }
 
-    function initRealtime() {
-        if (window.msgChannel) return;
+  function initRealtime() {
+    if (window.msgChannel) return;
 
-        typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: true } } });
-        typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
-            if (payload.room_id === activeRoomId && payload.username !== currentUser?.user_metadata?.username) {
-                typingText.textContent = `${payload.username} is typing`;
-                typingIndicator.style.display = 'flex';
-                clearTimeout(typingTimeout);
-                typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2500);
-            }
-        }).on('broadcast', { event: 'user_renamed' }, (payload) => {
-            const { oldUser, newUser } = payload;
+    typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
+    
+    typingChannel.on('broadcast', { event: 'typing' }, ({ payload }) => {
+        const myUsername = getCurrentUsername();
+        
+        // Ensure room matches and ignore self-broadcasts
+        if (String(payload.room_id) === String(activeRoomId) && payload.username !== myUsername) {
+            typingText.textContent = `${payload.username} is typing`;
+            typingIndicator.style.display = 'flex';
             
-            if (currentUser?.user_metadata?.username === oldUser) {
-                currentUser.user_metadata.username = newUser;
-                currentUserName.textContent = newUser;
-                currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
-            }
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => { 
+                typingIndicator.style.display = 'none'; 
+            }, 2500);
+        }
+    }).on('broadcast', { event: 'user_renamed' }, ({ payload }) => {
+        const { oldUser, newUser } = payload;
+        
+        if (getCurrentUsername() === oldUser) {
+            if (currentUser.user_metadata) currentUser.user_metadata.username = newUser;
+            currentUserName.textContent = newUser;
+            currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+        }
 
-            if (typingText.textContent.includes(oldUser)) {
-                typingText.textContent = typingText.textContent.replace(oldUser, newUser);
-            }
+        if (typingText.textContent.includes(oldUser)) {
+            typingText.textContent = typingText.textContent.replace(oldUser, newUser);
+        }
 
-            fetchRooms();
-            if (activeRoomId) fetchMessages();
-        }).subscribe();
-
+        fetchRooms();
+        if (activeRoomId) fetchMessages();
+    }).subscribe();
         window.msgChannel = supabase2
             .channel('db-changes')
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
