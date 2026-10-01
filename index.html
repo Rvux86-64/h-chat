@@ -31,6 +31,7 @@
           --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         } 
 
+        /* Ocean Theme */
         body.theme-ocean {
           --bg-main: #0b1329;
           --panel-bg: rgba(30, 41, 59, 0.8);
@@ -43,6 +44,7 @@
           --msg-other: rgba(30, 41, 59, 0.9);
         }
 
+        /* Hacker Theme */
         body.theme-hacker {
           --bg-main: #050505;
           --panel-bg: rgba(12, 12, 12, 0.9);
@@ -56,6 +58,7 @@
           --font-family: 'Fira Code', monospace;
         }
 
+        /* Sunset Theme */
         body.theme-sunset {
           --bg-main: #1f1216;
           --panel-bg: rgba(63, 42, 38, 0.8);
@@ -68,6 +71,7 @@
           --msg-other: rgba(63, 42, 38, 0.9);
         }
 
+        /* Light Mode */
         body.light-mode {
           --bg-main: #f1f5f9;
           --panel-bg: rgba(255, 255, 255, 0.85);
@@ -95,6 +99,7 @@
           transition: background-color 0.3s, color 0.3s;
         }
 
+        /* Auth Screen */
         .auth-modal { 
           position: fixed; 
           inset: 0; 
@@ -166,6 +171,7 @@
         }
         .auth-toggle:hover { color: var(--accent); }
 
+        /* Main Chat Wrapper */
         .chat-wrapper { 
           display: flex; 
           width: 1000px; 
@@ -180,6 +186,7 @@
           overflow: hidden; 
         }
 
+        /* Sidebar Styling */
         .sidebar { 
           width: 290px; 
           background: rgba(0, 0, 0, 0.15); 
@@ -311,6 +318,7 @@
         .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-muted); }
         .pulse-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); animation: pulse 1.8s infinite; }
 
+        /* Main Chat Container */
         .main-chat { flex: 1; display: flex; flex-direction: column; background: rgba(0, 0, 0, 0.05); }
         .chat-header { 
           padding: 18px 24px; 
@@ -375,35 +383,13 @@
         .msg-attachment-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 500; word-break: break-all; }
         .msg-attachment-link:hover { text-decoration: underline; }
 
-        .html-preview-container {
-            margin-top: 8px;
-            width: 100%;
-            min-width: 280px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px;
-        }
-        .html-preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .html-preview-iframe {
-            width: 100%;
-            height: 280px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: #ffffff;
-        }
-
         .msg-actions { display: none; position: absolute; top: -12px; right: 10px; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px 6px; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .message-row.self:not(.system):hover .msg-actions { display: flex; }
         .msg-action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.75rem; padding: 4px; }
         .msg-action-btn:hover { color: var(--accent); }
         .msg-action-btn.delete-btn:hover { color: #ef4444; }
 
+        /* Modern Typing Indicator */
         .typing-indicator { 
           display: none; 
           align-items: center; 
@@ -514,7 +500,7 @@
                 <div class="channels-list" id="channelsList"></div>
             </div>
 
-            <a href="indexold.html?v=2" class="old-version-btn" title="Go to the classic layout"><i class="fa-solid fa-clock-rotate-left"></i> Classic Mode</a>
+            <a href="./indexold.html" class="old-version-btn" title="Go to the classic layout"><i class="fa-solid fa-clock-rotate-left"></i> Classic Mode</a>
 
             <div class="user-card">
                 <label><i class="fa-solid fa-user-shield"></i> Profile</label>
@@ -598,28 +584,15 @@
     let presenceChannel = null;
     const onlineUsers = new Set();
 
-   // Helper to safely get current username with fallback
-function getCurrentUsername() {
-    return currentUser?.user_metadata?.username || currentUser?.email?.split('@')[0] || 'Anonymous';
-}
-
-// Fixed Input Listener
-messageInput.addEventListener('input', () => {
-    const now = Date.now();
-    const username = getCurrentUsername();
-    
-    if (activeRoomId && username && typingChannel && (now - lastTypingTime > 1200)) {
-        lastTypingTime = now;
-        typingChannel.send({
-            type: 'broadcast',
-            event: 'typing',
-            payload: { room_id: String(activeRoomId), username: username }
-        });
-    }
-    
-    messageInput.style.height = 'auto';
-    messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
-});
+    messageInput.addEventListener('input', () => {
+        const now = Date.now();
+        if (activeRoomId && currentUser && typingChannel && (now - lastTypingTime > 1200)) {
+            lastTypingTime = now;
+            typingChannel.send({ type: 'broadcast', event: 'typing', payload: { room_id: activeRoomId, username: currentUser.user_metadata?.username } });
+        }
+        messageInput.style.height = 'auto';
+        messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+    });
 
     messageInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) { 
@@ -709,40 +682,34 @@ messageInput.addEventListener('input', () => {
     function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission().catch(err => console.log("Permission skipped:", err)); }
     function showNotification(username, message) { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(`New message from ${username}`, { body: message, icon: getAvatarUrl(username) }); }
 
-  function initRealtime() {
-    if (window.msgChannel) return;
+    function initRealtime() {
+        if (window.msgChannel) return;
 
-    typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
-    
-    typingChannel.on('broadcast', { event: 'typing' }, ({ payload }) => {
-        const myUsername = getCurrentUsername();
-        
-        // Ensure room matches and ignore self-broadcasts
-        if (String(payload.room_id) === String(activeRoomId) && payload.username !== myUsername) {
-            typingText.textContent = `${payload.username} is typing`;
-            typingIndicator.style.display = 'flex';
+        typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: true } } });
+        typingChannel.on('broadcast', { event: 'typing' }, (payload) => {
+            if (payload.room_id === activeRoomId && payload.username !== currentUser?.user_metadata?.username) {
+                typingText.textContent = `${payload.username} is typing`;
+                typingIndicator.style.display = 'flex';
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => { typingIndicator.style.display = 'none'; }, 2500);
+            }
+        }).on('broadcast', { event: 'user_renamed' }, (payload) => {
+            const { oldUser, newUser } = payload;
             
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => { 
-                typingIndicator.style.display = 'none'; 
-            }, 2500);
-        }
-    }).on('broadcast', { event: 'user_renamed' }, ({ payload }) => {
-        const { oldUser, newUser } = payload;
-        
-        if (getCurrentUsername() === oldUser) {
-            if (currentUser.user_metadata) currentUser.user_metadata.username = newUser;
-            currentUserName.textContent = newUser;
-            currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
-        }
+            if (currentUser?.user_metadata?.username === oldUser) {
+                currentUser.user_metadata.username = newUser;
+                currentUserName.textContent = newUser;
+                currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+            }
 
-        if (typingText.textContent.includes(oldUser)) {
-            typingText.textContent = typingText.textContent.replace(oldUser, newUser);
-        }
+            if (typingText.textContent.includes(oldUser)) {
+                typingText.textContent = typingText.textContent.replace(oldUser, newUser);
+            }
 
-        fetchRooms();
-        if (activeRoomId) fetchMessages();
-    }).subscribe();
+            fetchRooms();
+            if (activeRoomId) fetchMessages();
+        }).subscribe();
+
         window.msgChannel = supabase2
             .channel('db-changes')
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
@@ -911,8 +878,6 @@ messageInput.addEventListener('input', () => {
         const actionsHtml = isSelf && msgUsername !== 'System' ? `<div class="msg-actions"><button class="msg-action-btn" onclick="editMessage('${msg.id}', '${encodeURIComponent(msg.content)}')"><i class="fa-solid fa-pen"></i></button><button class="msg-action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fa-solid fa-trash"></i></button></div>` : '';
 
         let formattedContent = msg.content || '';
-        let pendingIframeLoad = null;
-
         if (typeof formattedContent === 'string') {
             if (formattedContent.startsWith('[IMG]') && formattedContent.endsWith('[/IMG]')) {
                 const imgUrl = formattedContent.replace('[IMG]', '').replace('[/IMG]', '');
@@ -920,28 +885,12 @@ messageInput.addEventListener('input', () => {
             } else if (formattedContent.match(/\[HTML=(.*?)\](.*?)\[\/HTML\]/)) {
                 const match = formattedContent.match(/\[HTML=(.*?)\](.*?)\[\/HTML\]/);
                 if (match) {
-                    const fileName = match[1];
-                    const fileUrl = match[2];
-                    const iframeId = `preview-iframe-${msg.id || Math.random().toString(36).substring(2)}`;
-
                     formattedContent = `
-                    <div class="html-preview-container">
-                        <div class="html-preview-header">
-                            <span style="font-size: 0.82rem; color: var(--text-muted);"><i class="fa-solid fa-code"></i> Preview: <b>${fileName}</b></span>
-                            <a href="${fileUrl}" target="_blank" class="msg-attachment-link" style="margin-top: 0;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Tab</a>
-                        </div>
-                        <iframe id="${iframeId}" class="html-preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+                    <div style="margin-top: 8px; width: 100%; min-width: 250px;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-code"></i> Preview: ${match[1]}</span>
+                        <iframe src="${match[2]}" sandbox style="width: 100%; height: 250px; border: 1px solid var(--border-color); border-radius: 8px; background: white; margin-top: 4px;"></iframe>
+                        <a href="${match[2]}" target="_blank" class="msg-attachment-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open in new tab</a>
                     </div>`;
-
-                    pendingIframeLoad = () => {
-                        fetch(fileUrl)
-                            .then(res => res.text())
-                            .then(html => {
-                                const iframe = document.getElementById(iframeId);
-                                if (iframe) iframe.srcdoc = html;
-                            })
-                            .catch(err => console.error('Error rendering HTML preview:', err));
-                    };
                 }
             } else if (formattedContent.startsWith('[FILE=') && formattedContent.endsWith('[/FILE]')) {
                 const match = formattedContent.match(/\[FILE=(.*?)\](.*?)\[\/FILE\]/);
@@ -972,7 +921,6 @@ messageInput.addEventListener('input', () => {
         `;
 
         chatBox.appendChild(rowElement);
-        if (pendingIframeLoad) pendingIframeLoad();
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
@@ -1198,11 +1146,7 @@ messageInput.addEventListener('input', () => {
         const file = e.target.files[0]; if (!file || !activeRoomId || !currentUser) return;
         attachBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; attachBtn.disabled = true;
         const filePath = `${activeRoomId}/${Date.now()}-${Math.random().toString(36).substring(2)}.${file.name.split('.').pop()}`;
-        
-        const { error: uploadError } = await supabase2.storage.from('chat-files').upload(filePath, file, {
-            contentType: file.type || 'text/html',
-            upsert: true
-        });
+        const { error: uploadError } = await supabase2.storage.from('chat-files').upload(filePath, file);
         
         if (uploadError) alert("Upload failed: " + uploadError.message);
         else {
