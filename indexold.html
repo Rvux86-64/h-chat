@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classic H-chat</title>
     <!-- Include Leaflet CSS file in the <head> -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com" />
 
     <!-- Include Leaflet JavaScript file inside <head> -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com"></script>
 
     <style>
         body {
@@ -41,16 +41,18 @@
 </head>
 <body>
 
-    <!-- Hidden by default via HTML attribute -->
+    <!-- Both elements are hidden by default via HTML attribute -->
     <h2 id="h2" hidden>P.DIDDY IS COMING FOR YOU!</h2>
     <button class="btn" id="actionBtn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
-    <div id="map"></div>
+    
+    <div id="map" hidden></div>
 
     <script>
         const h = document.getElementById("h2");
         const actionBtn = document.getElementById("actionBtn");
+        const mapContainer = document.getElementById("map");
 
-        // Set up the map immediately so you don't see a blank canvas
+        // Set up the map engine immediately in the background
         const map = L.map('map').setView([0, 0], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -62,12 +64,17 @@
                 navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
                         // SUCCESS: User pressed 'Allow' on the permission prompt!
-                        h.hidden = false; // Reveal the scary text here
-                        actionBtn.hidden = true; // Optional: Hide button since action is done
+                        h.hidden = false;           // Reveal the text
+                        mapContainer.hidden = false; // Reveal the map container
+                        actionBtn.hidden = true;    // Hide the trigger button
+                        
+                        // CRUCIAL: Recalculate map dimensions now that the container is visible
+                        map.invalidateSize();
 
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
                         
+                        // Move view smoothly to coordinates and drop the pin
                         map.flyTo([lat, lng], 15);
                         L.marker([lat, lng]).addTo(map)
                             .bindPopup("<b>Found you!</b>")
