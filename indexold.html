@@ -3,61 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fun Classic H-chat</title>
+    <title>Classic H-chat</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com" />
     <style>
-        #map {
-            width: 100%;
-            height: 500px;
-            background-color: #e5e3df; /* Gives a fallback visual box before map loads */
-        }
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            text-align: center;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+            margin-top: 15px;
+            background-color: #e5e3df; 
+            border: 2px solid #333;
+        }
+        .btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background-color: #e84118;
         }
     </style>
 </head>
 <body>
 
     <h2>P.DIDDY IS COMING FOR YOU!</h2>
+    
+    <!-- This button forces the browser to re-evaluate the permission request -->
+    <button class="btn" onclick="findMyPosition()">🚨 DETECT MY LOCATION 🚨</button>
+
     <div id="map"></div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com"></script>
     <script>
-        // 1. Initialize the map framework IMMEDIATELY on page load
-        // This stops the page from displaying totally blank on GitHub Pages
+        // Set up the map immediately so you don't see a blank page
         const map = L.map('map').setView([0, 0], 2);
 
-        // 2. Fetch the OpenStreetMap base layers
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // 3. Request geolocation AFTER the map shell is visible
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function showPosition(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
+        // This only runs when you click the button
+        function findMyPosition() {
+            if (navigator.geolocation) {
+                alert("Checking permissions... look for the browser popup at the top!");
+                
+                navigator.geolocation.getCurrentPosition(
+                    function showPosition(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
 
-                    // Fly seamlessly to their real coordinates
-                    map.flyTo([lat, lng], 15);
+                        map.flyTo([lat, lng], 15);
 
-                    // Add the custom pin dropped on their spot
-                    L.marker([lat, lng]).addTo(map)
-                        .bindPopup("<b>Found you!</b>")
-                        .openPopup();
-                },
-                function showError(error) {
-                    console.warn("Geolocation Error Code: " + error.code + " - " + error.message);
-                    alert("Map ready! Please click the lock icon in your URL address bar to allow location permissions.");
-                },
-                { enableHighAccuracy: true, timeout: 8000 }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
+                        L.marker([lat, lng]).addTo(map)
+                            .bindPopup("<b>Found you!</b>")
+                            .openPopup();
+                    },
+                    function showError(error) {
+                        // This alert will show us exactly why the system is failing
+                        alert("Error details: [Code " + error.code + "] " + error.message);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            } else {
+                alert("Geolocation is completely unsupported by this browser.");
+            }
         }
     </script>
 </body>
