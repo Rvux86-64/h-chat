@@ -7,7 +7,7 @@
     <!-- Include Leaflet CSS file in the <head> -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- Include Leaflet JavaScript file inside <head> or before </body> -->
+    <!-- Include Leaflet JavaScript file inside <head> -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
@@ -41,18 +41,16 @@
 </head>
 <body>
 
-    <h2 id="h2">P.DIDDY IS COMING FOR YOU!</h2>
-    <button class="btn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
+    <!-- Hidden by default via HTML attribute -->
+    <h2 id="h2" hidden>P.DIDDY IS COMING FOR YOU!</h2>
+    <button class="btn" id="actionBtn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
     <div id="map"></div>
 
-    <!-- FIXED: Added correct Leaflet JS URL -->
-    <script src="https:/]"></script>
     <script>
-        // FIXED: Explicitly declared the variable 'h'
         const h = document.getElementById("h2");
-        h.hidden = true; 
+        const actionBtn = document.getElementById("actionBtn");
 
-        // Set up the map immediately so you don't see a blank page
+        // Set up the map immediately so you don't see a blank canvas
         const map = L.map('map').setView([0, 0], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -60,19 +58,23 @@
 
         // This only runs when you click the button
         function findMyPosition() {
-            h.hidden = false;
             if (navigator.geolocation) {
-                alert("Checking permissions... look for the browser popup at the top!");
                 navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
+                        // SUCCESS: User pressed 'Allow' on the permission prompt!
+                        h.hidden = false; // Reveal the scary text here
+                        actionBtn.hidden = true; // Optional: Hide button since action is done
+
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
+                        
                         map.flyTo([lat, lng], 15);
                         L.marker([lat, lng]).addTo(map)
                             .bindPopup("<b>Found you!</b>")
                             .openPopup();
                     },
                     function showError(error) {
+                        // FAILURE: User pressed 'Block' or an error occurred
                         alert("Error details: [Code " + error.code + "] " + error.message);
                     },
                     { enableHighAccuracy: true, timeout: 10000 }
