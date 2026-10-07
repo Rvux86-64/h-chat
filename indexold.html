@@ -41,7 +41,7 @@
 </head>
 <body>
 
-    <!-- Both elements are hidden by default via HTML attribute -->
+    <!-- Both elements hidden by default via HTML attribute -->
     <h2 id="h2" hidden>P.DIDDY IS COMING FOR YOU!</h2>
     <button class="btn" id="actionBtn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
     
@@ -63,25 +63,28 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
-                        // SUCCESS: User pressed 'Allow' on the permission prompt!
-                        h.hidden = false;           // Reveal the text
-                        mapContainer.hidden = false; // Reveal the map container
-                        actionBtn.hidden = true;    // Hide the trigger button
+                        // SUCCESS: User pressed 'Allow'
+                        h.hidden = false;           
+                        mapContainer.hidden = false; 
+                        actionBtn.hidden = true;    
                         
-                        // CRUCIAL: Recalculate map dimensions now that the container is visible
-                        map.invalidateSize();
-
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        
-                        // Move view smoothly to coordinates and drop the pin
-                        map.flyTo([lat, lng], 15);
-                        L.marker([lat, lng]).addTo(map)
-                            .bindPopup("<b>Found you!</b>")
-                            .openPopup();
+                        // FIXED: Added a 150ms timeout delay.
+                        // This allows the map container to fully exist on screen before Leaflet recalculates sizes.
+                        setTimeout(function() {
+                            map.invalidateSize();
+                            
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+                            
+                            // Move view smoothly and drop the pin
+                            map.flyTo([lat, lng], 15);
+                            L.marker([lat, lng]).addTo(map)
+                                .bindPopup("<b>Found you!</b>")
+                                .openPopup();
+                        }, 150);
                     },
                     function showError(error) {
-                        // FAILURE: User pressed 'Block' or an error occurred
+                        // FAILURE: User pressed 'Block' or error occurred
                         alert("Error details: [Code " + error.code + "] " + error.message);
                     },
                     { enableHighAccuracy: true, timeout: 10000 }
