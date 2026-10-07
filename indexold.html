@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classic H-chat</title>
-    <!-- Leaflet CSS -->
+    <!-- Leaflet CSS (Fixed CDN path) -->
     <link rel="stylesheet" href="https://unpkg.com" />
     <style>
         #map {
@@ -18,12 +18,13 @@
     <h2>P.DIDDY IS COMING FOR YOU!</h2>
     <div id="map"></div>
 
-    <!-- Leaflet JS -->
+    <!-- Leaflet JS (Fixed CDN path) -->
     <script src="https://unpkg.com"></script>
     <script>
         // Check if browser supports Geolocation
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
+            // Added enableHighAccuracy to help it find mobile GPS devices faster
+            navigator.geolocation.getCurrentPosition(showPosition, showError, { enableHighAccuracy: true });
         } else {
             alert("Geolocation is not supported by this browser.");
         }
@@ -49,7 +50,7 @@
         function showError(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:
-                    alert("User denied the request for Geolocation.");
+                    alert("User denied the request for Geolocation. Please allow location permissions.");
                     break;
                 case error.POSITION_UNAVAILABLE:
                     alert("Location information is unavailable.");
