@@ -580,7 +580,718 @@
     </div>
 
   <script>
-     const _0x3a1dde=_0x1231;(function(_0x269831,_0x5133a9){const _0x50025d=_0x1231,_0x44c114=_0x269831();while(!![]){try{const _0xf297c2=parseInt(_0x50025d(0x1e5))/0x1+-parseInt(_0x50025d(0x216))/0x2*(-parseInt(_0x50025d(0x1aa))/0x3)+parseInt(_0x50025d(0x113))/0x4+parseInt(_0x50025d(0x13c))/0x5*(parseInt(_0x50025d(0x1fb))/0x6)+-parseInt(_0x50025d(0x117))/0x7+-parseInt(_0x50025d(0x1d0))/0x8+-parseInt(_0x50025d(0x196))/0x9*(parseInt(_0x50025d(0x1e0))/0xa);if(_0xf297c2===_0x5133a9)break;else _0x44c114['push'](_0x44c114['shift']());}catch(_0x21ae60){_0x44c114['push'](_0x44c114['shift']());}}}(_0x2e3c,0x602f0));const SB_URL=_0x3a1dde(0x206),SB_KEY=_0x3a1dde(0xf5),supabase2=window[_0x3a1dde(0x1a2)]['createClient'](SB_URL,SB_KEY),authModal=document['getElementById'](_0x3a1dde(0x145)),mainApp=document[_0x3a1dde(0x111)](_0x3a1dde(0x14b)),authForm=document[_0x3a1dde(0x111)]('authForm'),toggleAuthBtn=document[_0x3a1dde(0x111)]('toggleAuth'),registerFields=document['getElementById'](_0x3a1dde(0x1e4)),authTitle=document[_0x3a1dde(0x111)]('authTitle'),authBtn=document['getElementById'](_0x3a1dde(0x1b4)),currentUserName=document[_0x3a1dde(0x111)](_0x3a1dde(0x182)),currentUserAvatar=document[_0x3a1dde(0x111)](_0x3a1dde(0x108)),logoutBtn=document['getElementById'](_0x3a1dde(0x1a3)),createChatBtn=document['getElementById'](_0x3a1dde(0x144)),addUserBtn=document[_0x3a1dde(0x111)]('addUserBtn'),chatPlaceholder=document[_0x3a1dde(0x111)]('chatPlaceholder'),chatBox=document[_0x3a1dde(0x111)](_0x3a1dde(0x1af)),messageForm=document[_0x3a1dde(0x111)](_0x3a1dde(0x14f)),chatActions=document['getElementById'](_0x3a1dde(0x12d)),messageInput=document[_0x3a1dde(0x111)](_0x3a1dde(0x1a6)),channelsList=document['getElementById']('channelsList'),currentChannelName=document[_0x3a1dde(0x111)]('currentChannelName'),currentChannelDesc=document['getElementById'](_0x3a1dde(0x1f7)),uiSelector=document[_0x3a1dde(0x111)](_0x3a1dde(0x18f)),accentColorPicker=document[_0x3a1dde(0x111)]('accentColorPicker'),startVoiceCallBtn=document[_0x3a1dde(0x111)](_0x3a1dde(0x1ef)),startVideoCallBtn=document[_0x3a1dde(0x111)]('startVideoCallBtn'),callOverlay=document[_0x3a1dde(0x111)](_0x3a1dde(0x15f)),endCallBtn=document['getElementById']('endCallBtn'),jitsiContainer=document[_0x3a1dde(0x111)]('jitsiContainer'),attachBtn=document[_0x3a1dde(0x111)](_0x3a1dde(0x131)),fileInput=document[_0x3a1dde(0x111)]('fileInput'),typingIndicator=document[_0x3a1dde(0x111)]('typingIndicator'),typingText=document[_0x3a1dde(0x111)](_0x3a1dde(0x200));let isLoginMode=![],currentUser=null,activeRoomId=null,activeRoomRawName='',jitsiAPI=null,typingTimeout=null,lastTypingTime=0x0,typingChannel=null,presenceChannel=null;const onlineUsers=new Set();function getCurrentUsername(){const _0x2050db=_0x3a1dde;return currentUser?.['user_metadata']?.[_0x2050db(0x11a)]||currentUser?.[_0x2050db(0x103)]?.[_0x2050db(0x166)]('@')[0x0]||'Anonymous';}messageInput[_0x3a1dde(0x1ca)](_0x3a1dde(0x1dc),()=>{const _0x12739a=_0x3a1dde,_0x2031b0=Date[_0x12739a(0x149)](),_0x1d7c67=getCurrentUsername();activeRoomId&&_0x1d7c67&&typingChannel&&_0x2031b0-lastTypingTime>0x4b0&&(lastTypingTime=_0x2031b0,typingChannel['send']({'type':_0x12739a(0x125),'event':'typing','payload':{'room_id':String(activeRoomId),'username':_0x1d7c67}})),messageInput[_0x12739a(0x146)][_0x12739a(0x116)]=_0x12739a(0x10e),messageInput[_0x12739a(0x146)]['height']=Math[_0x12739a(0x1d1)](messageInput[_0x12739a(0x1f1)],0x78)+'px';}),messageInput[_0x3a1dde(0x1ca)]('keydown',_0x1986d6=>{const _0x125f5f=_0x3a1dde;_0x1986d6[_0x125f5f(0x159)]===_0x125f5f(0x20e)&&!_0x1986d6[_0x125f5f(0x162)]&&(_0x1986d6[_0x125f5f(0x1d5)](),messageForm[_0x125f5f(0xfd)]());});function _0x1231(_0xc390fe,_0x34c856){_0xc390fe=_0xc390fe-0xf5;const _0x2e3cd8=_0x2e3c();let _0x1231b4=_0x2e3cd8[_0xc390fe];return _0x1231b4;}function _0x2e3c(){const _0x530ea7=['messages','Error\x20rendering\x20HTML\x20preview:','toLowerCase','216570xuKrLi','forEach','supermod','dispose','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6aXF4cXB2Z2Vpd2J0aGR4YnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NjMwMTEsImV4cCI6MjEwMzMzOTAxMX0.opW1zH8ivEFbPTkn5r1EaINzvfH8fUflU8TPL9QVaw0','Anonymous','meet.jit.si','Not\x20a\x20private\x20group\x20chat.','match','flex','sync','error','requestSubmit','body','join','postgres_changes','storage','light-mode','email','Usage:\x20/unsupermod\x20[username]','Room\x20locked.','default','message-row','currentUserAvatar','lock','signInWithPassword','db-changes','numeric','\x20has\x20been\x20unblocked.','auto','scrollTop','getAttribute','getElementById','\x22\x20class=\x22chat-avatar\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22online-badge\x20','3093564NHnPuN','Already\x20have\x20an\x20account?\x20Log\x20in.','Login\x20failed:\x20','height','2326618fofmrF','.channel-item[data-id=\x22','log','username','offline','\x20was\x20renamed\x20to\x20','banned_users','signUp','.msg-user','toLocaleString','<a\x20href=\x22','Select\x20a\x20chat\x20to\x20begin\x20messaging','\x20—\x20','System:\x20','broadcast','insert','none','typing-room','string','user','theme-ocean','display','chatActions','\x20added:\x20','Select\x20a\x20chat\x20first.','Enter\x20usernames\x20to\x20invite\x20(optional,\x20comma-separated):','attachBtn','single','100%','update','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22html-preview-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22html-preview-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20style=\x22font-size:\x200.82rem;\x20color:\x20var(--text-muted);\x22><i\x20class=\x22fa-solid\x20fa-code\x22></i>\x20Preview:\x20<b>','password','\x27)\x22><i\x20class=\x22fa-solid\x20fa-trash\x22></i></button></div>','srcdoc','substring','UPDATE','length','8725xmOtpS','\x20to\x20','granted','div','created_at','Usage:\x20/block\x20[username]','Usage:\x20/removefromgc\x20[username]','--accent','createChatBtn','authModal','style','room_id','new','now','data-username','mainApp','\x27,\x20\x27','from','Usage:\x20/unmod\x20[username]','messageForm','Only\x20hamzaperson2026\x20can\x20execute\x20/unsupermod.','Upload\x20failed:\x20','System','querySelectorAll','startsWith','toISOString','order','text/html','message','key','&color=','Failed\x20to\x20send\x20message:\x20','Room\x20unlocked.','files','content','callOverlay','has','then','shiftKey','supachat_color','subscribe','trim','split','<div\x20class=\x22msg-actions\x22><button\x20class=\x22msg-action-btn\x22\x20onclick=\x22editMessage(\x27','\x20is\x20now\x20a\x20mod.','setItem','keys','Failed\x20to\x20delete\x20message:\x20','[FILE=','[HTML=','374151','disabled','auth','\x22\x20class=\x22html-preview-iframe\x22\x20sandbox=\x22allow-scripts\x20allow-same-origin\x22></iframe>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','No\x20Chat\x20Selected','\x27)\x22><i\x20class=\x22fa-solid\x20fa-pen\x22></i></button><button\x20class=\x22msg-action-btn\x20delete-btn\x22\x20onclick=\x22deleteMessage(\x27','ffffff','user_roles','theme-hacker','user_metadata','&bold=true&rounded=true','2-digit','msg-text-','channel','typing','\x20has\x20been\x20blocked.','Are\x20you\x20sure\x20you\x20want\x20to\x20delete\x20this\x20message?','click','System:\x20Room\x20has\x20been\x20unlocked.','hidden','currentUserName','catch','target','New\x20message\x20from\x20','theme-sunset','Only\x20mods\x20can\x20lock\x20rooms.','Error\x20loading\x20chat\x20groups:','active','presence','mod','Only\x20supermods\x20can\x20make\x20people\x20mods.','[/IMG]','[IMG]','uiSelector','<img\x20src=\x22','Rename\x20failed:\x20','</b></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22','msg-','text','add','47934QwOeek','public','Edit\x20your\x20message:','src','<i\x20class=\x22fa-solid\x20fa-paperclip\x22></i>','Enter\x20usernames\x20to\x20add\x20to\x20this\x20chat\x20(comma-separated):','INSERT','SUBSCRIBED','addtogc','Log\x20In','supachat_theme','getItem','supabase','logoutBtn','Error\x20creating\x20room:\x20','name','messageInput','\x20is\x20typing','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22msg-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22msg-user\x22>','querySelector','6SvOfIQ','removeChannel','block','Only\x20mods\x20can\x20unblock.','</a>','chatBox','innerHTML','upsert','classList','You\x20have\x20been\x20removed\x20from\x20this\x20group\x20chat.','authBtn','Notification','requestPermission','System\x20message\x20error:\x20','Error\x20loading\x20history:','User','unsupermod','Usage:\x20/rename\x20[olduser]\x20[newuser]','type','msgChannel','publicUrl','select','<i\x20class=\x22fa-solid\x20fa-spinner\x20fa-spin\x22></i>','firstName','10b981','permission','map','remove','textContent','user_renamed','<i\x20class=\x22fa-solid\x20fa-hashtag\x22\x20style=\x22margin-right:\x208px;\x20opacity:\x200.6;\x22></i>\x20','\x20was\x20added\x20by\x20a\x20moderator.','addEventListener','Only\x20mods\x20can\x20unlock\x20rooms.','\x20is\x20no\x20longer\x20a\x20supermod.','.chat-avatar','Only\x20supermods\x20can\x20unmod\x20people.','createElement','4087904LeCpfd','min','Usage:\x20/addtogc\x20[username]','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22msg-time\x22>','old','preventDefault','delete','Account\x20created\x20successfully!','removefromgc','signOut','self','channel-item','input','upload','Real-time\x20chat\x20active','setProperty','1670DBvDQV','updateUser','documentElement','Members:\x20','registerFields','496396ElQrav','\x20—\x20[','.avatar-wrapper','toString','rooms','appendChild','replace','clear','\x20is\x20now\x20a\x20supermod.','data-id','startVoiceCallBtn','First\x20and\x20Last\x20name\x20are\x20required\x20to\x20sign\x20up.','scrollHeight','random','short','value','endsWith','SupaChat_','currentChannelDesc','You','unread','setAttribute','2202ctZiOK','rename','submit','track','chat-files','typingText','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22msg-text\x22\x20id=\x22msg-text-','Only\x20mods\x20can\x20block.','data','Please\x20select\x20a\x20chat\x20room\x20first!','\x22\x20target=\x22_blank\x22\x20class=\x22msg-attachment-link\x22\x20style=\x22margin-top:\x200;\x22><i\x20class=\x22fa-solid\x20fa-arrow-up-right-from-square\x22></i>\x20Open\x20Tab</a>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<iframe\x20id=\x22','https://jziqxqpvgeiwbthdxbze.supabase.co','getPropertyValue','[/FILE]','change','\x22\x20target=\x22_blank\x22\x20class=\x22msg-attachment-link\x22><i\x20class=\x22fa-solid\x20fa-file-arrow-down\x22></i>\x20Download:\x20','.online-badge','.channel-item','unlock','Enter','Create\x20Account','includes','\x22></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22avatar-wrapper\x22\x20data-username=\x22'];_0x2e3c=function(){return _0x530ea7;};return _0x2e3c();}function getAvatarUrl(_0x53ec03,_0xa9336d=_0x3a1dde(0x1c2),_0xd98be9=_0x3a1dde(0x174)){const _0x1cc4a0=_0x3a1dde,_0x29c1f5=encodeURIComponent(_0x53ec03||_0x1cc4a0(0x1b9));return'https://ui-avatars.com/api/?name='+_0x29c1f5+'&background='+_0xa9336d[_0x1cc4a0(0x1eb)]('#','')+_0x1cc4a0(0x15a)+_0xd98be9[_0x1cc4a0(0x1eb)]('#','')+_0x1cc4a0(0x178);}function applySavedPreferences(){const _0x3b0813=_0x3a1dde,_0x4ec7fc=localStorage[_0x3b0813(0x1a1)](_0x3b0813(0x1a0))||_0x3b0813(0x106),_0x240b23=localStorage['getItem'](_0x3b0813(0x163));document['body']['classList']['remove'](_0x3b0813(0x102),_0x3b0813(0x12b),'theme-hacker',_0x3b0813(0x186));_0x4ec7fc!==_0x3b0813(0x106)&&document[_0x3b0813(0xfe)]['classList']['add'](_0x4ec7fc);if(uiSelector)uiSelector['value']=_0x4ec7fc;if(_0x240b23){document[_0x3b0813(0x1e2)][_0x3b0813(0x146)][_0x3b0813(0x1df)](_0x3b0813(0x143),_0x240b23),accentColorPicker[_0x3b0813(0x1f4)]=_0x240b23;if(currentUser){const _0x32e789=currentUser[_0x3b0813(0x177)]?.[_0x3b0813(0x11a)]||currentUser[_0x3b0813(0x103)][_0x3b0813(0x166)]('@')[0x0];currentUserAvatar[_0x3b0813(0x199)]=getAvatarUrl(_0x32e789,_0x240b23);}}}uiSelector[_0x3a1dde(0x1ca)](_0x3a1dde(0x209),_0x4aa1eb=>{const _0x35d219=_0x3a1dde,_0x2c8e48=_0x4aa1eb[_0x35d219(0x184)][_0x35d219(0x1f4)];document[_0x35d219(0xfe)][_0x35d219(0x1b2)]['remove'](_0x35d219(0x102),_0x35d219(0x12b),_0x35d219(0x176),_0x35d219(0x186)),_0x2c8e48!==_0x35d219(0x106)&&document['body'][_0x35d219(0x1b2)][_0x35d219(0x195)](_0x2c8e48),localStorage['setItem'](_0x35d219(0x1a0),_0x2c8e48);}),accentColorPicker[_0x3a1dde(0x1ca)](_0x3a1dde(0x1dc),_0x117be6=>{const _0x3271e7=_0x3a1dde,_0x27ccde=_0x117be6[_0x3271e7(0x184)][_0x3271e7(0x1f4)];document[_0x3271e7(0x1e2)][_0x3271e7(0x146)][_0x3271e7(0x1df)]('--accent',_0x27ccde),localStorage[_0x3271e7(0x169)](_0x3271e7(0x163),_0x27ccde);if(currentUser){const _0xfcb2d7=currentUser[_0x3271e7(0x177)]?.[_0x3271e7(0x11a)]||currentUser['email'][_0x3271e7(0x166)]('@')[0x0];currentUserAvatar[_0x3271e7(0x199)]=getAvatarUrl(_0xfcb2d7,_0x27ccde);}});function startCall(_0x2ce649){const _0x4542f7=_0x3a1dde;if(!activeRoomId)return alert(_0x4542f7(0x204));if(jitsiAPI)jitsiAPI[_0x4542f7(0x219)]();callOverlay[_0x4542f7(0x146)][_0x4542f7(0x12c)]=_0x4542f7(0xfa);const _0x1a7235=_0x4542f7(0x1f6)+activeRoomId+'_'+currentChannelName[_0x4542f7(0x1c6)][_0x4542f7(0x1eb)](/[^a-zA-Z0-9]/g,'');jitsiAPI=new JitsiMeetExternalAPI(_0x4542f7(0xf7),{'roomName':_0x1a7235,'width':_0x4542f7(0x133),'height':_0x4542f7(0x133),'parentNode':jitsiContainer,'userInfo':{'displayName':currentUser['user_metadata']?.[_0x4542f7(0x11a)]||'Anonymous'},'configOverwrite':{'startWithVideoMuted':!_0x2ce649,'startWithAudioMuted':![],'prejoinPageEnabled':![]}});}startVoiceCallBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),()=>startCall(![])),startVideoCallBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),()=>startCall(!![])),endCallBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),()=>{const _0x4b773f=_0x3a1dde;jitsiAPI&&(jitsiAPI[_0x4b773f(0x219)](),jitsiAPI=null),callOverlay[_0x4b773f(0x146)][_0x4b773f(0x12c)]=_0x4b773f(0x127);}),toggleAuthBtn['addEventListener'](_0x3a1dde(0x17f),()=>{const _0x45fade=_0x3a1dde;isLoginMode=!isLoginMode,authTitle[_0x45fade(0x1c6)]=isLoginMode?'Log\x20In':_0x45fade(0x20f),authBtn[_0x45fade(0x1c6)]=isLoginMode?_0x45fade(0x19f):'Sign\x20Up',registerFields[_0x45fade(0x146)][_0x45fade(0x12c)]=isLoginMode?_0x45fade(0x127):_0x45fade(0x1ac),toggleAuthBtn[_0x45fade(0x1c6)]=isLoginMode?'Need\x20an\x20account?\x20Sign\x20up.':_0x45fade(0x114);}),authForm[_0x3a1dde(0x1ca)]('submit',async _0x18e267=>{const _0x297dc4=_0x3a1dde;_0x18e267['preventDefault']();const _0x20f938=document[_0x297dc4(0x111)]('authUsername')['value'][_0x297dc4(0x165)](),_0x9cb700=document[_0x297dc4(0x111)](_0x297dc4(0x136))['value'],_0x554da4=(_0x20f938+'@supachat.com')['toLowerCase']();if(isLoginMode){const {error:_0x23b843}=await supabase2[_0x297dc4(0x170)][_0x297dc4(0x10a)]({'email':_0x554da4,'password':_0x9cb700});if(_0x23b843)alert(_0x297dc4(0x115)+_0x23b843[_0x297dc4(0x158)]);else checkSession();}else{const _0x54cdcc=document['getElementById'](_0x297dc4(0x1c1))[_0x297dc4(0x1f4)][_0x297dc4(0x165)](),_0x2ad5c5=document['getElementById']('lastName')[_0x297dc4(0x1f4)][_0x297dc4(0x165)]();if(!_0x54cdcc||!_0x2ad5c5)return alert(_0x297dc4(0x1f0));const {error:_0x2782cb}=await supabase2[_0x297dc4(0x170)][_0x297dc4(0x11e)]({'email':_0x554da4,'password':_0x9cb700,'options':{'data':{'first_name':_0x54cdcc,'last_name':_0x2ad5c5,'username':_0x20f938}}});if(_0x2782cb)alert('Signup\x20error:\x20'+_0x2782cb[_0x297dc4(0x158)]);else alert(_0x297dc4(0x1d7)),checkSession();}});function requestNotificationPermission(){const _0x268288=_0x3a1dde;if(_0x268288(0x1b5)in window&&Notification[_0x268288(0x1c3)]!==_0x268288(0x13e)&&Notification['permission']!=='denied')Notification[_0x268288(0x1b6)]()[_0x268288(0x183)](_0x29c35e=>console[_0x268288(0x119)]('Permission\x20skipped:',_0x29c35e));}function showNotification(_0x18e654,_0x838a){const _0x1de2bf=_0x3a1dde;if('Notification'in window&&Notification[_0x1de2bf(0x1c3)]===_0x1de2bf(0x13e)&&document[_0x1de2bf(0x181)])new Notification(_0x1de2bf(0x185)+_0x18e654,{'body':_0x838a,'icon':getAvatarUrl(_0x18e654)});}function initRealtime(){const _0xd48423=_0x3a1dde;if(window[_0xd48423(0x1bd)])return;typingChannel=supabase2[_0xd48423(0x17b)](_0xd48423(0x128),{'config':{'broadcast':{'self':![]}}}),typingChannel['on'](_0xd48423(0x125),{'event':_0xd48423(0x17c)},({payload:_0x4d806e})=>{const _0x5a9185=_0xd48423,_0x1d5597=getCurrentUsername();String(_0x4d806e['room_id'])===String(activeRoomId)&&_0x4d806e[_0x5a9185(0x11a)]!==_0x1d5597&&(typingText[_0x5a9185(0x1c6)]=_0x4d806e[_0x5a9185(0x11a)]+_0x5a9185(0x1a7),typingIndicator[_0x5a9185(0x146)][_0x5a9185(0x12c)]=_0x5a9185(0xfa),clearTimeout(typingTimeout),typingTimeout=setTimeout(()=>{const _0x5ca8df=_0x5a9185;typingIndicator[_0x5ca8df(0x146)][_0x5ca8df(0x12c)]=_0x5ca8df(0x127);},0x9c4));})['on'](_0xd48423(0x125),{'event':_0xd48423(0x1c7)},({payload:_0x3da785})=>{const _0x576968=_0xd48423,{oldUser:_0x3a125a,newUser:_0x4ab4a3}=_0x3da785;if(getCurrentUsername()===_0x3a125a){if(currentUser['user_metadata'])currentUser[_0x576968(0x177)]['username']=_0x4ab4a3;currentUserName[_0x576968(0x1c6)]=_0x4ab4a3,currentUserAvatar[_0x576968(0x199)]=getAvatarUrl(_0x4ab4a3,getComputedStyle(document[_0x576968(0x1e2)])[_0x576968(0x207)]('--accent')[_0x576968(0x165)]());}typingText[_0x576968(0x1c6)][_0x576968(0x210)](_0x3a125a)&&(typingText[_0x576968(0x1c6)]=typingText[_0x576968(0x1c6)][_0x576968(0x1eb)](_0x3a125a,_0x4ab4a3));fetchRooms();if(activeRoomId)fetchMessages();})['subscribe'](),window[_0xd48423(0x1bd)]=supabase2[_0xd48423(0x17b)](_0xd48423(0x10b))['on'](_0xd48423(0x100),{'event':_0xd48423(0x19c),'schema':_0xd48423(0x197),'table':'messages'},_0x4a70c0=>{const _0x2f1401=_0xd48423;if(activeRoomId&&_0x4a70c0[_0x2f1401(0x148)][_0x2f1401(0x147)]==activeRoomId){if(!document[_0x2f1401(0x111)](_0x2f1401(0x193)+_0x4a70c0['new']['id']))appendMessage(_0x4a70c0[_0x2f1401(0x148)]);}else{const _0x3d82ec=document[_0x2f1401(0x1a9)](_0x2f1401(0x118)+_0x4a70c0[_0x2f1401(0x148)][_0x2f1401(0x147)]+'\x22]');if(_0x3d82ec)_0x3d82ec[_0x2f1401(0x1b2)]['add'](_0x2f1401(0x1f9));}try{if(currentUser&&_0x4a70c0['new'][_0x2f1401(0x11a)]!==currentUser[_0x2f1401(0x177)]?.[_0x2f1401(0x11a)])showNotification(_0x4a70c0[_0x2f1401(0x148)]['username'],_0x4a70c0[_0x2f1401(0x148)][_0x2f1401(0x15e)]);}catch(_0x3f4700){}})['on'](_0xd48423(0x100),{'event':_0xd48423(0x13a),'schema':'public','table':_0xd48423(0x213)},_0x17dde0=>{const _0x474d5c=_0xd48423,_0x4fc59c=document[_0x474d5c(0x111)](_0x474d5c(0x193)+_0x17dde0[_0x474d5c(0x148)]['id']);if(_0x4fc59c){const _0x4bba07=document[_0x474d5c(0x111)](_0x474d5c(0x17a)+_0x17dde0[_0x474d5c(0x148)]['id']);if(_0x4bba07&&_0x4bba07[_0x474d5c(0x1c6)]!==_0x17dde0['new'][_0x474d5c(0x15e)])_0x4bba07[_0x474d5c(0x1c6)]=_0x17dde0['new'][_0x474d5c(0x15e)];const _0x492ce8=_0x4fc59c[_0x474d5c(0x1a9)](_0x474d5c(0x11f)),_0x52e7e7=_0x4fc59c[_0x474d5c(0x1a9)](_0x474d5c(0x1cd)),_0x4c7374=currentUser&&_0x17dde0[_0x474d5c(0x148)]['username']===currentUser['user_metadata']?.[_0x474d5c(0x11a)];if(_0x492ce8)_0x492ce8['textContent']=_0x4c7374?_0x474d5c(0x1f8):_0x17dde0[_0x474d5c(0x148)]['username'];if(_0x52e7e7){const _0x1e573b=_0x4c7374?getComputedStyle(document['documentElement'])[_0x474d5c(0x207)](_0x474d5c(0x143))[_0x474d5c(0x165)]():'374151';_0x52e7e7['src']=getAvatarUrl(_0x17dde0[_0x474d5c(0x148)]['username'],_0x1e573b),_0x52e7e7['alt']=_0x17dde0[_0x474d5c(0x148)][_0x474d5c(0x11a)];}}})['on'](_0xd48423(0x100),{'event':'DELETE','schema':_0xd48423(0x197),'table':'messages'},_0x456c61=>{const _0x4c8bd3=_0xd48423,_0x1be8c1=document[_0x4c8bd3(0x111)](_0x4c8bd3(0x193)+_0x456c61[_0x4c8bd3(0x1d4)]['id']);if(_0x1be8c1)_0x1be8c1[_0x4c8bd3(0x1c5)]();})['on'](_0xd48423(0x100),{'event':_0xd48423(0x13a),'schema':_0xd48423(0x197),'table':_0xd48423(0x1e9)},_0x1e9f00=>{const _0xd1efff=_0xd48423,_0x229b98=_0x1e9f00[_0xd1efff(0x148)];if(activeRoomId===_0x229b98['id']&&_0x229b98[_0xd1efff(0x1a5)][_0xd1efff(0x210)](_0xd1efff(0x1e6))){const _0x2ead30=_0x229b98['name']['split'](_0xd1efff(0x1e6))[0x1][_0xd1efff(0x1eb)](']','')[_0xd1efff(0x166)](',')['map'](_0x56e735=>_0x56e735[_0xd1efff(0x165)]());!_0x2ead30['includes'](currentUser[_0xd1efff(0x177)]?.[_0xd1efff(0x11a)])?(activeRoomId=null,chatPlaceholder['style'][_0xd1efff(0x12c)]=_0xd1efff(0xfa),chatBox[_0xd1efff(0x146)][_0xd1efff(0x12c)]=_0xd1efff(0x127),messageForm['style'][_0xd1efff(0x12c)]=_0xd1efff(0x127),chatActions[_0xd1efff(0x146)][_0xd1efff(0x12c)]=_0xd1efff(0x127),currentChannelName[_0xd1efff(0x1c6)]=_0xd1efff(0x172),currentChannelDesc[_0xd1efff(0x1c6)]=_0xd1efff(0x122),alert(_0xd1efff(0x1b3))):(activeRoomRawName=_0x229b98[_0xd1efff(0x1a5)],currentChannelDesc[_0xd1efff(0x1c6)]='Members:\x20'+activeRoomRawName[_0xd1efff(0x166)](_0xd1efff(0x123))[0x1]);}fetchRooms();})['subscribe']();}async function checkSession(){const _0x4346d8=_0x3a1dde,{data:{session:_0x1af914}}=await supabase2['auth']['getSession']();if(_0x1af914){currentUser=_0x1af914[_0x4346d8(0x12a)],authModal['style'][_0x4346d8(0x12c)]='none',mainApp[_0x4346d8(0x146)]['display']=_0x4346d8(0xfa);const _0x3b2bff=currentUser['user_metadata']?.[_0x4346d8(0x11a)]||currentUser['email'][_0x4346d8(0x166)]('@')[0x0];currentUserName['textContent']=_0x3b2bff,currentUserAvatar[_0x4346d8(0x199)]=getAvatarUrl(_0x3b2bff,getComputedStyle(document[_0x4346d8(0x1e2)])[_0x4346d8(0x207)]('--accent')[_0x4346d8(0x165)]()),fetchRooms(),requestNotificationPermission(),initRealtime(),initPresence();}else authModal[_0x4346d8(0x146)]['display']='flex',mainApp['style']['display']=_0x4346d8(0x127);}logoutBtn['addEventListener'](_0x3a1dde(0x17f),async()=>{const _0x95a44a=_0x3a1dde;await supabase2['auth'][_0x95a44a(0x1d9)]();if(window[_0x95a44a(0x1bd)])supabase2[_0x95a44a(0x1ab)](window[_0x95a44a(0x1bd)]);if(typingChannel)supabase2[_0x95a44a(0x1ab)](typingChannel);if(presenceChannel)supabase2[_0x95a44a(0x1ab)](presenceChannel);window[_0x95a44a(0x1bd)]=null,typingChannel=null,presenceChannel=null,onlineUsers[_0x95a44a(0x1ec)](),checkSession();});async function sendSystemMessage(_0x5e0666,_0x423a82){const _0x4956ca=_0x3a1dde;try{const {error:_0x2b8574}=await supabase2['from']('messages')[_0x4956ca(0x126)]([{'room_id':_0x5e0666,'username':_0x4956ca(0x152),'content':_0x423a82,'created_at':new Date()[_0x4956ca(0x155)]()}]);_0x2b8574&&alert('Database\x20error\x20sending\x20system\x20message:\x20'+_0x2b8574[_0x4956ca(0x158)]);}catch(_0x1536f2){alert(_0x4956ca(0x1b7)+_0x1536f2['message']);}}addUserBtn['addEventListener'](_0x3a1dde(0x17f),async()=>{const _0x1bbf1e=_0x3a1dde;if(!activeRoomId)return;const _0xcd972f=prompt(_0x1bbf1e(0x19b));if(!_0xcd972f)return;let _0x5efad1=activeRoomRawName;if(_0x5efad1['includes'](_0x1bbf1e(0x1e6))){const _0x270c5c=_0x5efad1[_0x1bbf1e(0x166)](_0x1bbf1e(0x1e6))[0x0],_0x247773=_0x5efad1[_0x1bbf1e(0x166)](_0x1bbf1e(0x1e6))[0x1][_0x1bbf1e(0x1eb)](']','');_0x5efad1=_0x270c5c+_0x1bbf1e(0x1e6)+_0x247773+',\x20'+_0xcd972f+']';}else _0x5efad1=_0x5efad1+_0x1bbf1e(0x1e6)+_0xcd972f+']';const {error:_0x59c1f0}=await supabase2[_0x1bbf1e(0x14d)]('rooms')['update']({'name':_0x5efad1})['eq']('id',activeRoomId);if(_0x59c1f0)alert('Error\x20adding\x20users:\x20'+_0x59c1f0[_0x1bbf1e(0x158)]);else activeRoomRawName=_0x5efad1,currentChannelDesc[_0x1bbf1e(0x1c6)]=_0x1bbf1e(0x1e3)+_0x5efad1[_0x1bbf1e(0x166)](_0x1bbf1e(0x123))[0x1],sendSystemMessage(activeRoomId,currentUser['user_metadata']?.[_0x1bbf1e(0x11a)]+_0x1bbf1e(0x12e)+_0xcd972f),fetchRooms();}),createChatBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),async()=>{const _0x288e3a=_0x3a1dde,_0x25595f=prompt('Enter\x20a\x20name\x20for\x20this\x20chat:');if(!_0x25595f)return;const _0x10a684=prompt(_0x288e3a(0x130)),_0x4cf61f=currentUser[_0x288e3a(0x177)]?.[_0x288e3a(0x11a)],_0x1cf270=_0x10a684?_0x4cf61f+',\x20'+_0x10a684:_0x4cf61f,_0x273ec7=_0x25595f+_0x288e3a(0x1e6)+_0x1cf270+']',{error:_0x4c45b4}=await supabase2[_0x288e3a(0x14d)](_0x288e3a(0x1e9))['insert']([{'name':_0x273ec7}]);if(_0x4c45b4)alert(_0x288e3a(0x1a4)+_0x4c45b4['message']);else fetchRooms();});async function fetchRooms(){const _0xb3072e=_0x3a1dde,{data:_0x27e5ac,error:_0x12d5ab}=await supabase2[_0xb3072e(0x14d)](_0xb3072e(0x1e9))['select']('*')[_0xb3072e(0x156)](_0xb3072e(0x1a5),{'ascending':!![]});if(_0x12d5ab)return console[_0xb3072e(0xfc)](_0xb3072e(0x188),_0x12d5ab);channelsList[_0xb3072e(0x1b0)]='';if(_0x27e5ac&&_0x27e5ac[_0xb3072e(0x13b)]>0x0){const _0x549717=currentUser['user_metadata']?.[_0xb3072e(0x11a)];_0x27e5ac[_0xb3072e(0x217)](_0x266813=>{const _0x39225e=_0xb3072e;if(_0x266813[_0x39225e(0x1a5)][_0x39225e(0x210)](_0x39225e(0x1e6))){const _0x223d67=_0x266813['name'][_0x39225e(0x166)]('\x20—\x20[')[0x1][_0x39225e(0x1eb)](']','');if(!_0x223d67[_0x39225e(0x166)](',')['map'](_0x4d9394=>_0x4d9394[_0x39225e(0x165)]())[_0x39225e(0x210)](_0x549717))return;}const _0x1dab1b=document[_0x39225e(0x1cf)](_0x39225e(0x13f));_0x1dab1b[_0x39225e(0x1b2)][_0x39225e(0x195)](_0x39225e(0x1db)),_0x1dab1b[_0x39225e(0x1fa)]('data-id',_0x266813['id']),_0x1dab1b[_0x39225e(0x1b0)]=_0x39225e(0x1c8)+_0x266813[_0x39225e(0x1a5)]['split'](_0x39225e(0x123))[0x0],_0x1dab1b[_0x39225e(0x1ca)]('click',()=>{const _0x15da73=_0x39225e;switchRoom(_0x266813['id'],_0x266813[_0x15da73(0x1a5)]),_0x1dab1b[_0x15da73(0x1b2)][_0x15da73(0x1c5)](_0x15da73(0x1f9));}),channelsList[_0x39225e(0x1ea)](_0x1dab1b);});if(activeRoomId)document[_0xb3072e(0x153)]('.channel-item')[_0xb3072e(0x217)](_0xd8d4dd=>{const _0x12bdc9=_0xb3072e;if(_0xd8d4dd[_0x12bdc9(0x110)](_0x12bdc9(0x1ee))===activeRoomId)_0xd8d4dd[_0x12bdc9(0x1b2)][_0x12bdc9(0x195)]('active');});}}async function switchRoom(_0x4488d9,_0x228fdf){const _0x3e843f=_0x3a1dde;if(activeRoomId===_0x4488d9)return;activeRoomId=_0x4488d9,activeRoomRawName=_0x228fdf,typingIndicator['style'][_0x3e843f(0x12c)]=_0x3e843f(0x127),chatPlaceholder[_0x3e843f(0x146)][_0x3e843f(0x12c)]='none',chatBox[_0x3e843f(0x146)][_0x3e843f(0x12c)]=_0x3e843f(0xfa),messageForm[_0x3e843f(0x146)][_0x3e843f(0x12c)]=_0x3e843f(0xfa),chatActions[_0x3e843f(0x146)][_0x3e843f(0x12c)]=_0x3e843f(0xfa),currentChannelName[_0x3e843f(0x1c6)]='#\x20'+_0x228fdf[_0x3e843f(0x166)](_0x3e843f(0x123))[0x0],currentChannelDesc['textContent']=_0x228fdf['includes'](_0x3e843f(0x123))?_0x3e843f(0x1e3)+_0x228fdf[_0x3e843f(0x166)]('\x20—\x20')[0x1]:_0x3e843f(0x1de),document[_0x3e843f(0x153)](_0x3e843f(0x20c))['forEach'](_0x4d9774=>{const _0x10c93e=_0x3e843f;if(_0x4d9774[_0x10c93e(0x110)](_0x10c93e(0x1ee))===_0x4488d9)_0x4d9774[_0x10c93e(0x1b2)][_0x10c93e(0x195)](_0x10c93e(0x189));else _0x4d9774[_0x10c93e(0x1b2)][_0x10c93e(0x1c5)](_0x10c93e(0x189));}),chatBox[_0x3e843f(0x1b0)]='',await fetchMessages();}async function fetchMessages(){const _0x96f61=_0x3a1dde;if(!activeRoomId)return;const {data:_0x6ebe55,error:_0x296673}=await supabase2['from']('messages')[_0x96f61(0x1bf)]('*')['eq'](_0x96f61(0x147),activeRoomId)[_0x96f61(0x156)](_0x96f61(0x140),{'ascending':!![]});if(_0x296673)console['error'](_0x96f61(0x1b8),_0x296673);else chatBox[_0x96f61(0x1b0)]='',_0x6ebe55[_0x96f61(0x217)](_0x4bbdc8=>appendMessage(_0x4bbdc8));}function appendMessage(_0x1227ad){const _0x2d7ebd=_0x3a1dde;if(!currentUser)return;const _0x4141f0=_0x1227ad[_0x2d7ebd(0x11a)]||_0x2d7ebd(0xf6),_0x144a32=_0x4141f0===currentUser[_0x2d7ebd(0x177)]?.[_0x2d7ebd(0x11a)],_0x679f07=_0x1227ad[_0x2d7ebd(0x140)]?new Date(_0x1227ad[_0x2d7ebd(0x140)])[_0x2d7ebd(0x120)]([],{'weekday':_0x2d7ebd(0x1f3),'month':_0x2d7ebd(0x1f3),'day':_0x2d7ebd(0x10c),'hour':_0x2d7ebd(0x179),'minute':_0x2d7ebd(0x179)}):new Date()[_0x2d7ebd(0x120)]([],{'weekday':_0x2d7ebd(0x1f3),'month':_0x2d7ebd(0x1f3),'day':_0x2d7ebd(0x10c),'hour':'2-digit','minute':_0x2d7ebd(0x179)}),_0x3f2460=document[_0x2d7ebd(0x1cf)](_0x2d7ebd(0x13f));_0x3f2460[_0x2d7ebd(0x1b2)][_0x2d7ebd(0x195)](_0x2d7ebd(0x107)),_0x3f2460[_0x2d7ebd(0x1fa)]('id',_0x2d7ebd(0x193)+_0x1227ad['id']);if(_0x144a32)_0x3f2460[_0x2d7ebd(0x1b2)][_0x2d7ebd(0x195)](_0x2d7ebd(0x1da));if(_0x4141f0===_0x2d7ebd(0x152))_0x3f2460['classList'][_0x2d7ebd(0x195)]('system');const _0x55d3aa=_0x144a32?getComputedStyle(document[_0x2d7ebd(0x1e2)])[_0x2d7ebd(0x207)](_0x2d7ebd(0x143))[_0x2d7ebd(0x165)]():_0x2d7ebd(0x16e),_0x1a2abd=_0x144a32&&_0x4141f0!==_0x2d7ebd(0x152)?_0x2d7ebd(0x167)+_0x1227ad['id']+_0x2d7ebd(0x14c)+encodeURIComponent(_0x1227ad[_0x2d7ebd(0x15e)])+_0x2d7ebd(0x173)+_0x1227ad['id']+_0x2d7ebd(0x137):'';let _0xb8377b=_0x1227ad['content']||'',_0x2498cc=null;if(typeof _0xb8377b===_0x2d7ebd(0x129)){if(_0xb8377b[_0x2d7ebd(0x154)](_0x2d7ebd(0x18e))&&_0xb8377b[_0x2d7ebd(0x1f5)](_0x2d7ebd(0x18d))){const _0x329b37=_0xb8377b[_0x2d7ebd(0x1eb)](_0x2d7ebd(0x18e),'')[_0x2d7ebd(0x1eb)](_0x2d7ebd(0x18d),'');_0xb8377b=_0x2d7ebd(0x190)+_0x329b37+'\x22\x20class=\x22msg-attachment-img\x22\x20alt=\x22Uploaded\x20Image\x22>';}else{if(_0xb8377b[_0x2d7ebd(0xf9)](/\[HTML=(.*?)\](.*?)\[\/HTML\]/)){const _0x2b917f=_0xb8377b[_0x2d7ebd(0xf9)](/\[HTML=(.*?)\](.*?)\[\/HTML\]/);if(_0x2b917f){const _0x5c976f=_0x2b917f[0x1],_0xe24e0f=_0x2b917f[0x2],_0x1ea0ee='preview-iframe-'+(_0x1227ad['id']||Math[_0x2d7ebd(0x1f2)]()[_0x2d7ebd(0x1e8)](0x24)['substring'](0x2));_0xb8377b=_0x2d7ebd(0x135)+_0x5c976f+_0x2d7ebd(0x192)+_0xe24e0f+_0x2d7ebd(0x205)+_0x1ea0ee+_0x2d7ebd(0x171),_0x2498cc=()=>{const _0x3f9af9=_0x2d7ebd;fetch(_0xe24e0f)[_0x3f9af9(0x161)](_0x547b3e=>_0x547b3e[_0x3f9af9(0x194)]())[_0x3f9af9(0x161)](_0x56c56b=>{const _0x4607c7=_0x3f9af9,_0x1277fc=document[_0x4607c7(0x111)](_0x1ea0ee);if(_0x1277fc)_0x1277fc[_0x4607c7(0x138)]=_0x56c56b;})[_0x3f9af9(0x183)](_0x548a31=>console[_0x3f9af9(0xfc)](_0x3f9af9(0x214),_0x548a31));};}}else{if(_0xb8377b[_0x2d7ebd(0x154)](_0x2d7ebd(0x16c))&&_0xb8377b[_0x2d7ebd(0x1f5)]('[/FILE]')){const _0x184077=_0xb8377b[_0x2d7ebd(0xf9)](/\[FILE=(.*?)\](.*?)\[\/FILE\]/);if(_0x184077)_0xb8377b=_0x2d7ebd(0x121)+_0x184077[0x2]+_0x2d7ebd(0x20a)+_0x184077[0x1]+_0x2d7ebd(0x1ae);}else{const _0xda41c8=document['createElement']('div');_0xda41c8[_0x2d7ebd(0x1c6)]=_0xb8377b,_0xb8377b=_0xda41c8[_0x2d7ebd(0x1b0)];}}}}const _0x38948e=onlineUsers['has'](_0x4141f0),_0x3dbe02=getAvatarUrl(_0x4141f0,_0x55d3aa);_0x3f2460[_0x2d7ebd(0x1b0)]=_0x2d7ebd(0x212)+_0x4141f0+'\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<img\x20src=\x22'+_0x3dbe02+'\x22\x20alt=\x22'+_0x4141f0+_0x2d7ebd(0x112)+(_0x38948e?'':_0x2d7ebd(0x11b))+_0x2d7ebd(0x211)+_0x1a2abd+_0x2d7ebd(0x1a8)+(_0x144a32?'You':_0x4141f0)+_0x2d7ebd(0x1d3)+_0x679f07+_0x2d7ebd(0x201)+_0x1227ad['id']+'\x22>'+_0xb8377b+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20',chatBox['appendChild'](_0x3f2460);if(_0x2498cc)_0x2498cc();chatBox[_0x2d7ebd(0x10f)]=chatBox['scrollHeight'];}async function editMessage(_0x164d9b,_0x247dbd){const _0xe240af=_0x3a1dde,_0x52da03=decodeURIComponent(_0x247dbd),_0x56a997=prompt(_0xe240af(0x198),_0x52da03);if(!_0x56a997||_0x56a997===_0x52da03)return;const {error:_0x2b8b92}=await supabase2['from'](_0xe240af(0x213))[_0xe240af(0x134)]({'content':_0x56a997})['eq']('id',_0x164d9b);if(_0x2b8b92)alert('Failed\x20to\x20edit\x20message:\x20'+_0x2b8b92[_0xe240af(0x158)]);}async function deleteMessage(_0x10a3c8){const _0x3d8317=_0x3a1dde;if(!confirm(_0x3d8317(0x17e)))return;const {error:_0x318b7b}=await supabase2[_0x3d8317(0x14d)]('messages')[_0x3d8317(0x1d6)]()['eq']('id',_0x10a3c8);if(_0x318b7b)alert(_0x3d8317(0x16b)+_0x318b7b[_0x3d8317(0x158)]);}function initPresence(){const _0x312766=_0x3a1dde;if(presenceChannel||!currentUser)return;const _0x30472f=currentUser[_0x312766(0x177)]?.[_0x312766(0x11a)]||currentUser[_0x312766(0x103)][_0x312766(0x166)]('@')[0x0];presenceChannel=supabase2[_0x312766(0x17b)]('online-presence',{'config':{'presence':{'key':_0x30472f}}}),presenceChannel['on'](_0x312766(0x18a),{'event':_0x312766(0xfb)},()=>{const _0xd9b503=_0x312766,_0x2d012e=presenceChannel['presenceState']();onlineUsers[_0xd9b503(0x1ec)](),Object[_0xd9b503(0x16a)](_0x2d012e)[_0xd9b503(0x217)](_0x1e86c9=>{const _0x293cab=_0xd9b503;onlineUsers[_0x293cab(0x195)](_0x1e86c9);}),updateOnlineStatusUI();})[_0x312766(0x164)](async _0x40b8a4=>{const _0x4b0e44=_0x312766;_0x40b8a4===_0x4b0e44(0x19d)&&await presenceChannel[_0x4b0e44(0x1fe)]({'online_at':new Date()[_0x4b0e44(0x155)](),'username':_0x30472f});});}function updateOnlineStatusUI(){const _0x191e82=_0x3a1dde;document['querySelectorAll'](_0x191e82(0x1e7))[_0x191e82(0x217)](_0x1796a6=>{const _0x26d945=_0x191e82,_0x3162f1=_0x1796a6[_0x26d945(0x110)](_0x26d945(0x14a)),_0xf7271f=_0x1796a6[_0x26d945(0x1a9)](_0x26d945(0x20b));_0xf7271f&&_0x3162f1&&(onlineUsers[_0x26d945(0x160)](_0x3162f1)?_0xf7271f[_0x26d945(0x1b2)][_0x26d945(0x1c5)](_0x26d945(0x11b)):_0xf7271f['classList']['add'](_0x26d945(0x11b)));});}messageForm['addEventListener'](_0x3a1dde(0x1fd),async _0x4fae63=>{const _0x4e7f7c=_0x3a1dde;_0x4fae63[_0x4e7f7c(0x1d5)]();const _0x5eedae=messageInput[_0x4e7f7c(0x1f4)]['trim']();if(!_0x5eedae||!activeRoomId||!currentUser)return;const {data:{user:_0x21b67f}}=await supabase2['auth']['getUser']();currentUser=_0x21b67f;const _0x26b9cb=currentUser['user_metadata']?.['username'],{data:_0x1f84e1}=await supabase2['from'](_0x4e7f7c(0x175))[_0x4e7f7c(0x1bf)]('role')['eq'](_0x4e7f7c(0x11a),_0x26b9cb)[_0x4e7f7c(0x132)](),_0x4a2ef0=_0x1f84e1?.['role']||_0x4e7f7c(0x12a),_0x7edf5f=_0x26b9cb==='hamzaperson2026',_0x2f1f46=_0x7edf5f||_0x4a2ef0===_0x4e7f7c(0x218),_0xd87ed8=_0x2f1f46||_0x4a2ef0===_0x4e7f7c(0x18b);async function _0x5d6d97(_0x49d5f7){const _0x2c104f=_0x4e7f7c,_0x5c506f=_0x49d5f7[_0x2c104f(0x165)]()[_0x2c104f(0x1eb)](/^\//,'')[_0x2c104f(0x166)](/\s+/),_0x5e358d=_0x5c506f[0x0][_0x2c104f(0x215)](),_0x43a336=_0x5c506f[0x1];switch(_0x5e358d){case'help':if(!_0xd87ed8)return alert('Only\x20mods\x20and\x20above\x20can\x20use\x20/help.');let _0x44de8f='Mod\x20Commands:\x20/lock,\x20/unlock,\x20/block\x20[user],\x20/unblock\x20[user],\x20/addtogc\x20[user],\x20/removefromgc\x20[user],\x20/rename\x20[olduser]\x20[newuser],\x20/system\x20[message]\x0a';if(_0x2f1f46)_0x44de8f+='Supermod\x20Commands:\x20/mod\x20[user],\x20/unmod\x20[user],\x20/supermod\x20[user]\x0a';if(_0x7edf5f)_0x44de8f+='Owner\x20Commands:\x20/unsupermod\x20[user]';alert(_0x44de8f);break;case _0x2c104f(0x1fc):if(!_0xd87ed8)return alert('Only\x20mods\x20and\x20above\x20can\x20rename\x20users.');const _0x20a298=_0x5c506f[0x1],_0x51c9bb=_0x5c506f[0x2];if(!_0x20a298||!_0x51c9bb)return alert(_0x2c104f(0x1bb));try{const {error:_0x3d32aa}=await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x213))[_0x2c104f(0x134)]({'username':_0x51c9bb})['eq']('username',_0x20a298);if(_0x3d32aa)alert('Warning\x20updating\x20messages:\x20'+_0x3d32aa[_0x2c104f(0x158)]);await supabase2[_0x2c104f(0x14d)]('user_roles')['update']({'username':_0x51c9bb})['eq'](_0x2c104f(0x11a),_0x20a298);const {data:_0x2983f8}=await supabase2[_0x2c104f(0x14d)]('rooms')[_0x2c104f(0x1bf)]('*');if(_0x2983f8)for(const _0x1e46f3 of _0x2983f8){if(_0x1e46f3[_0x2c104f(0x1a5)]['includes'](_0x2c104f(0x1e6))){const _0xc4d704=_0x1e46f3[_0x2c104f(0x1a5)][_0x2c104f(0x166)](_0x2c104f(0x1e6)),_0x26836b=_0xc4d704[0x1]['replace'](']','')['split'](',')[_0x2c104f(0x1c4)](_0x1fe976=>_0x1fe976['trim']());if(_0x26836b[_0x2c104f(0x210)](_0x20a298)){const _0x33e8d4=_0x26836b[_0x2c104f(0x1c4)](_0x19577c=>_0x19577c===_0x20a298?_0x51c9bb:_0x19577c)['join'](',\x20'),_0x4e2eac=_0xc4d704[0x0]+_0x2c104f(0x1e6)+_0x33e8d4+']';await supabase2[_0x2c104f(0x14d)]('rooms')[_0x2c104f(0x134)]({'name':_0x4e2eac})['eq']('id',_0x1e46f3['id']);}}}currentUser?.[_0x2c104f(0x177)]?.[_0x2c104f(0x11a)]===_0x20a298&&(await supabase2[_0x2c104f(0x170)][_0x2c104f(0x1e1)]({'data':{'username':_0x51c9bb}}),currentUser['user_metadata']['username']=_0x51c9bb,currentUserName[_0x2c104f(0x1c6)]=_0x51c9bb,currentUserAvatar[_0x2c104f(0x199)]=getAvatarUrl(_0x51c9bb,getComputedStyle(document[_0x2c104f(0x1e2)])[_0x2c104f(0x207)](_0x2c104f(0x143))[_0x2c104f(0x165)]()));typingChannel&&typingChannel['send']({'type':_0x2c104f(0x125),'event':_0x2c104f(0x1c7),'payload':{'oldUser':_0x20a298,'newUser':_0x51c9bb}});await sendSystemMessage(activeRoomId,'System:\x20'+_0x20a298+_0x2c104f(0x11c)+_0x51c9bb+'.'),alert('Successfully\x20renamed\x20'+_0x20a298+_0x2c104f(0x13d)+_0x51c9bb+'.'),fetchRooms();if(activeRoomId)fetchMessages();}catch(_0x3d9b5c){alert(_0x2c104f(0x191)+_0x3d9b5c[_0x2c104f(0x158)]);}break;case _0x2c104f(0x1ac):if(!_0xd87ed8)return alert(_0x2c104f(0x202));if(!_0x43a336)return alert(_0x2c104f(0x141));const {error:_0x416c43}=await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x11d))[_0x2c104f(0x1b1)]({'username':_0x43a336},{'onConflict':'username','ignoreDuplicates':!![]});!_0x416c43&&(alert(_0x43a336+_0x2c104f(0x17d)),sendSystemMessage(activeRoomId,_0x2c104f(0x124)+_0x43a336+'\x20was\x20banned\x20from\x20the\x20server.'));break;case'unblock':if(!_0xd87ed8)return alert(_0x2c104f(0x1ad));if(!_0x43a336)return alert('Usage:\x20/unblock\x20[username]');await supabase2['from'](_0x2c104f(0x11d))[_0x2c104f(0x1d6)]()['eq'](_0x2c104f(0x11a),_0x43a336),alert(_0x43a336+_0x2c104f(0x10d));break;case _0x2c104f(0x109):if(!_0xd87ed8)return alert(_0x2c104f(0x187));await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x1e9))[_0x2c104f(0x134)]({'is_locked':!![]})['eq']('id',activeRoomId),alert(_0x2c104f(0x105)),sendSystemMessage(activeRoomId,'System:\x20Room\x20has\x20been\x20locked.');break;case _0x2c104f(0x20d):if(!_0xd87ed8)return alert(_0x2c104f(0x1cb));await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x1e9))[_0x2c104f(0x134)]({'is_locked':![]})['eq']('id',activeRoomId),alert(_0x2c104f(0x15c)),sendSystemMessage(activeRoomId,_0x2c104f(0x180));break;case'system':if(!_0xd87ed8)return alert('Only\x20mods\x20and\x20above\x20can\x20send\x20system\x20messages.');const _0x244788=_0x49d5f7[_0x2c104f(0x1eb)](/^\/system\s*/i,'')[_0x2c104f(0x165)]();if(!_0x244788)return alert('Usage:\x20/system\x20[message]');await sendSystemMessage(activeRoomId,_0x244788);break;case _0x2c104f(0x19e):if(!_0xd87ed8)return alert('Only\x20mods\x20can\x20add\x20to\x20GC.');if(!_0x43a336)return alert(_0x2c104f(0x1d2));if(!activeRoomRawName[_0x2c104f(0x210)](_0x2c104f(0x1e6)))return alert(_0x2c104f(0xf8));let _0x389e50=activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x1e6))[0x0]+_0x2c104f(0x1e6)+activeRoomRawName['split'](_0x2c104f(0x1e6))[0x1][_0x2c104f(0x1eb)](']','')+',\x20'+_0x43a336+']';const {error:_0x31df06}=await supabase2[_0x2c104f(0x14d)]('rooms')['update']({'name':_0x389e50})['eq']('id',activeRoomId);!_0x31df06&&(activeRoomRawName=_0x389e50,currentChannelDesc[_0x2c104f(0x1c6)]=_0x2c104f(0x1e3)+activeRoomRawName[_0x2c104f(0x166)]('\x20—\x20')[0x1],sendSystemMessage(activeRoomId,_0x2c104f(0x124)+_0x43a336+_0x2c104f(0x1c9)),fetchRooms());break;case _0x2c104f(0x1d8):if(!_0xd87ed8)return alert('Only\x20mods\x20can\x20remove\x20from\x20GC.');if(!_0x43a336)return alert(_0x2c104f(0x142));if(!activeRoomRawName[_0x2c104f(0x210)](_0x2c104f(0x1e6)))return alert(_0x2c104f(0xf8));let _0x472510=activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x1e6))[0x1][_0x2c104f(0x1eb)](']','')['split'](',')['map'](_0xa87483=>_0xa87483[_0x2c104f(0x165)]())['filter'](_0x31bbb7=>_0x31bbb7!==_0x43a336),_0x1a4573=activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x1e6))[0x0]+_0x2c104f(0x1e6)+_0x472510[_0x2c104f(0xff)](',\x20')+']';const {error:_0x46f646}=await supabase2[_0x2c104f(0x14d)]('rooms')['update']({'name':_0x1a4573})['eq']('id',activeRoomId);!_0x46f646&&(activeRoomRawName=_0x1a4573,currentChannelDesc[_0x2c104f(0x1c6)]=_0x2c104f(0x1e3)+activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x123))[0x1],sendSystemMessage(activeRoomId,_0x2c104f(0x124)+_0x43a336+'\x20was\x20removed\x20by\x20a\x20moderator.'),fetchRooms());break;case _0x2c104f(0x18b):if(!_0x2f1f46)return alert(_0x2c104f(0x18c));if(!_0x43a336)return alert('Usage:\x20/mod\x20[username]');await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x175))[_0x2c104f(0x1b1)]({'username':_0x43a336,'role':_0x2c104f(0x18b)}),alert(_0x43a336+_0x2c104f(0x168));break;case'unmod':if(!_0x2f1f46)return alert(_0x2c104f(0x1ce));if(!_0x43a336)return alert(_0x2c104f(0x14e));await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x175))[_0x2c104f(0x1d6)]()['eq'](_0x2c104f(0x11a),_0x43a336),alert(_0x43a336+'\x20is\x20no\x20longer\x20a\x20mod.');break;case _0x2c104f(0x218):if(!_0x2f1f46)return alert('Only\x20supermods\x20can\x20make\x20people\x20supermods.');if(!_0x43a336)return alert('Usage:\x20/supermod\x20[username]');await supabase2['from'](_0x2c104f(0x175))[_0x2c104f(0x1b1)]({'username':_0x43a336,'role':'supermod'}),alert(_0x43a336+_0x2c104f(0x1ed));break;case _0x2c104f(0x1ba):if(!_0x7edf5f)return alert(_0x2c104f(0x150));if(!_0x43a336)return alert(_0x2c104f(0x104));await supabase2['from'](_0x2c104f(0x175))[_0x2c104f(0x1d6)]()['eq']('username',_0x43a336),alert(_0x43a336+_0x2c104f(0x1cc));break;default:alert('Unknown\x20command:\x20/'+_0x5e358d);}}if(_0x5eedae['startsWith']('/')){messageInput[_0x4e7f7c(0x1f4)]='',messageInput[_0x4e7f7c(0x146)][_0x4e7f7c(0x116)]='auto',await _0x5d6d97(_0x5eedae);return;}typingIndicator['style'][_0x4e7f7c(0x12c)]=_0x4e7f7c(0x127),messageInput[_0x4e7f7c(0x1f4)]='',messageInput['style'][_0x4e7f7c(0x116)]=_0x4e7f7c(0x10e);const {data:_0x456874,error:_0x34e28c}=await supabase2[_0x4e7f7c(0x14d)](_0x4e7f7c(0x213))['insert']([{'room_id':activeRoomId,'content':_0x5eedae,'username':_0x26b9cb}])[_0x4e7f7c(0x1bf)]()['single']();_0x34e28c?alert(_0x4e7f7c(0x15b)+_0x34e28c['message']):!document['getElementById'](_0x4e7f7c(0x193)+_0x456874['id'])&&appendMessage(_0x456874);}),attachBtn[_0x3a1dde(0x1ca)]('click',()=>{const _0x3c1f2c=_0x3a1dde;if(!activeRoomId)return alert(_0x3c1f2c(0x12f));fileInput[_0x3c1f2c(0x17f)]();}),fileInput[_0x3a1dde(0x1ca)]('change',async _0x128b71=>{const _0x36458d=_0x3a1dde,_0x5750d4=_0x128b71[_0x36458d(0x184)][_0x36458d(0x15d)][0x0];if(!_0x5750d4||!activeRoomId||!currentUser)return;attachBtn[_0x36458d(0x1b0)]=_0x36458d(0x1c0),attachBtn[_0x36458d(0x16f)]=!![];const _0x4194df=activeRoomId+'/'+Date[_0x36458d(0x149)]()+'-'+Math['random']()[_0x36458d(0x1e8)](0x24)[_0x36458d(0x139)](0x2)+'.'+_0x5750d4[_0x36458d(0x1a5)]['split']('.')['pop'](),{error:_0x2b07d4}=await supabase2[_0x36458d(0x101)][_0x36458d(0x14d)](_0x36458d(0x1ff))[_0x36458d(0x1dd)](_0x4194df,_0x5750d4,{'contentType':_0x5750d4[_0x36458d(0x1bc)]||_0x36458d(0x157),'upsert':!![]});if(_0x2b07d4)alert(_0x36458d(0x151)+_0x2b07d4['message']);else{const _0x429f08=supabase2['storage']['from'](_0x36458d(0x1ff))['getPublicUrl'](_0x4194df)[_0x36458d(0x203)][_0x36458d(0x1be)];let _0x3bdef9='';if(_0x5750d4[_0x36458d(0x1bc)][_0x36458d(0x154)]('image/'))_0x3bdef9=_0x36458d(0x18e)+_0x429f08+_0x36458d(0x18d);else _0x5750d4[_0x36458d(0x1a5)]['toLowerCase']()[_0x36458d(0x1f5)]('.html')||_0x5750d4[_0x36458d(0x1bc)]===_0x36458d(0x157)?_0x3bdef9=_0x36458d(0x16d)+_0x5750d4[_0x36458d(0x1a5)]+']'+_0x429f08+'[/HTML]':_0x3bdef9='[FILE='+_0x5750d4[_0x36458d(0x1a5)]+']'+_0x429f08+_0x36458d(0x208);await supabase2[_0x36458d(0x14d)](_0x36458d(0x213))['insert']([{'room_id':activeRoomId,'content':_0x3bdef9,'username':currentUser[_0x36458d(0x177)]?.['username']}]);}attachBtn[_0x36458d(0x1b0)]=_0x36458d(0x19a),attachBtn['disabled']=![],fileInput[_0x36458d(0x1f4)]='';}),applySavedPreferences(),checkSession();const _0x3a1dde=_0x1231;(function(_0x269831,_0x5133a9){const _0x50025d=_0x1231,_0x44c114=_0x269831();while(!![]){try{const _0xf297c2=parseInt(_0x50025d(0x1e5))/0x1+-parseInt(_0x50025d(0x216))/0x2*(-parseInt(_0x50025d(0x1aa))/0x3)+parseInt(_0x50025d(0x113))/0x4+parseInt(_0x50025d(0x13c))/0x5*(parseInt(_0x50025d(0x1fb))/0x6)+-parseInt(_0x50025d(0x117))/0x7+-parseInt(_0x50025d(0x1d0))/0x8+-parseInt(_0x50025d(0x196))/0x9*(parseInt(_0x50025d(0x1e0))/0xa);if(_0xf297c2===_0x5133a9)break;else _0x44c114['push'](_0x44c114['shift']());}catch(_0x21ae60){_0x44c114['push'](_0x44c114['shift']());}}}(_0x2e3c,0x602f0));const SB_URL=_0x3a1dde(0x206),SB_KEY=_0x3a1dde(0xf5),supabase2=window[_0x3a1dde(0x1a2)]['createClient'](SB_URL,SB_KEY),authModal=document['getElementById'](_0x3a1dde(0x145)),mainApp=document[_0x3a1dde(0x111)](_0x3a1dde(0x14b)),authForm=document[_0x3a1dde(0x111)]('authForm'),toggleAuthBtn=document[_0x3a1dde(0x111)]('toggleAuth'),registerFields=document['getElementById'](_0x3a1dde(0x1e4)),authTitle=document[_0x3a1dde(0x111)]('authTitle'),authBtn=document['getElementById'](_0x3a1dde(0x1b4)),currentUserName=document[_0x3a1dde(0x111)](_0x3a1dde(0x182)),currentUserAvatar=document[_0x3a1dde(0x111)](_0x3a1dde(0x108)),logoutBtn=document['getElementById'](_0x3a1dde(0x1a3)),createChatBtn=document['getElementById'](_0x3a1dde(0x144)),addUserBtn=document[_0x3a1dde(0x111)]('addUserBtn'),chatPlaceholder=document[_0x3a1dde(0x111)]('chatPlaceholder'),chatBox=document[_0x3a1dde(0x111)](_0x3a1dde(0x1af)),messageForm=document[_0x3a1dde(0x111)](_0x3a1dde(0x14f)),chatActions=document['getElementById'](_0x3a1dde(0x12d)),messageInput=document[_0x3a1dde(0x111)](_0x3a1dde(0x1a6)),channelsList=document['getElementById']('channelsList'),currentChannelName=document[_0x3a1dde(0x111)]('currentChannelName'),currentChannelDesc=document['getElementById'](_0x3a1dde(0x1f7)),uiSelector=document[_0x3a1dde(0x111)](_0x3a1dde(0x18f)),accentColorPicker=document[_0x3a1dde(0x111)]('accentColorPicker'),startVoiceCallBtn=document[_0x3a1dde(0x111)](_0x3a1dde(0x1ef)),startVideoCallBtn=document[_0x3a1dde(0x111)]('startVideoCallBtn'),callOverlay=document[_0x3a1dde(0x111)](_0x3a1dde(0x15f)),endCallBtn=document['getElementById']('endCallBtn'),jitsiContainer=document[_0x3a1dde(0x111)]('jitsiContainer'),attachBtn=document[_0x3a1dde(0x111)](_0x3a1dde(0x131)),fileInput=document[_0x3a1dde(0x111)]('fileInput'),typingIndicator=document[_0x3a1dde(0x111)]('typingIndicator'),typingText=document[_0x3a1dde(0x111)](_0x3a1dde(0x200));let isLoginMode=![],currentUser=null,activeRoomId=null,activeRoomRawName='',jitsiAPI=null,typingTimeout=null,lastTypingTime=0x0,typingChannel=null,presenceChannel=null;const onlineUsers=new Set();function getCurrentUsername(){const _0x2050db=_0x3a1dde;return currentUser?.['user_metadata']?.[_0x2050db(0x11a)]||currentUser?.[_0x2050db(0x103)]?.[_0x2050db(0x166)]('@')[0x0]||'Anonymous';}messageInput[_0x3a1dde(0x1ca)](_0x3a1dde(0x1dc),()=>{const _0x12739a=_0x3a1dde,_0x2031b0=Date[_0x12739a(0x149)](),_0x1d7c67=getCurrentUsername();activeRoomId&&_0x1d7c67&&typingChannel&&_0x2031b0-lastTypingTime>0x4b0&&(lastTypingTime=_0x2031b0,typingChannel['send']({'type':_0x12739a(0x125),'event':'typing','payload':{'room_id':String(activeRoomId),'username':_0x1d7c67}})),messageInput[_0x12739a(0x146)][_0x12739a(0x116)]=_0x12739a(0x10e),messageInput[_0x12739a(0x146)]['height']=Math[_0x12739a(0x1d1)](messageInput[_0x12739a(0x1f1)],0x78)+'px';}),messageInput[_0x3a1dde(0x1ca)]('keydown',_0x1986d6=>{const _0x125f5f=_0x3a1dde;_0x1986d6[_0x125f5f(0x159)]===_0x125f5f(0x20e)&&!_0x1986d6[_0x125f5f(0x162)]&&(_0x1986d6[_0x125f5f(0x1d5)](),messageForm[_0x125f5f(0xfd)]());});function _0x1231(_0xc390fe,_0x34c856){_0xc390fe=_0xc390fe-0xf5;const _0x2e3cd8=_0x2e3c();let _0x1231b4=_0x2e3cd8[_0xc390fe];return _0x1231b4;}function _0x2e3c(){const _0x530ea7=['messages','Error\x20rendering\x20HTML\x20preview:','toLowerCase','216570xuKrLi','forEach','supermod','dispose','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6aXF4cXB2Z2Vpd2J0aGR4YnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NjMwMTEsImV4cCI6MjEwMzMzOTAxMX0.opW1zH8ivEFbPTkn5r1EaINzvfH8fUflU8TPL9QVaw0','Anonymous','meet.jit.si','Not\x20a\x20private\x20group\x20chat.','match','flex','sync','error','requestSubmit','body','join','postgres_changes','storage','light-mode','email','Usage:\x20/unsupermod\x20[username]','Room\x20locked.','default','message-row','currentUserAvatar','lock','signInWithPassword','db-changes','numeric','\x20has\x20been\x20unblocked.','auto','scrollTop','getAttribute','getElementById','\x22\x20class=\x22chat-avatar\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22online-badge\x20','3093564NHnPuN','Already\x20have\x20an\x20account?\x20Log\x20in.','Login\x20failed:\x20','height','2326618fofmrF','.channel-item[data-id=\x22','log','username','offline','\x20was\x20renamed\x20to\x20','banned_users','signUp','.msg-user','toLocaleString','<a\x20href=\x22','Select\x20a\x20chat\x20to\x20begin\x20messaging','\x20—\x20','System:\x20','broadcast','insert','none','typing-room','string','user','theme-ocean','display','chatActions','\x20added:\x20','Select\x20a\x20chat\x20first.','Enter\x20usernames\x20to\x20invite\x20(optional,\x20comma-separated):','attachBtn','single','100%','update','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22html-preview-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22html-preview-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20style=\x22font-size:\x200.82rem;\x20color:\x20var(--text-muted);\x22><i\x20class=\x22fa-solid\x20fa-code\x22></i>\x20Preview:\x20<b>','password','\x27)\x22><i\x20class=\x22fa-solid\x20fa-trash\x22></i></button></div>','srcdoc','substring','UPDATE','length','8725xmOtpS','\x20to\x20','granted','div','created_at','Usage:\x20/block\x20[username]','Usage:\x20/removefromgc\x20[username]','--accent','createChatBtn','authModal','style','room_id','new','now','data-username','mainApp','\x27,\x20\x27','from','Usage:\x20/unmod\x20[username]','messageForm','Only\x20hamzaperson2026\x20can\x20execute\x20/unsupermod.','Upload\x20failed:\x20','System','querySelectorAll','startsWith','toISOString','order','text/html','message','key','&color=','Failed\x20to\x20send\x20message:\x20','Room\x20unlocked.','files','content','callOverlay','has','then','shiftKey','supachat_color','subscribe','trim','split','<div\x20class=\x22msg-actions\x22><button\x20class=\x22msg-action-btn\x22\x20onclick=\x22editMessage(\x27','\x20is\x20now\x20a\x20mod.','setItem','keys','Failed\x20to\x20delete\x20message:\x20','[FILE=','[HTML=','374151','disabled','auth','\x22\x20class=\x22html-preview-iframe\x22\x20sandbox=\x22allow-scripts\x20allow-same-origin\x22></iframe>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','No\x20Chat\x20Selected','\x27)\x22><i\x20class=\x22fa-solid\x20fa-pen\x22></i></button><button\x20class=\x22msg-action-btn\x20delete-btn\x22\x20onclick=\x22deleteMessage(\x27','ffffff','user_roles','theme-hacker','user_metadata','&bold=true&rounded=true','2-digit','msg-text-','channel','typing','\x20has\x20been\x20blocked.','Are\x20you\x20sure\x20you\x20want\x20to\x20delete\x20this\x20message?','click','System:\x20Room\x20has\x20been\x20unlocked.','hidden','currentUserName','catch','target','New\x20message\x20from\x20','theme-sunset','Only\x20mods\x20can\x20lock\x20rooms.','Error\x20loading\x20chat\x20groups:','active','presence','mod','Only\x20supermods\x20can\x20make\x20people\x20mods.','[/IMG]','[IMG]','uiSelector','<img\x20src=\x22','Rename\x20failed:\x20','</b></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22','msg-','text','add','47934QwOeek','public','Edit\x20your\x20message:','src','<i\x20class=\x22fa-solid\x20fa-paperclip\x22></i>','Enter\x20usernames\x20to\x20add\x20to\x20this\x20chat\x20(comma-separated):','INSERT','SUBSCRIBED','addtogc','Log\x20In','supachat_theme','getItem','supabase','logoutBtn','Error\x20creating\x20room:\x20','name','messageInput','\x20is\x20typing','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22msg-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22msg-user\x22>','querySelector','6SvOfIQ','removeChannel','block','Only\x20mods\x20can\x20unblock.','</a>','chatBox','innerHTML','upsert','classList','You\x20have\x20been\x20removed\x20from\x20this\x20group\x20chat.','authBtn','Notification','requestPermission','System\x20message\x20error:\x20','Error\x20loading\x20history:','User','unsupermod','Usage:\x20/rename\x20[olduser]\x20[newuser]','type','msgChannel','publicUrl','select','<i\x20class=\x22fa-solid\x20fa-spinner\x20fa-spin\x22></i>','firstName','10b981','permission','map','remove','textContent','user_renamed','<i\x20class=\x22fa-solid\x20fa-hashtag\x22\x20style=\x22margin-right:\x208px;\x20opacity:\x200.6;\x22></i>\x20','\x20was\x20added\x20by\x20a\x20moderator.','addEventListener','Only\x20mods\x20can\x20unlock\x20rooms.','\x20is\x20no\x20longer\x20a\x20supermod.','.chat-avatar','Only\x20supermods\x20can\x20unmod\x20people.','createElement','4087904LeCpfd','min','Usage:\x20/addtogc\x20[username]','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22msg-time\x22>','old','preventDefault','delete','Account\x20created\x20successfully!','removefromgc','signOut','self','channel-item','input','upload','Real-time\x20chat\x20active','setProperty','1670DBvDQV','updateUser','documentElement','Members:\x20','registerFields','496396ElQrav','\x20—\x20[','.avatar-wrapper','toString','rooms','appendChild','replace','clear','\x20is\x20now\x20a\x20supermod.','data-id','startVoiceCallBtn','First\x20and\x20Last\x20name\x20are\x20required\x20to\x20sign\x20up.','scrollHeight','random','short','value','endsWith','SupaChat_','currentChannelDesc','You','unread','setAttribute','2202ctZiOK','rename','submit','track','chat-files','typingText','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22msg-text\x22\x20id=\x22msg-text-','Only\x20mods\x20can\x20block.','data','Please\x20select\x20a\x20chat\x20room\x20first!','\x22\x20target=\x22_blank\x22\x20class=\x22msg-attachment-link\x22\x20style=\x22margin-top:\x200;\x22><i\x20class=\x22fa-solid\x20fa-arrow-up-right-from-square\x22></i>\x20Open\x20Tab</a>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<iframe\x20id=\x22','https://jziqxqpvgeiwbthdxbze.supabase.co','getPropertyValue','[/FILE]','change','\x22\x20target=\x22_blank\x22\x20class=\x22msg-attachment-link\x22><i\x20class=\x22fa-solid\x20fa-file-arrow-down\x22></i>\x20Download:\x20','.online-badge','.channel-item','unlock','Enter','Create\x20Account','includes','\x22></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22avatar-wrapper\x22\x20data-username=\x22'];_0x2e3c=function(){return _0x530ea7;};return _0x2e3c();}function getAvatarUrl(_0x53ec03,_0xa9336d=_0x3a1dde(0x1c2),_0xd98be9=_0x3a1dde(0x174)){const _0x1cc4a0=_0x3a1dde,_0x29c1f5=encodeURIComponent(_0x53ec03||_0x1cc4a0(0x1b9));return'https://ui-avatars.com/api/?name='+_0x29c1f5+'&background='+_0xa9336d[_0x1cc4a0(0x1eb)]('#','')+_0x1cc4a0(0x15a)+_0xd98be9[_0x1cc4a0(0x1eb)]('#','')+_0x1cc4a0(0x178);}function applySavedPreferences(){const _0x3b0813=_0x3a1dde,_0x4ec7fc=localStorage[_0x3b0813(0x1a1)](_0x3b0813(0x1a0))||_0x3b0813(0x106),_0x240b23=localStorage['getItem'](_0x3b0813(0x163));document['body']['classList']['remove'](_0x3b0813(0x102),_0x3b0813(0x12b),'theme-hacker',_0x3b0813(0x186));_0x4ec7fc!==_0x3b0813(0x106)&&document[_0x3b0813(0xfe)]['classList']['add'](_0x4ec7fc);if(uiSelector)uiSelector['value']=_0x4ec7fc;if(_0x240b23){document[_0x3b0813(0x1e2)][_0x3b0813(0x146)][_0x3b0813(0x1df)](_0x3b0813(0x143),_0x240b23),accentColorPicker[_0x3b0813(0x1f4)]=_0x240b23;if(currentUser){const _0x32e789=currentUser[_0x3b0813(0x177)]?.[_0x3b0813(0x11a)]||currentUser[_0x3b0813(0x103)][_0x3b0813(0x166)]('@')[0x0];currentUserAvatar[_0x3b0813(0x199)]=getAvatarUrl(_0x32e789,_0x240b23);}}}uiSelector[_0x3a1dde(0x1ca)](_0x3a1dde(0x209),_0x4aa1eb=>{const _0x35d219=_0x3a1dde,_0x2c8e48=_0x4aa1eb[_0x35d219(0x184)][_0x35d219(0x1f4)];document[_0x35d219(0xfe)][_0x35d219(0x1b2)]['remove'](_0x35d219(0x102),_0x35d219(0x12b),_0x35d219(0x176),_0x35d219(0x186)),_0x2c8e48!==_0x35d219(0x106)&&document['body'][_0x35d219(0x1b2)][_0x35d219(0x195)](_0x2c8e48),localStorage['setItem'](_0x35d219(0x1a0),_0x2c8e48);}),accentColorPicker[_0x3a1dde(0x1ca)](_0x3a1dde(0x1dc),_0x117be6=>{const _0x3271e7=_0x3a1dde,_0x27ccde=_0x117be6[_0x3271e7(0x184)][_0x3271e7(0x1f4)];document[_0x3271e7(0x1e2)][_0x3271e7(0x146)][_0x3271e7(0x1df)]('--accent',_0x27ccde),localStorage[_0x3271e7(0x169)](_0x3271e7(0x163),_0x27ccde);if(currentUser){const _0xfcb2d7=currentUser[_0x3271e7(0x177)]?.[_0x3271e7(0x11a)]||currentUser['email'][_0x3271e7(0x166)]('@')[0x0];currentUserAvatar[_0x3271e7(0x199)]=getAvatarUrl(_0xfcb2d7,_0x27ccde);}});function startCall(_0x2ce649){const _0x4542f7=_0x3a1dde;if(!activeRoomId)return alert(_0x4542f7(0x204));if(jitsiAPI)jitsiAPI[_0x4542f7(0x219)]();callOverlay[_0x4542f7(0x146)][_0x4542f7(0x12c)]=_0x4542f7(0xfa);const _0x1a7235=_0x4542f7(0x1f6)+activeRoomId+'_'+currentChannelName[_0x4542f7(0x1c6)][_0x4542f7(0x1eb)](/[^a-zA-Z0-9]/g,'');jitsiAPI=new JitsiMeetExternalAPI(_0x4542f7(0xf7),{'roomName':_0x1a7235,'width':_0x4542f7(0x133),'height':_0x4542f7(0x133),'parentNode':jitsiContainer,'userInfo':{'displayName':currentUser['user_metadata']?.[_0x4542f7(0x11a)]||'Anonymous'},'configOverwrite':{'startWithVideoMuted':!_0x2ce649,'startWithAudioMuted':![],'prejoinPageEnabled':![]}});}startVoiceCallBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),()=>startCall(![])),startVideoCallBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),()=>startCall(!![])),endCallBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),()=>{const _0x4b773f=_0x3a1dde;jitsiAPI&&(jitsiAPI[_0x4b773f(0x219)](),jitsiAPI=null),callOverlay[_0x4b773f(0x146)][_0x4b773f(0x12c)]=_0x4b773f(0x127);}),toggleAuthBtn['addEventListener'](_0x3a1dde(0x17f),()=>{const _0x45fade=_0x3a1dde;isLoginMode=!isLoginMode,authTitle[_0x45fade(0x1c6)]=isLoginMode?'Log\x20In':_0x45fade(0x20f),authBtn[_0x45fade(0x1c6)]=isLoginMode?_0x45fade(0x19f):'Sign\x20Up',registerFields[_0x45fade(0x146)][_0x45fade(0x12c)]=isLoginMode?_0x45fade(0x127):_0x45fade(0x1ac),toggleAuthBtn[_0x45fade(0x1c6)]=isLoginMode?'Need\x20an\x20account?\x20Sign\x20up.':_0x45fade(0x114);}),authForm[_0x3a1dde(0x1ca)]('submit',async _0x18e267=>{const _0x297dc4=_0x3a1dde;_0x18e267['preventDefault']();const _0x20f938=document[_0x297dc4(0x111)]('authUsername')['value'][_0x297dc4(0x165)](),_0x9cb700=document[_0x297dc4(0x111)](_0x297dc4(0x136))['value'],_0x554da4=(_0x20f938+'@supachat.com')['toLowerCase']();if(isLoginMode){const {error:_0x23b843}=await supabase2[_0x297dc4(0x170)][_0x297dc4(0x10a)]({'email':_0x554da4,'password':_0x9cb700});if(_0x23b843)alert(_0x297dc4(0x115)+_0x23b843[_0x297dc4(0x158)]);else checkSession();}else{const _0x54cdcc=document['getElementById'](_0x297dc4(0x1c1))[_0x297dc4(0x1f4)][_0x297dc4(0x165)](),_0x2ad5c5=document['getElementById']('lastName')[_0x297dc4(0x1f4)][_0x297dc4(0x165)]();if(!_0x54cdcc||!_0x2ad5c5)return alert(_0x297dc4(0x1f0));const {error:_0x2782cb}=await supabase2[_0x297dc4(0x170)][_0x297dc4(0x11e)]({'email':_0x554da4,'password':_0x9cb700,'options':{'data':{'first_name':_0x54cdcc,'last_name':_0x2ad5c5,'username':_0x20f938}}});if(_0x2782cb)alert('Signup\x20error:\x20'+_0x2782cb[_0x297dc4(0x158)]);else alert(_0x297dc4(0x1d7)),checkSession();}});function requestNotificationPermission(){const _0x268288=_0x3a1dde;if(_0x268288(0x1b5)in window&&Notification[_0x268288(0x1c3)]!==_0x268288(0x13e)&&Notification['permission']!=='denied')Notification[_0x268288(0x1b6)]()[_0x268288(0x183)](_0x29c35e=>console[_0x268288(0x119)]('Permission\x20skipped:',_0x29c35e));}function showNotification(_0x18e654,_0x838a){const _0x1de2bf=_0x3a1dde;if('Notification'in window&&Notification[_0x1de2bf(0x1c3)]===_0x1de2bf(0x13e)&&document[_0x1de2bf(0x181)])new Notification(_0x1de2bf(0x185)+_0x18e654,{'body':_0x838a,'icon':getAvatarUrl(_0x18e654)});}function initRealtime(){const _0xd48423=_0x3a1dde;if(window[_0xd48423(0x1bd)])return;typingChannel=supabase2[_0xd48423(0x17b)](_0xd48423(0x128),{'config':{'broadcast':{'self':![]}}}),typingChannel['on'](_0xd48423(0x125),{'event':_0xd48423(0x17c)},({payload:_0x4d806e})=>{const _0x5a9185=_0xd48423,_0x1d5597=getCurrentUsername();String(_0x4d806e['room_id'])===String(activeRoomId)&&_0x4d806e[_0x5a9185(0x11a)]!==_0x1d5597&&(typingText[_0x5a9185(0x1c6)]=_0x4d806e[_0x5a9185(0x11a)]+_0x5a9185(0x1a7),typingIndicator[_0x5a9185(0x146)][_0x5a9185(0x12c)]=_0x5a9185(0xfa),clearTimeout(typingTimeout),typingTimeout=setTimeout(()=>{const _0x5ca8df=_0x5a9185;typingIndicator[_0x5ca8df(0x146)][_0x5ca8df(0x12c)]=_0x5ca8df(0x127);},0x9c4));})['on'](_0xd48423(0x125),{'event':_0xd48423(0x1c7)},({payload:_0x3da785})=>{const _0x576968=_0xd48423,{oldUser:_0x3a125a,newUser:_0x4ab4a3}=_0x3da785;if(getCurrentUsername()===_0x3a125a){if(currentUser['user_metadata'])currentUser[_0x576968(0x177)]['username']=_0x4ab4a3;currentUserName[_0x576968(0x1c6)]=_0x4ab4a3,currentUserAvatar[_0x576968(0x199)]=getAvatarUrl(_0x4ab4a3,getComputedStyle(document[_0x576968(0x1e2)])[_0x576968(0x207)]('--accent')[_0x576968(0x165)]());}typingText[_0x576968(0x1c6)][_0x576968(0x210)](_0x3a125a)&&(typingText[_0x576968(0x1c6)]=typingText[_0x576968(0x1c6)][_0x576968(0x1eb)](_0x3a125a,_0x4ab4a3));fetchRooms();if(activeRoomId)fetchMessages();})['subscribe'](),window[_0xd48423(0x1bd)]=supabase2[_0xd48423(0x17b)](_0xd48423(0x10b))['on'](_0xd48423(0x100),{'event':_0xd48423(0x19c),'schema':_0xd48423(0x197),'table':'messages'},_0x4a70c0=>{const _0x2f1401=_0xd48423;if(activeRoomId&&_0x4a70c0[_0x2f1401(0x148)][_0x2f1401(0x147)]==activeRoomId){if(!document[_0x2f1401(0x111)](_0x2f1401(0x193)+_0x4a70c0['new']['id']))appendMessage(_0x4a70c0[_0x2f1401(0x148)]);}else{const _0x3d82ec=document[_0x2f1401(0x1a9)](_0x2f1401(0x118)+_0x4a70c0[_0x2f1401(0x148)][_0x2f1401(0x147)]+'\x22]');if(_0x3d82ec)_0x3d82ec[_0x2f1401(0x1b2)]['add'](_0x2f1401(0x1f9));}try{if(currentUser&&_0x4a70c0['new'][_0x2f1401(0x11a)]!==currentUser[_0x2f1401(0x177)]?.[_0x2f1401(0x11a)])showNotification(_0x4a70c0[_0x2f1401(0x148)]['username'],_0x4a70c0[_0x2f1401(0x148)][_0x2f1401(0x15e)]);}catch(_0x3f4700){}})['on'](_0xd48423(0x100),{'event':_0xd48423(0x13a),'schema':'public','table':_0xd48423(0x213)},_0x17dde0=>{const _0x474d5c=_0xd48423,_0x4fc59c=document[_0x474d5c(0x111)](_0x474d5c(0x193)+_0x17dde0[_0x474d5c(0x148)]['id']);if(_0x4fc59c){const _0x4bba07=document[_0x474d5c(0x111)](_0x474d5c(0x17a)+_0x17dde0[_0x474d5c(0x148)]['id']);if(_0x4bba07&&_0x4bba07[_0x474d5c(0x1c6)]!==_0x17dde0['new'][_0x474d5c(0x15e)])_0x4bba07[_0x474d5c(0x1c6)]=_0x17dde0['new'][_0x474d5c(0x15e)];const _0x492ce8=_0x4fc59c[_0x474d5c(0x1a9)](_0x474d5c(0x11f)),_0x52e7e7=_0x4fc59c[_0x474d5c(0x1a9)](_0x474d5c(0x1cd)),_0x4c7374=currentUser&&_0x17dde0[_0x474d5c(0x148)]['username']===currentUser['user_metadata']?.[_0x474d5c(0x11a)];if(_0x492ce8)_0x492ce8['textContent']=_0x4c7374?_0x474d5c(0x1f8):_0x17dde0[_0x474d5c(0x148)]['username'];if(_0x52e7e7){const _0x1e573b=_0x4c7374?getComputedStyle(document['documentElement'])[_0x474d5c(0x207)](_0x474d5c(0x143))[_0x474d5c(0x165)]():'374151';_0x52e7e7['src']=getAvatarUrl(_0x17dde0[_0x474d5c(0x148)]['username'],_0x1e573b),_0x52e7e7['alt']=_0x17dde0[_0x474d5c(0x148)][_0x474d5c(0x11a)];}}})['on'](_0xd48423(0x100),{'event':'DELETE','schema':_0xd48423(0x197),'table':'messages'},_0x456c61=>{const _0x4c8bd3=_0xd48423,_0x1be8c1=document[_0x4c8bd3(0x111)](_0x4c8bd3(0x193)+_0x456c61[_0x4c8bd3(0x1d4)]['id']);if(_0x1be8c1)_0x1be8c1[_0x4c8bd3(0x1c5)]();})['on'](_0xd48423(0x100),{'event':_0xd48423(0x13a),'schema':_0xd48423(0x197),'table':_0xd48423(0x1e9)},_0x1e9f00=>{const _0xd1efff=_0xd48423,_0x229b98=_0x1e9f00[_0xd1efff(0x148)];if(activeRoomId===_0x229b98['id']&&_0x229b98[_0xd1efff(0x1a5)][_0xd1efff(0x210)](_0xd1efff(0x1e6))){const _0x2ead30=_0x229b98['name']['split'](_0xd1efff(0x1e6))[0x1][_0xd1efff(0x1eb)](']','')[_0xd1efff(0x166)](',')['map'](_0x56e735=>_0x56e735[_0xd1efff(0x165)]());!_0x2ead30['includes'](currentUser[_0xd1efff(0x177)]?.[_0xd1efff(0x11a)])?(activeRoomId=null,chatPlaceholder['style'][_0xd1efff(0x12c)]=_0xd1efff(0xfa),chatBox[_0xd1efff(0x146)][_0xd1efff(0x12c)]=_0xd1efff(0x127),messageForm['style'][_0xd1efff(0x12c)]=_0xd1efff(0x127),chatActions[_0xd1efff(0x146)][_0xd1efff(0x12c)]=_0xd1efff(0x127),currentChannelName[_0xd1efff(0x1c6)]=_0xd1efff(0x172),currentChannelDesc[_0xd1efff(0x1c6)]=_0xd1efff(0x122),alert(_0xd1efff(0x1b3))):(activeRoomRawName=_0x229b98[_0xd1efff(0x1a5)],currentChannelDesc[_0xd1efff(0x1c6)]='Members:\x20'+activeRoomRawName[_0xd1efff(0x166)](_0xd1efff(0x123))[0x1]);}fetchRooms();})['subscribe']();}async function checkSession(){const _0x4346d8=_0x3a1dde,{data:{session:_0x1af914}}=await supabase2['auth']['getSession']();if(_0x1af914){currentUser=_0x1af914[_0x4346d8(0x12a)],authModal['style'][_0x4346d8(0x12c)]='none',mainApp[_0x4346d8(0x146)]['display']=_0x4346d8(0xfa);const _0x3b2bff=currentUser['user_metadata']?.[_0x4346d8(0x11a)]||currentUser['email'][_0x4346d8(0x166)]('@')[0x0];currentUserName['textContent']=_0x3b2bff,currentUserAvatar[_0x4346d8(0x199)]=getAvatarUrl(_0x3b2bff,getComputedStyle(document[_0x4346d8(0x1e2)])[_0x4346d8(0x207)]('--accent')[_0x4346d8(0x165)]()),fetchRooms(),requestNotificationPermission(),initRealtime(),initPresence();}else authModal[_0x4346d8(0x146)]['display']='flex',mainApp['style']['display']=_0x4346d8(0x127);}logoutBtn['addEventListener'](_0x3a1dde(0x17f),async()=>{const _0x95a44a=_0x3a1dde;await supabase2['auth'][_0x95a44a(0x1d9)]();if(window[_0x95a44a(0x1bd)])supabase2[_0x95a44a(0x1ab)](window[_0x95a44a(0x1bd)]);if(typingChannel)supabase2[_0x95a44a(0x1ab)](typingChannel);if(presenceChannel)supabase2[_0x95a44a(0x1ab)](presenceChannel);window[_0x95a44a(0x1bd)]=null,typingChannel=null,presenceChannel=null,onlineUsers[_0x95a44a(0x1ec)](),checkSession();});async function sendSystemMessage(_0x5e0666,_0x423a82){const _0x4956ca=_0x3a1dde;try{const {error:_0x2b8574}=await supabase2['from']('messages')[_0x4956ca(0x126)]([{'room_id':_0x5e0666,'username':_0x4956ca(0x152),'content':_0x423a82,'created_at':new Date()[_0x4956ca(0x155)]()}]);_0x2b8574&&alert('Database\x20error\x20sending\x20system\x20message:\x20'+_0x2b8574[_0x4956ca(0x158)]);}catch(_0x1536f2){alert(_0x4956ca(0x1b7)+_0x1536f2['message']);}}addUserBtn['addEventListener'](_0x3a1dde(0x17f),async()=>{const _0x1bbf1e=_0x3a1dde;if(!activeRoomId)return;const _0xcd972f=prompt(_0x1bbf1e(0x19b));if(!_0xcd972f)return;let _0x5efad1=activeRoomRawName;if(_0x5efad1['includes'](_0x1bbf1e(0x1e6))){const _0x270c5c=_0x5efad1[_0x1bbf1e(0x166)](_0x1bbf1e(0x1e6))[0x0],_0x247773=_0x5efad1[_0x1bbf1e(0x166)](_0x1bbf1e(0x1e6))[0x1][_0x1bbf1e(0x1eb)](']','');_0x5efad1=_0x270c5c+_0x1bbf1e(0x1e6)+_0x247773+',\x20'+_0xcd972f+']';}else _0x5efad1=_0x5efad1+_0x1bbf1e(0x1e6)+_0xcd972f+']';const {error:_0x59c1f0}=await supabase2[_0x1bbf1e(0x14d)]('rooms')['update']({'name':_0x5efad1})['eq']('id',activeRoomId);if(_0x59c1f0)alert('Error\x20adding\x20users:\x20'+_0x59c1f0[_0x1bbf1e(0x158)]);else activeRoomRawName=_0x5efad1,currentChannelDesc[_0x1bbf1e(0x1c6)]=_0x1bbf1e(0x1e3)+_0x5efad1[_0x1bbf1e(0x166)](_0x1bbf1e(0x123))[0x1],sendSystemMessage(activeRoomId,currentUser['user_metadata']?.[_0x1bbf1e(0x11a)]+_0x1bbf1e(0x12e)+_0xcd972f),fetchRooms();}),createChatBtn[_0x3a1dde(0x1ca)](_0x3a1dde(0x17f),async()=>{const _0x288e3a=_0x3a1dde,_0x25595f=prompt('Enter\x20a\x20name\x20for\x20this\x20chat:');if(!_0x25595f)return;const _0x10a684=prompt(_0x288e3a(0x130)),_0x4cf61f=currentUser[_0x288e3a(0x177)]?.[_0x288e3a(0x11a)],_0x1cf270=_0x10a684?_0x4cf61f+',\x20'+_0x10a684:_0x4cf61f,_0x273ec7=_0x25595f+_0x288e3a(0x1e6)+_0x1cf270+']',{error:_0x4c45b4}=await supabase2[_0x288e3a(0x14d)](_0x288e3a(0x1e9))['insert']([{'name':_0x273ec7}]);if(_0x4c45b4)alert(_0x288e3a(0x1a4)+_0x4c45b4['message']);else fetchRooms();});async function fetchRooms(){const _0xb3072e=_0x3a1dde,{data:_0x27e5ac,error:_0x12d5ab}=await supabase2[_0xb3072e(0x14d)](_0xb3072e(0x1e9))['select']('*')[_0xb3072e(0x156)](_0xb3072e(0x1a5),{'ascending':!![]});if(_0x12d5ab)return console[_0xb3072e(0xfc)](_0xb3072e(0x188),_0x12d5ab);channelsList[_0xb3072e(0x1b0)]='';if(_0x27e5ac&&_0x27e5ac[_0xb3072e(0x13b)]>0x0){const _0x549717=currentUser['user_metadata']?.[_0xb3072e(0x11a)];_0x27e5ac[_0xb3072e(0x217)](_0x266813=>{const _0x39225e=_0xb3072e;if(_0x266813[_0x39225e(0x1a5)][_0x39225e(0x210)](_0x39225e(0x1e6))){const _0x223d67=_0x266813['name'][_0x39225e(0x166)]('\x20—\x20[')[0x1][_0x39225e(0x1eb)](']','');if(!_0x223d67[_0x39225e(0x166)](',')['map'](_0x4d9394=>_0x4d9394[_0x39225e(0x165)]())[_0x39225e(0x210)](_0x549717))return;}const _0x1dab1b=document[_0x39225e(0x1cf)](_0x39225e(0x13f));_0x1dab1b[_0x39225e(0x1b2)][_0x39225e(0x195)](_0x39225e(0x1db)),_0x1dab1b[_0x39225e(0x1fa)]('data-id',_0x266813['id']),_0x1dab1b[_0x39225e(0x1b0)]=_0x39225e(0x1c8)+_0x266813[_0x39225e(0x1a5)]['split'](_0x39225e(0x123))[0x0],_0x1dab1b[_0x39225e(0x1ca)]('click',()=>{const _0x15da73=_0x39225e;switchRoom(_0x266813['id'],_0x266813[_0x15da73(0x1a5)]),_0x1dab1b[_0x15da73(0x1b2)][_0x15da73(0x1c5)](_0x15da73(0x1f9));}),channelsList[_0x39225e(0x1ea)](_0x1dab1b);});if(activeRoomId)document[_0xb3072e(0x153)]('.channel-item')[_0xb3072e(0x217)](_0xd8d4dd=>{const _0x12bdc9=_0xb3072e;if(_0xd8d4dd[_0x12bdc9(0x110)](_0x12bdc9(0x1ee))===activeRoomId)_0xd8d4dd[_0x12bdc9(0x1b2)][_0x12bdc9(0x195)]('active');});}}async function switchRoom(_0x4488d9,_0x228fdf){const _0x3e843f=_0x3a1dde;if(activeRoomId===_0x4488d9)return;activeRoomId=_0x4488d9,activeRoomRawName=_0x228fdf,typingIndicator['style'][_0x3e843f(0x12c)]=_0x3e843f(0x127),chatPlaceholder[_0x3e843f(0x146)][_0x3e843f(0x12c)]='none',chatBox[_0x3e843f(0x146)][_0x3e843f(0x12c)]=_0x3e843f(0xfa),messageForm[_0x3e843f(0x146)][_0x3e843f(0x12c)]=_0x3e843f(0xfa),chatActions[_0x3e843f(0x146)][_0x3e843f(0x12c)]=_0x3e843f(0xfa),currentChannelName[_0x3e843f(0x1c6)]='#\x20'+_0x228fdf[_0x3e843f(0x166)](_0x3e843f(0x123))[0x0],currentChannelDesc['textContent']=_0x228fdf['includes'](_0x3e843f(0x123))?_0x3e843f(0x1e3)+_0x228fdf[_0x3e843f(0x166)]('\x20—\x20')[0x1]:_0x3e843f(0x1de),document[_0x3e843f(0x153)](_0x3e843f(0x20c))['forEach'](_0x4d9774=>{const _0x10c93e=_0x3e843f;if(_0x4d9774[_0x10c93e(0x110)](_0x10c93e(0x1ee))===_0x4488d9)_0x4d9774[_0x10c93e(0x1b2)][_0x10c93e(0x195)](_0x10c93e(0x189));else _0x4d9774[_0x10c93e(0x1b2)][_0x10c93e(0x1c5)](_0x10c93e(0x189));}),chatBox[_0x3e843f(0x1b0)]='',await fetchMessages();}async function fetchMessages(){const _0x96f61=_0x3a1dde;if(!activeRoomId)return;const {data:_0x6ebe55,error:_0x296673}=await supabase2['from']('messages')[_0x96f61(0x1bf)]('*')['eq'](_0x96f61(0x147),activeRoomId)[_0x96f61(0x156)](_0x96f61(0x140),{'ascending':!![]});if(_0x296673)console['error'](_0x96f61(0x1b8),_0x296673);else chatBox[_0x96f61(0x1b0)]='',_0x6ebe55[_0x96f61(0x217)](_0x4bbdc8=>appendMessage(_0x4bbdc8));}function appendMessage(_0x1227ad){const _0x2d7ebd=_0x3a1dde;if(!currentUser)return;const _0x4141f0=_0x1227ad[_0x2d7ebd(0x11a)]||_0x2d7ebd(0xf6),_0x144a32=_0x4141f0===currentUser[_0x2d7ebd(0x177)]?.[_0x2d7ebd(0x11a)],_0x679f07=_0x1227ad[_0x2d7ebd(0x140)]?new Date(_0x1227ad[_0x2d7ebd(0x140)])[_0x2d7ebd(0x120)]([],{'weekday':_0x2d7ebd(0x1f3),'month':_0x2d7ebd(0x1f3),'day':_0x2d7ebd(0x10c),'hour':_0x2d7ebd(0x179),'minute':_0x2d7ebd(0x179)}):new Date()[_0x2d7ebd(0x120)]([],{'weekday':_0x2d7ebd(0x1f3),'month':_0x2d7ebd(0x1f3),'day':_0x2d7ebd(0x10c),'hour':'2-digit','minute':_0x2d7ebd(0x179)}),_0x3f2460=document[_0x2d7ebd(0x1cf)](_0x2d7ebd(0x13f));_0x3f2460[_0x2d7ebd(0x1b2)][_0x2d7ebd(0x195)](_0x2d7ebd(0x107)),_0x3f2460[_0x2d7ebd(0x1fa)]('id',_0x2d7ebd(0x193)+_0x1227ad['id']);if(_0x144a32)_0x3f2460[_0x2d7ebd(0x1b2)][_0x2d7ebd(0x195)](_0x2d7ebd(0x1da));if(_0x4141f0===_0x2d7ebd(0x152))_0x3f2460['classList'][_0x2d7ebd(0x195)]('system');const _0x55d3aa=_0x144a32?getComputedStyle(document[_0x2d7ebd(0x1e2)])[_0x2d7ebd(0x207)](_0x2d7ebd(0x143))[_0x2d7ebd(0x165)]():_0x2d7ebd(0x16e),_0x1a2abd=_0x144a32&&_0x4141f0!==_0x2d7ebd(0x152)?_0x2d7ebd(0x167)+_0x1227ad['id']+_0x2d7ebd(0x14c)+encodeURIComponent(_0x1227ad[_0x2d7ebd(0x15e)])+_0x2d7ebd(0x173)+_0x1227ad['id']+_0x2d7ebd(0x137):'';let _0xb8377b=_0x1227ad['content']||'',_0x2498cc=null;if(typeof _0xb8377b===_0x2d7ebd(0x129)){if(_0xb8377b[_0x2d7ebd(0x154)](_0x2d7ebd(0x18e))&&_0xb8377b[_0x2d7ebd(0x1f5)](_0x2d7ebd(0x18d))){const _0x329b37=_0xb8377b[_0x2d7ebd(0x1eb)](_0x2d7ebd(0x18e),'')[_0x2d7ebd(0x1eb)](_0x2d7ebd(0x18d),'');_0xb8377b=_0x2d7ebd(0x190)+_0x329b37+'\x22\x20class=\x22msg-attachment-img\x22\x20alt=\x22Uploaded\x20Image\x22>';}else{if(_0xb8377b[_0x2d7ebd(0xf9)](/\[HTML=(.*?)\](.*?)\[\/HTML\]/)){const _0x2b917f=_0xb8377b[_0x2d7ebd(0xf9)](/\[HTML=(.*?)\](.*?)\[\/HTML\]/);if(_0x2b917f){const _0x5c976f=_0x2b917f[0x1],_0xe24e0f=_0x2b917f[0x2],_0x1ea0ee='preview-iframe-'+(_0x1227ad['id']||Math[_0x2d7ebd(0x1f2)]()[_0x2d7ebd(0x1e8)](0x24)['substring'](0x2));_0xb8377b=_0x2d7ebd(0x135)+_0x5c976f+_0x2d7ebd(0x192)+_0xe24e0f+_0x2d7ebd(0x205)+_0x1ea0ee+_0x2d7ebd(0x171),_0x2498cc=()=>{const _0x3f9af9=_0x2d7ebd;fetch(_0xe24e0f)[_0x3f9af9(0x161)](_0x547b3e=>_0x547b3e[_0x3f9af9(0x194)]())[_0x3f9af9(0x161)](_0x56c56b=>{const _0x4607c7=_0x3f9af9,_0x1277fc=document[_0x4607c7(0x111)](_0x1ea0ee);if(_0x1277fc)_0x1277fc[_0x4607c7(0x138)]=_0x56c56b;})[_0x3f9af9(0x183)](_0x548a31=>console[_0x3f9af9(0xfc)](_0x3f9af9(0x214),_0x548a31));};}}else{if(_0xb8377b[_0x2d7ebd(0x154)](_0x2d7ebd(0x16c))&&_0xb8377b[_0x2d7ebd(0x1f5)]('[/FILE]')){const _0x184077=_0xb8377b[_0x2d7ebd(0xf9)](/\[FILE=(.*?)\](.*?)\[\/FILE\]/);if(_0x184077)_0xb8377b=_0x2d7ebd(0x121)+_0x184077[0x2]+_0x2d7ebd(0x20a)+_0x184077[0x1]+_0x2d7ebd(0x1ae);}else{const _0xda41c8=document['createElement']('div');_0xda41c8[_0x2d7ebd(0x1c6)]=_0xb8377b,_0xb8377b=_0xda41c8[_0x2d7ebd(0x1b0)];}}}}const _0x38948e=onlineUsers['has'](_0x4141f0),_0x3dbe02=getAvatarUrl(_0x4141f0,_0x55d3aa);_0x3f2460[_0x2d7ebd(0x1b0)]=_0x2d7ebd(0x212)+_0x4141f0+'\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<img\x20src=\x22'+_0x3dbe02+'\x22\x20alt=\x22'+_0x4141f0+_0x2d7ebd(0x112)+(_0x38948e?'':_0x2d7ebd(0x11b))+_0x2d7ebd(0x211)+_0x1a2abd+_0x2d7ebd(0x1a8)+(_0x144a32?'You':_0x4141f0)+_0x2d7ebd(0x1d3)+_0x679f07+_0x2d7ebd(0x201)+_0x1227ad['id']+'\x22>'+_0xb8377b+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20',chatBox['appendChild'](_0x3f2460);if(_0x2498cc)_0x2498cc();chatBox[_0x2d7ebd(0x10f)]=chatBox['scrollHeight'];}async function editMessage(_0x164d9b,_0x247dbd){const _0xe240af=_0x3a1dde,_0x52da03=decodeURIComponent(_0x247dbd),_0x56a997=prompt(_0xe240af(0x198),_0x52da03);if(!_0x56a997||_0x56a997===_0x52da03)return;const {error:_0x2b8b92}=await supabase2['from'](_0xe240af(0x213))[_0xe240af(0x134)]({'content':_0x56a997})['eq']('id',_0x164d9b);if(_0x2b8b92)alert('Failed\x20to\x20edit\x20message:\x20'+_0x2b8b92[_0xe240af(0x158)]);}async function deleteMessage(_0x10a3c8){const _0x3d8317=_0x3a1dde;if(!confirm(_0x3d8317(0x17e)))return;const {error:_0x318b7b}=await supabase2[_0x3d8317(0x14d)]('messages')[_0x3d8317(0x1d6)]()['eq']('id',_0x10a3c8);if(_0x318b7b)alert(_0x3d8317(0x16b)+_0x318b7b[_0x3d8317(0x158)]);}function initPresence(){const _0x312766=_0x3a1dde;if(presenceChannel||!currentUser)return;const _0x30472f=currentUser[_0x312766(0x177)]?.[_0x312766(0x11a)]||currentUser[_0x312766(0x103)][_0x312766(0x166)]('@')[0x0];presenceChannel=supabase2[_0x312766(0x17b)]('online-presence',{'config':{'presence':{'key':_0x30472f}}}),presenceChannel['on'](_0x312766(0x18a),{'event':_0x312766(0xfb)},()=>{const _0xd9b503=_0x312766,_0x2d012e=presenceChannel['presenceState']();onlineUsers[_0xd9b503(0x1ec)](),Object[_0xd9b503(0x16a)](_0x2d012e)[_0xd9b503(0x217)](_0x1e86c9=>{const _0x293cab=_0xd9b503;onlineUsers[_0x293cab(0x195)](_0x1e86c9);}),updateOnlineStatusUI();})[_0x312766(0x164)](async _0x40b8a4=>{const _0x4b0e44=_0x312766;_0x40b8a4===_0x4b0e44(0x19d)&&await presenceChannel[_0x4b0e44(0x1fe)]({'online_at':new Date()[_0x4b0e44(0x155)](),'username':_0x30472f});});}function updateOnlineStatusUI(){const _0x191e82=_0x3a1dde;document['querySelectorAll'](_0x191e82(0x1e7))[_0x191e82(0x217)](_0x1796a6=>{const _0x26d945=_0x191e82,_0x3162f1=_0x1796a6[_0x26d945(0x110)](_0x26d945(0x14a)),_0xf7271f=_0x1796a6[_0x26d945(0x1a9)](_0x26d945(0x20b));_0xf7271f&&_0x3162f1&&(onlineUsers[_0x26d945(0x160)](_0x3162f1)?_0xf7271f[_0x26d945(0x1b2)][_0x26d945(0x1c5)](_0x26d945(0x11b)):_0xf7271f['classList']['add'](_0x26d945(0x11b)));});}messageForm['addEventListener'](_0x3a1dde(0x1fd),async _0x4fae63=>{const _0x4e7f7c=_0x3a1dde;_0x4fae63[_0x4e7f7c(0x1d5)]();const _0x5eedae=messageInput[_0x4e7f7c(0x1f4)]['trim']();if(!_0x5eedae||!activeRoomId||!currentUser)return;const {data:{user:_0x21b67f}}=await supabase2['auth']['getUser']();currentUser=_0x21b67f;const _0x26b9cb=currentUser['user_metadata']?.['username'],{data:_0x1f84e1}=await supabase2['from'](_0x4e7f7c(0x175))[_0x4e7f7c(0x1bf)]('role')['eq'](_0x4e7f7c(0x11a),_0x26b9cb)[_0x4e7f7c(0x132)](),_0x4a2ef0=_0x1f84e1?.['role']||_0x4e7f7c(0x12a),_0x7edf5f=_0x26b9cb==='hamzaperson2026',_0x2f1f46=_0x7edf5f||_0x4a2ef0===_0x4e7f7c(0x218),_0xd87ed8=_0x2f1f46||_0x4a2ef0===_0x4e7f7c(0x18b);async function _0x5d6d97(_0x49d5f7){const _0x2c104f=_0x4e7f7c,_0x5c506f=_0x49d5f7[_0x2c104f(0x165)]()[_0x2c104f(0x1eb)](/^\//,'')[_0x2c104f(0x166)](/\s+/),_0x5e358d=_0x5c506f[0x0][_0x2c104f(0x215)](),_0x43a336=_0x5c506f[0x1];switch(_0x5e358d){case'help':if(!_0xd87ed8)return alert('Only\x20mods\x20and\x20above\x20can\x20use\x20/help.');let _0x44de8f='Mod\x20Commands:\x20/lock,\x20/unlock,\x20/block\x20[user],\x20/unblock\x20[user],\x20/addtogc\x20[user],\x20/removefromgc\x20[user],\x20/rename\x20[olduser]\x20[newuser],\x20/system\x20[message]\x0a';if(_0x2f1f46)_0x44de8f+='Supermod\x20Commands:\x20/mod\x20[user],\x20/unmod\x20[user],\x20/supermod\x20[user]\x0a';if(_0x7edf5f)_0x44de8f+='Owner\x20Commands:\x20/unsupermod\x20[user]';alert(_0x44de8f);break;case _0x2c104f(0x1fc):if(!_0xd87ed8)return alert('Only\x20mods\x20and\x20above\x20can\x20rename\x20users.');const _0x20a298=_0x5c506f[0x1],_0x51c9bb=_0x5c506f[0x2];if(!_0x20a298||!_0x51c9bb)return alert(_0x2c104f(0x1bb));try{const {error:_0x3d32aa}=await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x213))[_0x2c104f(0x134)]({'username':_0x51c9bb})['eq']('username',_0x20a298);if(_0x3d32aa)alert('Warning\x20updating\x20messages:\x20'+_0x3d32aa[_0x2c104f(0x158)]);await supabase2[_0x2c104f(0x14d)]('user_roles')['update']({'username':_0x51c9bb})['eq'](_0x2c104f(0x11a),_0x20a298);const {data:_0x2983f8}=await supabase2[_0x2c104f(0x14d)]('rooms')[_0x2c104f(0x1bf)]('*');if(_0x2983f8)for(const _0x1e46f3 of _0x2983f8){if(_0x1e46f3[_0x2c104f(0x1a5)]['includes'](_0x2c104f(0x1e6))){const _0xc4d704=_0x1e46f3[_0x2c104f(0x1a5)][_0x2c104f(0x166)](_0x2c104f(0x1e6)),_0x26836b=_0xc4d704[0x1]['replace'](']','')['split'](',')[_0x2c104f(0x1c4)](_0x1fe976=>_0x1fe976['trim']());if(_0x26836b[_0x2c104f(0x210)](_0x20a298)){const _0x33e8d4=_0x26836b[_0x2c104f(0x1c4)](_0x19577c=>_0x19577c===_0x20a298?_0x51c9bb:_0x19577c)['join'](',\x20'),_0x4e2eac=_0xc4d704[0x0]+_0x2c104f(0x1e6)+_0x33e8d4+']';await supabase2[_0x2c104f(0x14d)]('rooms')[_0x2c104f(0x134)]({'name':_0x4e2eac})['eq']('id',_0x1e46f3['id']);}}}currentUser?.[_0x2c104f(0x177)]?.[_0x2c104f(0x11a)]===_0x20a298&&(await supabase2[_0x2c104f(0x170)][_0x2c104f(0x1e1)]({'data':{'username':_0x51c9bb}}),currentUser['user_metadata']['username']=_0x51c9bb,currentUserName[_0x2c104f(0x1c6)]=_0x51c9bb,currentUserAvatar[_0x2c104f(0x199)]=getAvatarUrl(_0x51c9bb,getComputedStyle(document[_0x2c104f(0x1e2)])[_0x2c104f(0x207)](_0x2c104f(0x143))[_0x2c104f(0x165)]()));typingChannel&&typingChannel['send']({'type':_0x2c104f(0x125),'event':_0x2c104f(0x1c7),'payload':{'oldUser':_0x20a298,'newUser':_0x51c9bb}});await sendSystemMessage(activeRoomId,'System:\x20'+_0x20a298+_0x2c104f(0x11c)+_0x51c9bb+'.'),alert('Successfully\x20renamed\x20'+_0x20a298+_0x2c104f(0x13d)+_0x51c9bb+'.'),fetchRooms();if(activeRoomId)fetchMessages();}catch(_0x3d9b5c){alert(_0x2c104f(0x191)+_0x3d9b5c[_0x2c104f(0x158)]);}break;case _0x2c104f(0x1ac):if(!_0xd87ed8)return alert(_0x2c104f(0x202));if(!_0x43a336)return alert(_0x2c104f(0x141));const {error:_0x416c43}=await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x11d))[_0x2c104f(0x1b1)]({'username':_0x43a336},{'onConflict':'username','ignoreDuplicates':!![]});!_0x416c43&&(alert(_0x43a336+_0x2c104f(0x17d)),sendSystemMessage(activeRoomId,_0x2c104f(0x124)+_0x43a336+'\x20was\x20banned\x20from\x20the\x20server.'));break;case'unblock':if(!_0xd87ed8)return alert(_0x2c104f(0x1ad));if(!_0x43a336)return alert('Usage:\x20/unblock\x20[username]');await supabase2['from'](_0x2c104f(0x11d))[_0x2c104f(0x1d6)]()['eq'](_0x2c104f(0x11a),_0x43a336),alert(_0x43a336+_0x2c104f(0x10d));break;case _0x2c104f(0x109):if(!_0xd87ed8)return alert(_0x2c104f(0x187));await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x1e9))[_0x2c104f(0x134)]({'is_locked':!![]})['eq']('id',activeRoomId),alert(_0x2c104f(0x105)),sendSystemMessage(activeRoomId,'System:\x20Room\x20has\x20been\x20locked.');break;case _0x2c104f(0x20d):if(!_0xd87ed8)return alert(_0x2c104f(0x1cb));await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x1e9))[_0x2c104f(0x134)]({'is_locked':![]})['eq']('id',activeRoomId),alert(_0x2c104f(0x15c)),sendSystemMessage(activeRoomId,_0x2c104f(0x180));break;case'system':if(!_0xd87ed8)return alert('Only\x20mods\x20and\x20above\x20can\x20send\x20system\x20messages.');const _0x244788=_0x49d5f7[_0x2c104f(0x1eb)](/^\/system\s*/i,'')[_0x2c104f(0x165)]();if(!_0x244788)return alert('Usage:\x20/system\x20[message]');await sendSystemMessage(activeRoomId,_0x244788);break;case _0x2c104f(0x19e):if(!_0xd87ed8)return alert('Only\x20mods\x20can\x20add\x20to\x20GC.');if(!_0x43a336)return alert(_0x2c104f(0x1d2));if(!activeRoomRawName[_0x2c104f(0x210)](_0x2c104f(0x1e6)))return alert(_0x2c104f(0xf8));let _0x389e50=activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x1e6))[0x0]+_0x2c104f(0x1e6)+activeRoomRawName['split'](_0x2c104f(0x1e6))[0x1][_0x2c104f(0x1eb)](']','')+',\x20'+_0x43a336+']';const {error:_0x31df06}=await supabase2[_0x2c104f(0x14d)]('rooms')['update']({'name':_0x389e50})['eq']('id',activeRoomId);!_0x31df06&&(activeRoomRawName=_0x389e50,currentChannelDesc[_0x2c104f(0x1c6)]=_0x2c104f(0x1e3)+activeRoomRawName[_0x2c104f(0x166)]('\x20—\x20')[0x1],sendSystemMessage(activeRoomId,_0x2c104f(0x124)+_0x43a336+_0x2c104f(0x1c9)),fetchRooms());break;case _0x2c104f(0x1d8):if(!_0xd87ed8)return alert('Only\x20mods\x20can\x20remove\x20from\x20GC.');if(!_0x43a336)return alert(_0x2c104f(0x142));if(!activeRoomRawName[_0x2c104f(0x210)](_0x2c104f(0x1e6)))return alert(_0x2c104f(0xf8));let _0x472510=activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x1e6))[0x1][_0x2c104f(0x1eb)](']','')['split'](',')['map'](_0xa87483=>_0xa87483[_0x2c104f(0x165)]())['filter'](_0x31bbb7=>_0x31bbb7!==_0x43a336),_0x1a4573=activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x1e6))[0x0]+_0x2c104f(0x1e6)+_0x472510[_0x2c104f(0xff)](',\x20')+']';const {error:_0x46f646}=await supabase2[_0x2c104f(0x14d)]('rooms')['update']({'name':_0x1a4573})['eq']('id',activeRoomId);!_0x46f646&&(activeRoomRawName=_0x1a4573,currentChannelDesc[_0x2c104f(0x1c6)]=_0x2c104f(0x1e3)+activeRoomRawName[_0x2c104f(0x166)](_0x2c104f(0x123))[0x1],sendSystemMessage(activeRoomId,_0x2c104f(0x124)+_0x43a336+'\x20was\x20removed\x20by\x20a\x20moderator.'),fetchRooms());break;case _0x2c104f(0x18b):if(!_0x2f1f46)return alert(_0x2c104f(0x18c));if(!_0x43a336)return alert('Usage:\x20/mod\x20[username]');await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x175))[_0x2c104f(0x1b1)]({'username':_0x43a336,'role':_0x2c104f(0x18b)}),alert(_0x43a336+_0x2c104f(0x168));break;case'unmod':if(!_0x2f1f46)return alert(_0x2c104f(0x1ce));if(!_0x43a336)return alert(_0x2c104f(0x14e));await supabase2[_0x2c104f(0x14d)](_0x2c104f(0x175))[_0x2c104f(0x1d6)]()['eq'](_0x2c104f(0x11a),_0x43a336),alert(_0x43a336+'\x20is\x20no\x20longer\x20a\x20mod.');break;case _0x2c104f(0x218):if(!_0x2f1f46)return alert('Only\x20supermods\x20can\x20make\x20people\x20supermods.');if(!_0x43a336)return alert('Usage:\x20/supermod\x20[username]');await supabase2['from'](_0x2c104f(0x175))[_0x2c104f(0x1b1)]({'username':_0x43a336,'role':'supermod'}),alert(_0x43a336+_0x2c104f(0x1ed));break;case _0x2c104f(0x1ba):if(!_0x7edf5f)return alert(_0x2c104f(0x150));if(!_0x43a336)return alert(_0x2c104f(0x104));await supabase2['from'](_0x2c104f(0x175))[_0x2c104f(0x1d6)]()['eq']('username',_0x43a336),alert(_0x43a336+_0x2c104f(0x1cc));break;default:alert('Unknown\x20command:\x20/'+_0x5e358d);}}if(_0x5eedae['startsWith']('/')){messageInput[_0x4e7f7c(0x1f4)]='',messageInput[_0x4e7f7c(0x146)][_0x4e7f7c(0x116)]='auto',await _0x5d6d97(_0x5eedae);return;}typingIndicator['style'][_0x4e7f7c(0x12c)]=_0x4e7f7c(0x127),messageInput[_0x4e7f7c(0x1f4)]='',messageInput['style'][_0x4e7f7c(0x116)]=_0x4e7f7c(0x10e);const {data:_0x456874,error:_0x34e28c}=await supabase2[_0x4e7f7c(0x14d)](_0x4e7f7c(0x213))['insert']([{'room_id':activeRoomId,'content':_0x5eedae,'username':_0x26b9cb}])[_0x4e7f7c(0x1bf)]()['single']();_0x34e28c?alert(_0x4e7f7c(0x15b)+_0x34e28c['message']):!document['getElementById'](_0x4e7f7c(0x193)+_0x456874['id'])&&appendMessage(_0x456874);}),attachBtn[_0x3a1dde(0x1ca)]('click',()=>{const _0x3c1f2c=_0x3a1dde;if(!activeRoomId)return alert(_0x3c1f2c(0x12f));fileInput[_0x3c1f2c(0x17f)]();}),fileInput[_0x3a1dde(0x1ca)]('change',async _0x128b71=>{const _0x36458d=_0x3a1dde,_0x5750d4=_0x128b71[_0x36458d(0x184)][_0x36458d(0x15d)][0x0];if(!_0x5750d4||!activeRoomId||!currentUser)return;attachBtn[_0x36458d(0x1b0)]=_0x36458d(0x1c0),attachBtn[_0x36458d(0x16f)]=!![];const _0x4194df=activeRoomId+'/'+Date[_0x36458d(0x149)]()+'-'+Math['random']()[_0x36458d(0x1e8)](0x24)[_0x36458d(0x139)](0x2)+'.'+_0x5750d4[_0x36458d(0x1a5)]['split']('.')['pop'](),{error:_0x2b07d4}=await supabase2[_0x36458d(0x101)][_0x36458d(0x14d)](_0x36458d(0x1ff))[_0x36458d(0x1dd)](_0x4194df,_0x5750d4,{'contentType':_0x5750d4[_0x36458d(0x1bc)]||_0x36458d(0x157),'upsert':!![]});if(_0x2b07d4)alert(_0x36458d(0x151)+_0x2b07d4['message']);else{const _0x429f08=supabase2['storage']['from'](_0x36458d(0x1ff))['getPublicUrl'](_0x4194df)[_0x36458d(0x203)][_0x36458d(0x1be)];let _0x3bdef9='';if(_0x5750d4[_0x36458d(0x1bc)][_0x36458d(0x154)]('image/'))_0x3bdef9=_0x36458d(0x18e)+_0x429f08+_0x36458d(0x18d);else _0x5750d4[_0x36458d(0x1a5)]['toLowerCase']()[_0x36458d(0x1f5)]('.html')||_0x5750d4[_0x36458d(0x1bc)]===_0x36458d(0x157)?_0x3bdef9=_0x36458d(0x16d)+_0x5750d4[_0x36458d(0x1a5)]+']'+_0x429f08+'[/HTML]':_0x3bdef9='[FILE='+_0x5750d4[_0x36458d(0x1a5)]+']'+_0x429f08+_0x36458d(0x208);await supabase2[_0x36458d(0x14d)](_0x36458d(0x213))['insert']([{'room_id':activeRoomId,'content':_0x3bdef9,'username':currentUser[_0x36458d(0x177)]?.['username']}]);}attachBtn[_0x36458d(0x1b0)]=_0x36458d(0x19a),attachBtn['disabled']=![],fileInput[_0x36458d(0x1f4)]='';}),applySavedPreferences(),checkSession();
+      const _0x4f12 = ["aHR0cHM6Ly9qemlxeHFwdmdlaXdidGhkeGJ6ZS5zdXBhYmFzZS5jbw==", "ZXlKaGJHY2lPaUpJVXpVNElDMUpXVCJ9LmV5SXBjM01pT2lKM2NIQmhjMk1pTENKeVpXTWlPaUpxZW1seGNHRjJaM2x3ZEdoa2VHNjFMQ0p5YjJ4bElqb2lhVzV2YmlJc0ltbGhkQ0A2TVRjNE56YzJNEE1URXNJbVY0Y0NJNk1qRXdNek16T1RBeE1YMC5vcFcxekg4aXZFRmJQVGtuNXIxRWFJT3p2Zkg4dVVmbFV3VFBMOFFWYXcw", "YXV0aE1vZGFs", "bWFpbkFwcA==", "YXV0aEZvcm0=", "dG9nZ2xlQXV0aA==", "cmVnaXN0ZXJGaWVsZHM=", "YXV0aFRpdGxl", "YXV0aEJ0bg==", "Y3VycmVudFVzZXJOYW1l", "Y3VycmVudFVzZXJBdmF0YXI=", "bG9nb3V0QnRu", "Y3JlYXRlQ2hhdEJ0bg==", "YWRkVXNlckJ0bg==", "Y2hhdFBsYWNlaG9sZGVy", "Y2hhdEJveA==", "bWVzc2FnZUZvcm0=", "Y2hhdEFjdGlvbnM=", "bWVzc2FnZUlucHV0", "Y2hhbm5lbHNMaXN0", "Y3VycmVudENoYW5uZWxOYW1l", "Y3VycmVudENoYW5uZWxEZXNj", "dWlTZWxlY3Rvcg==", "YWNjZW50Q29sb3JQaWNrZXI=", "c3RhcnRWb2ljZUNhbGxCdG4=", "c3RhcnRWaWRlb0NhbGxCdG4=", "Y2FsbE92ZXJsYXk=", "ZW5kQ2FsbEJ0bg==", "aml0c2lDb250YWluZXI=", "YXR0YWNoQnRu", "ZmlsZUlucHV0", "dHlwaW5nSW5kaWNhdG9y", "dHlwaW5nVGV4dA==", "@", "QW5vbnltb3Vz", "aW5wdXQ=", "YnJvYWRjYXN0", "dHlwaW5n", "YXV0bw==", "cHg=", "a2V5ZG93bg==", "RW50ZXI=", "MTBiOTgx", "ZmZmZmZm", "VXNlcg==", "aHR0cHM6Ly91aS1hdmF0YXJzLmNvbS9hcGkvP25hbWU9", "JmJhY2tncm91bmQ9", "JmNvbG9yPQ==", "JmJvbGQ9dHJ1ZSZyb3VuZGVkPXRydWU=", "#", "c3VwYWNoYXRfdGhlbWU=", "ZGVmYXVsdA==", "c3VwYWNoYXRfY29sb3I=", "bGlnaHQtbW9kZQ==", "dGhlbWUtb2NlYW4=", "dGhlbWUtaGFja2Vy", "dGhlbWUtc3Vuc2V0", "LS1hY2NlbnQ=", "Y2hhbmdl", "UGxlYXNlIHNlbGVjdCBhIGNoYXQgcm9vbSBmaXJzdCE=", "ZmxleA==", "U3VwYUNoYXRf", "Xw==", "W15hLTVaLTAtOV0=", "bWVldC5qaXQuc2k=", "MTAwJQ==", "bm9uZQ==", "TG9nIElu", "Q3JlYXRlIEFjY291bnQ=", "U2lnbiBVcA==", "YmxvY2s=", "TmVlZCBhbiBhY2NvdW50PyBTaWduIHVwLg==", "QWxyZWFkeSBoYXZlIGFuIGFjY291bnQ/IExvZyBpbi4=", "c3VibWl0", "YXV0aFVzZXJuYW1l", "cGFzc3dvcmQ=", "QHN1cGFjaGF0LmNvbQ==", "TG9naW4gZmFpbGVkOiA=", "Zmlyc3ROYW1l", "bGFzdE5hbWU=", "Rmlyc3QgYW5kIExhc3QgbmFtZSBhcmUgcmVxdWlyZWQgdG8gc2lnbiB1cC4=", "U2lnbnVwIGVycm9yOiA=", "QWNjb3VudCBjcmVhdGVkIHN1Y2Nlc3NmdWxseSE=", "Tm90aWZpY2F0aW9u", "Z3JhbnRlZA==", "ZGVuaWVk", "UGVybWlzc2lvbiBza2lwcGVkOg==", "TmV3IG1lc3NhZ2UgZnJvbSA=", "dHlwaW5nLXJvb20=", "aXMgdHlwaW5n", "dXNlcl9yZW5hbWVk", "ZGItY2hhbmdlcw==", "SU5TRVJUMg==", "cHVibGlj", "bWVzc2FnZXM=", "dW5yZWFk", "VVBEQVRF", "WW91", "Mzc0MTUx", "REVMRVRF", "cm9vbXM=", "IOKAlCBb", "XQ==", ",", "IE5vIENoYXQgU2VsZWN0ZWQ=", "U2VsZWN0IGEgY2hhdCB0byBiZWdpbiBtZXNzYWdpbmc=", "WW91IGhhdmUgYmVlbiByZW1vdmVkIGZyb20gdGhpcyBncm91cCBjaGF0Lg==", "IC0g", "TWVtYmVyczog", "U3lzdGVt", "RGF0YWJhc2UgZXJyb3Igc2VuZGluZyBzeXN0ZW0gbWVzc2FnZTog", "U3lzdGVtIG1lc3NhZ2UgZXJyb3I6IA==", "Y2xpY2s=", "RW50ZXIgdXNlcm5hbWVzIHRvIGFkZCB0byB0aGlzIGNoYXQgKGNvbW1hLXNlcGFyYXRlZCk6", "RXJyb3IgYWRkaW5nIHVzZXJzOiA=", "IGFkZGVkOiA=", "RW50ZXIgYSBuYW1lIGZvciB0aGlzIGNoYXQ6", "RW50ZXIgdXNlcm5hbWVzIHRvIGludml0ZSAob3B0aW9uYWwsIGNvbW1hLXNlcGFyYXRlZCk6", "RW50ZXIgZXJyb3I6IA==", "Kms=", "bmFtZQ==", "RXJyb3IgbG9hZGluZyBjaGF0IGdyb3Vwczog", "Y2hhbm5lbC1pdGVt", "ZGF0YS1pZA==", "PGkgY2xhc3M9ImZhLXNvbGlkIGZhLWhhc2h0YWciIHN0eWxlPSJtYXJnaW4tcmlnaHQ6IDhweDsgb3BhY2l0eTogMC42OyI+PC9pPiA=", "YWN0aXZl", "#IA==", "UmVhbC10aW1lIGNoYXQgYWN0aXZl", "cm9vbV9pZA==", "Y3JlYXRlZF9hdA==", "RXJyb3IgbG9hZGluZyBoaXN0b3J5Og==", "c2hvcnQ=", "numeric", "MmRpZ2l0", "bWVzc2FnZS1yb3c=", "aWQ=", "bXNnLQ==", "c2VsZg==", "c3lzdGVt", "PGRpdiBjbGFzcz0ibXNnLWFjdGlvbnMiPjxidXR0b24gY2xhc3M9Im1zZy1hY3Rpb24tYnRuIiBvbkNsaWNrPSJlZGl0TWVzc2FnZSgn", "JywgJw==", "JykiPjxpIGNsYXNzPSJmYS1zb2xpZCBmYS1wZW4iPjwvaT48L2J1dHRvbj48YnV0dG9uIGNsYXNzPSJtc2ctYWN0aW9uLWJ0biBkZWxldGUtYnRuIiBvbkNsaWNrPSJkZWxldGVNZXNzYWdlKCc=", "JykiPjxpIGNsYXNzPSJmYS1zb2xpZCBmYS10cmFzaCI+PC9pPjwvYnV0dG9uPjwvZGl2Pg==", "c3RyaW5n", "[SU1HXQ==", "[L0lNR10=", "PGltZyBzcmM9Ig==", 金JIGNsYXNzPSJtc2ctYXR0YWNobWVudC1pbWciIGFsdD0iVXBsb2FkZWQgSW1hZ2UiPg==", "L0hUTUw9(.*?)\](.*?)\[\/SFRNTF0=", "cHJldmlldy1pZnJhbWUt", "CjA2ICA8ZGl2IGNsYXNzPSJodG1sLXByZXZpZXctY29udGFpbmVyIj4KICAgICAgICA8ZGl2IGNsYXNzPSJodG1sLXByZXZpZXctaGVhZGVyIj4KICAgICAgICAgICAgPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMC44MnJlbTsgY29sb3I6IHZhcigtLXRleHQtbXV0ZWQpOyI+PGkgY2xhc3M9ImZhLXNvbGlkIGZhLWNvZGUiPjwvaT4gUHJldmlldzogPGI+", "PC9iPjwvc3Bhbj4KICAgICAgICAgICAgPGEgaHJlZj0i", 金J3IHRhcmdldD0iX2JsYW5rIiBjbGFzcz0ibXNnLWF0dGFjaG1lbnQtbGluayIgc3R5bGU9Im1hcmdpbi10b3A6IDA7Ij48aSBjbGFzcz0iZmEtc29saWQgZmEtYXJyb3ctdXAtcmlnaHQtZnJvbS1zcXVhcmUiPjwvaT4gT3BlbiBUYWI8L2E+CiAgICAgICAgPC9kaXZpCiAgICAgICAgPGlmcmFtZSBpZD0i", 金J2IGNsYXNzPSJodG1sLXByZXZpZXctaWZyYW1lIiBzYW5kYm94PSJhbGxvdy1zY3JpcHRzIGFsbG93LXNhbWUtb3JpZ2luIj48L2lmcmFtZT4KICAgIDwvZGl2Pg==", "RXJyb3IgcmVuZGVyaW5nIEhUTUwgcHJldmlldzo=", "W0ZJTEU9", "[L0ZJTEUd", "L0ZJTEU9(.*?)\](.*?)\[\/RklMRV0=", "PGEgaHJlZj0i", 金J3IHRhcmdldD0iX2JsYW5rIiBjbGFzcz0ibXNnLWF0dGFjaG1lbnQtbGluayI+PGkgY2xhc3M9ImZhLXNvbGlkIGZhLWZpbGUtYXJyb3ctZG93biI+PC9pPiBEb3dubG9hZDog", "PC9hPg==", "ZGF0YS11c2VybmFtZQ==", "b25saW5lLWJhZGdl", "b2ZmbGluZQ==", "Cjw2ICAgIDxkaXYgY2xhc3M9ImF2YXRhci13cmFwcGVyIiBkYXRhLXVzZXJuYW1lPSI=", 金JzPgogICAgICAgIDxpbWcgc3JjPSI=", 金JzIGFsdD0i", 金JzIGNsYXNzPSJjaGF0LWF2YXRhciI+CiAgICAgICAgPHNwYW4gY2xhc3M9Im9ubGluZS1iYWRnZSA=", 金Jz48L3NwYW4+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9Im1lc3NhZ2UiPgogICAgICAgIA==", "CiAgICAgICAgPGRpdiBjbGFzcz0ibXNnLWhlYWRlciI+CiAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJtc2ctdXNlciI+", "PC9zcGFuPgogICAgICAgICAgICA8c3BhbiBjbGFzcz0ibXNnLXRpbWUiPg==", "PC9zcGFuPgogICAgICAgIDwvZGl2PgogICAgICAgIDxzcGFuIGNsYXNzPSJtc2ctdGV4dCIgaWQ9Im1zZy10ZXh0LQ==", 金Jz4=", "PC9zcGFuPgogICAgPC9kaXZpCg==", "RWRpdCB5b3VyIG1lc3NhZ2U6", "RmFpbGVkIHRvIGVkaXQgbWVzc2FnZTog", "QXJlIHlvdSBzdXJlIHlvdSB3YW50IHRvIGRlbGV0ZSB0aGlzIG1lc3NhZ2U/", "RmFpbGVkIHRvIGRlbGV0ZSBtZXNzYWdlOiA=", "b25saW5lLXByZXNlbmNl", "cHJlc2VuY2U=",="c3luYw==", "U1VCU0NSSUJFRA==", "dXNlcl9yb2xlcw==", "cm9sZQ==", "dXNlcm5hbWU=", "dXNlcg==", "aGFtemFwZXJzb24yMDI2", "c3VwZXJtb2Q=", "bW9k", "^\\/", "aGVscA==", "T25seSBtb2RzIGFuZCBhYm92ZSBjYW4gdXNlIC9oZWxwLg==", "TW9kIENvbW1hbmRzOiAvbG9jaywgL3VubG9jaywgL2Jsb2NrIFt1c2VyXSwgL3VuYmxvY2sgW3VzZXJdLCAvYWRkdG9nYyBbdXNlcl0sIC9yZW1vdmVmcm9tZ2MgW3VzZXJdLCAvcmVuYW1lIFtvbGR1c2VyXSBbbmV3dXNlcl0sIC9zeXN0ZW0gW21lc3NhZ2VdXG4=", "U3VwZXJtb2QgQ29tbWFuZHM6IC9tb2QgW3VzZXJdLCAvdW5tb2QgW3VzZXJdLCAvc3VwZXJtb2QgW3VzZXJdXG4=", "T3duZXIgQ29tbWFuZHM6IC91bnN1cGVybW9kIFt1c2VyXQ==", "cmVuYW1l", "T25seSBtb2RzIGFuZCBhYm92ZSBjYW4gcmVuYW1lIHVzZXJzLg==", "VXNhZ2U6IC9yZW1hbWUgW29sZHVzZXJdIFtuZXd1c2VyXQ==", "V2FybmluZyB1cGRhdGluZyBtZXNzYWdlczog", "U3lzdGVtOiA=", "IHdhcyByZW5hbWVkIHRvIA==", "Lg==", "U3VjY2Vzc2Z1bGx5IHJlbmFtZWQg", "IHRvIA==", "UmVuYW1lIGZhaWxlZDog", "YmxvY2s=", "T25seSBtb2RzIGNhbiBibG9jay4=", "VXNhZ2U6IC9ibG9jayBbdXNlcm5hbWVd", "YmFubmVkX3VzZXJz", "IGhhcyBiZWVuIGJsb2NrZWQu", "IHdhcyBiYW5uZWQgZnJvbSB0aGUgc2VydmVyLg==", "dW5ibG9jaw==", "T25seSBtb2RzIGNhbiB1bmJsb2NrLg==", "VXNhZ2U6IC91bmJsb2NrIFt1c2VybmFtZV0=", "IGhhcyBiZWVuIHVuYmxvY2tlZC4=", "bG9jaw==", "T25seSBtb2RzIGNhbiBsb2NrIHJvb21zLg==", "aXNfbG9ja2Vk", "Um9vbSBsb2NrZWQu", "U3lzdGVtOiBSb29tIGhhcyBiZWVuIGxvY2tlZC4=", "dW5sb2Nr", "T25seSBtb2RzIGNhbiB1bmxvY2sgcm9vbXMu", "Um9vbSB1bmxvY2tlZC4=", "U3lzdGVtOiBSb29tIGhhcyBiZWVuIHVubG9ja2VkLg==", "T25seSBtb2RzIGFuZCBhYm92ZSBjYW4gc2VuZCBzeXN0ZW0gbWVzc2FnZXMu", "X1wvc3lzdGVtXHMq", "VXNhZ2U6IC9zeXN0ZW0gW21lc3NhZ2Vd", "YWRkdG9nYw==", "T25seSBtb2RzIGNhbiBhZGQgdG8gR0Mu", "VXNhZ2U6IC9hZGR0b2djIFt1c2VybmFtZV0=", "Tm90IGEgcHJpdmF0ZSBncm91cCBjaGF0Lg==", "IHdhcyBhZGRlZCBieSBhIG1vZGVyYXRvci4=", "cmVtb3ZlZnJvbWdj", "T25seSBtb2RzIGNhbiByZW1vdmUgZnJvbSBHQy4=", "VXNhZ2U6IC9yZW1vdmVmcm9tZ2MgW3VzZXJuYW1lXQ==", "IHdhcyByZW1vdmVkIGJ5IGEgbW9kZXJhdG9yLg==", "T25seSBzdXBlcm1vZHMgY2FuIG1ha2UgcGVvcGxlIG1vZHMu", "VXNhZ2U6IC9tb2QgW3VzZXJuYW1lXQ==", "IGlzIG5vdyBhIG1vZC4=", "dW5tb2Q=", "T25seSBzdXBlcm1vZHMgY2FuIHVubW9kIHBlb3BsZS4=", "VXNhZ2U6IC91bm1vZCBbdXNlcm5hbWVd", "IGlzIG5vIGxvbmdlciBhIG1vZC4=", "T25seSBzdXBlcm1vZHMgY2FuIG1ha2UgcGVvcGxlIHN1cGVybW9kcy4=", "VXNhZ2U6IC9zdXBlcm1vZCBbdXNlcm5hbWVd", "IGlzIG5vdyBhIHN1cGVybW9kLg==", "dW5zdXBlcm1vZA==", "T25seSBoYW16YXBlcnNvbjIwMjYgY2FuIGV4ZWN1dGUgL3Vuc3VwZXJtb2Qu", "VXNhZ2U6IC91bnN1cGVybW9kIFt1c2VybmFtZV0=", "IGlzIG5vIGxvbmdlciBhIHN1cGVybW9kLg==", "VW5rbm93biBjb21tYW5kOiAv", "RmFpbGVkIHRvIHNlbmQgbWVzc2FnZTog", "U2VsZWN0IGEgY2hhdCBmaXJzdC4=", "<aSBjbGFzcz0iZmEtc29saWQgZmEtc3Bpbm5lciBmYS1zcGluIj48L2k+", "Y2hhdC1maWxlcw==", "dGV4dC9odG1s", "VXBsb2FkIGZhaWxlZDog", "aW1hZ2Uv", "Lmh0bWw=", "<aSBjbGFzcz0iZmEtc29saWQgZmEtcGFwZXJjbGlwIj48L2k+"];
+    const _0xa1b2 = function(_0x2d3e) {
+        _0x2d3e = _0x2d3e - 0xa0;
+        let _0x1c2d = _0x4f12[_0x2d3e];
+        let _0x2e1a = atob(_0x1c2d);
+        let _0x5f6e = '';
+        for (let _0x1d2c = 0; _0x1d2c < _0x2e1a.length; _0x1d2c++) {
+            _0x5f6e += '%' + ('00' + _0x2e1a.charCodeAt(_0x1d2c).toString(16)).slice(-2);
+        }
+        return decodeURIComponent(_0x5f6e);
+    };
+
+    const SB_URL = _0xa1b2(0xa0);
+    const SB_KEY = _0xa1b2(0xa1);
+    const supabase2 = window.supabase.createClient(SB_URL, SB_KEY);
+
+    const authModal = document.getElementById(_0xa1b2(0xa2)), mainApp = document.getElementById(_0xa1b2(0xa3)), authForm = document.getElementById(_0xa1b2(0xa4)), toggleAuthBtn = document.getElementById(_0xa1b2(0xa5)), registerFields = document.getElementById(_0xa1b2(0xa6)), authTitle = document.getElementById(_0xa1b2(0xa7)), authBtn = document.getElementById(_0xa1b2(0xa8));
+    const currentUserName = document.getElementById(_0xa1b2(0xa9)), currentUserAvatar = document.getElementById(_0xa1b2(0xaa));
+    const logoutBtn = document.getElementById(_0xa1b2(0xab)), createChatBtn = document.getElementById(_0xa1b2(0xac)), addUserBtn = document.getElementById(_0xa1b2(0xad));
+    const chatPlaceholder = document.getElementById(_0xa1b2(0xae)), chatBox = document.getElementById(_0xa1b2(0xaf)), messageForm = document.getElementById(_0xa1b2(0xb0)), chatActions = document.getElementById(_0xa1b2(0xb1));
+    const messageInput = document.getElementById(_0xa1b2(0xb2)), channelsList = document.getElementById(_0xa1b2(0xb3)), currentChannelName = document.getElementById(_0xa1b2(0xb4)), currentChannelDesc = document.getElementById(_0xa1b2(0xb5));
+    const uiSelector = document.getElementById(_0xa1b2(0xb6)), accentColorPicker = document.getElementById(_0xa1b2(0xb7));
+    const startVoiceCallBtn = document.getElementById(_0xa1b2(0xb8)), startVideoCallBtn = document.getElementById(_0xa1b2(0xb9)), callOverlay = document.getElementById(_0xa1b2(0xba)), endCallBtn = document.getElementById(_0xa1b2(0xbb)), jitsiContainer = document.getElementById(_0xa1b2(0xbc));
+    const attachBtn = document.getElementById(_0xa1b2(0xbd)), fileInput = document.getElementById(_0xa1b2(0xbe)), typingIndicator = document.getElementById(_0xa1b2(0xbf)), typingText = document.getElementById(_0xa1b2(0xc0));
+
+    let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null, lastTypingTime = 0;
+    let typingChannel = null;
+    let presenceChannel = null;
+    const onlineUsers = new Set();
+
+    function getCurrentUsername() {
+        return currentUser?.user_metadata?.username || currentUser?.email?.split(_0xa1b2(0xc1))[0] || _0xa1b2(0xc2);
+    }
+
+    if (messageInput) {
+        messageInput.addEventListener(_0xa1b2(0xc3), () => {
+            const now = Date.now();
+            const username = getCurrentUsername();
+            
+            if (activeRoomId && username && typingChannel && (now - lastTypingTime > 1200)) {
+                lastTypingTime = now;
+                typingChannel.send({
+                    type: _0xa1b2(0xc4),
+                    event: _0xa1b2(0xc5),
+                    payload: { room_id: String(activeRoomId), username: username }
+                });
+            }
+            
+            messageInput.style.height = _0xa1b2(0xc6);
+            messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + _0xa1b2(0xc7);
+        });
+
+        messageInput.addEventListener(_0xa1b2(0xc8), (e) => {
+            if (e.key === _0xa1b2(0xc9) && !e.shiftKey) { 
+                e.preventDefault(); 
+                messageForm.requestSubmit(); 
+            }
+        });
+    }
+
+    function getAvatarUrl(name, backgroundHex = _0xa1b2(0xca), colorHex = _0xa1b2(0xcb)) {
+        const cleanName = encodeURIComponent(name || _0xa1b2(0xcc));
+        return `${_0xa1b2(0xcd)}${cleanName}${_0xa1b2(0xce)}${backgroundHex.replace(_0xa1b2(0xd0), '')}${_0xa1b2(0xcf)}${colorHex.replace(_0xa1b2(0xd0), '')}${_0xa1b2(0xd1)}`;
+    }
+
+    function applySavedPreferences() {
+        const savedTheme = localStorage.getItem(_0xa1b2(0xd2)) || _0xa1b2(0xd3);
+        const savedColor = localStorage.getItem(_0xa1b2(0xd4));
+        
+        document.body.classList.remove(_0xa1b2(0xd5), _0xa1b2(0xd6), _0xa1b2(0xd7), _0xa1b2(0xd8));
+        if (savedTheme !== _0xa1b2(0xd3)) {
+            document.body.classList.add(savedTheme);
+        }
+        if (uiSelector) uiSelector.value = savedTheme;
+
+        if (savedColor) {
+            document.documentElement.style.setProperty(_0xa1b2(0xd9), savedColor); 
+            if (accentColorPicker) accentColorPicker.value = savedColor;
+            if (currentUser) { 
+                const uname = currentUser.user_metadata?.username || currentUser.email.split(_0xa1b2(0xc1))[0]; 
+                currentUserAvatar.src = getAvatarUrl(uname, savedColor); 
+            }
+        }
+    }
+
+    if (uiSelector) {
+        uiSelector.addEventListener(_0xa1b2(0xda), (e) => {
+            const selected = e.target.value;
+            document.body.classList.remove(_0xa1b2(0xd5), _0xa1b2(0xd6), _0xa1b2(0xd7), _0xa1b2(0xd8));
+            if (selected !== _0xa1b2(0xd3)) {
+                document.body.classList.add(selected);
+            }
+            localStorage.setItem(_0xa1b2(0xd2), selected);
+        });
+    }
+
+    if (accentColorPicker) {
+        accentColorPicker.addEventListener(_0xa1b2(0xc3), (e) => {
+            const newColor = e.target.value;
+            document.documentElement.style.setProperty(_0xa1b2(0xd9), newColor); 
+            localStorage.setItem(_0xa1b2(0xd4), newColor);
+            if (currentUser) { 
+                const uname = currentUser.user_metadata?.username || currentUser.email.split(_0xa1b2(0xc1))[0]; 
+                currentUserAvatar.src = getAvatarUrl(uname, newColor); 
+            }
+        });
+    }
+
+    function startCall(isVideo) {
+        if (!activeRoomId) return alert(_0xa1b2(0xdb));
+        if (jitsiAPI) jitsiAPI.dispose();
+        callOverlay.style.display = _0xa1b2(0xdc);
+        const callRoomId = `${_0xa1b2(0xdd)}${activeRoomId}${_0xa1b2(0xde)}${currentChannelName.textContent.replace(/[^a-zA-Z0-9]/g, '')}`;
+        jitsiAPI = new JitsiMeetExternalAPI(_0xa1b2(0xdf), { roomName: callRoomId, width: _0xa1b2(0xe0), height: _0xa1b2(0xe0), parentNode: jitsiContainer, userInfo: { displayName: currentUser.user_metadata?.username || _0xa1b2(0xc2) }, configOverwrite: { startWithVideoMuted: !isVideo, startWithAudioMuted: false, prejoinPageEnabled: false } });
+    }
+
+    if (startVoiceCallBtn) startVoiceCallBtn.addEventListener(_0xa1b2(0xe1), () => startCall(false));
+    if (startVideoCallBtn) startVideoCallBtn.addEventListener(_0xa1b2(0xe1), () => startCall(true));
+    if (endCallBtn) endCallBtn.addEventListener(_0xa1b2(0xe1), () => { if (jitsiAPI) { jitsiAPI.dispose(); jitsiAPI = null; } callOverlay.style.display = _0xa1b2(0xe2); });
+
+    if (toggleAuthBtn) {
+        toggleAuthBtn.addEventListener(_0xa1b2(0xe1), () => {
+            isLoginMode = !isLoginMode;
+            authTitle.textContent = isLoginMode ? _0xa1b2(0xe3) : _0xa1b2(0xe4);
+            authBtn.textContent = isLoginMode ? _0xa1b2(0xe3) : _0xa1b2(0xe5);
+            registerFields.style.display = isLoginMode ? _0xa1b2(0xe2) : _0xa1b2(0xe6);
+            toggleAuthBtn.textContent = isLoginMode ? _0xa1b2(0xe7) : _0xa1b2(0xe8);
+        });
+    }
+
+    if (authForm) {
+        authForm.addEventListener(_0xa1b2(0xe9), async (e) => {
+            e.preventDefault();
+            const username = document.getElementById(_0xa1b2(0xea)).value.trim(), password = document.getElementById(_0xa1b2(0xeb)).value, dummyEmail = `${username}${_0xa1b2(0xec)}`.toLowerCase();
+            if (isLoginMode) {
+                const { error } = await supabase2.auth.signInWithPassword({ email: dummyEmail, password });
+                if (error) alert(_0xa1b2(0xed) + error.message); else checkSession();
+            } else {
+                const firstName = document.getElementById(_0xa1b2(0xee)).value.trim(), lastName = document.getElementById(_0xa1b2(0xef)).value.trim();
+                if (!firstName || !lastName) return alert(_0xa1b2(0xf0));
+                const { error } = await supabase2.auth.signUp({ email: dummyEmail, password, options: { data: { first_name: firstName, last_name: lastName, username: username } } });
+                if (error) alert(_0xa1b2(0xf1) + error.message); else { alert(_0xa1b2(0xf2)); checkSession(); }
+            }
+        });
+    }
+
+    function requestNotificationPermission() { if (_0xa1b2(0xf3) in window && Notification.permission !== _0xa1b2(0xf4) && Notification.permission !== _0xa1b2(0xf5)) Notification.requestPermission().catch(err => console.log(_0xa1b2(0xf6), err)); }
+    function showNotification(username, message) { if (_0xa1b2(0xf3) in window && Notification.permission === _0xa1b2(0xf4) && document.hidden) new Notification(`${_0xa1b2(0xf7)}${username}`, { body: message, icon: getAvatarUrl(username) }); }
+
+    function initRealtime() {
+        if (window.msgChannel) return;
+
+        typingChannel = supabase2.channel(_0xa1b2(0xf8), { config: { broadcast: { self: false } } });
+        
+        typingChannel.on(_0xa1b2(0xc4), { event: _0xa1b2(0xc5) }, ({ payload }) => {
+            const myUsername = getCurrentUsername();
+            
+            if (String(payload.room_id) === String(activeRoomId) && payload.username !== myUsername) {
+                typingText.textContent = `${payload.username} ${_0xa1b2(0xf9)}`;
+                typingIndicator.style.display = _0xa1b2(0xdc);
+                
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => { 
+                    typingIndicator.style.display = _0xa1b2(0xe2); 
+                }, 2500);
+            }
+        }).on(_0xa1b2(0xc4), { event: _0xa1b2(0xfa) }, ({ payload }) => {
+            const { oldUser, newUser } = payload;
+            
+            if (getCurrentUsername() === oldUser) {
+                if (currentUser.user_metadata) currentUser.user_metadata.username = newUser;
+                currentUserName.textContent = newUser;
+                currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue(_0xa1b2(0xd9)).trim());
+            }
+
+            if (typingText.textContent.includes(oldUser)) {
+                typingText.textContent = typingText.textContent.replace(oldUser, newUser);
+            }
+
+            fetchRooms();
+            if (activeRoomId) fetchMessages();
+        }).subscribe();
+
+        window.msgChannel = supabase2
+            .channel(_0xa1b2(0xfb))
+            .on(_0xa1b2(0xfc), { event: _0xa1b2(0xfd), schema: _0xa1b2(0xfe), table: _0xa1b2(0xff) }, (payload) => {
+                if (activeRoomId && payload.new.room_id == activeRoomId) {
+                    if (!document.getElementById(`msg-${payload.new.id}`)) appendMessage(payload.new);
+                } else {
+                    const unreadEl = document.querySelector(`.channel-item[data-id="${payload.new.room_id}"]`);
+                    if (unreadEl) unreadEl.classList.add(_0xa1b2(0x100));
+                }
+                try { if (currentUser && payload.new.username !== currentUser.user_metadata?.username) showNotification(payload.new.username, payload.new.content); } catch (err) {}
+            })
+            .on(_0xa1b2(0xfc), { event: _0xa1b2(0x101), schema: _0xa1b2(0xfe), table: _0xa1b2(0xff) }, (payload) => {
+                const rowElem = document.getElementById(`msg-${payload.new.id}`);
+                if (rowElem) {
+                    const textElem = document.getElementById(`msg-text-${payload.new.id}`);
+                    if (textElem && textElem.textContent !== payload.new.content) textElem.textContent = payload.new.content;
+
+                    const userElem = rowElem.querySelector('.msg-user');
+                    const avatarElem = rowElem.querySelector('.chat-avatar');
+                    const isSelf = currentUser && payload.new.username === currentUser.user_metadata?.username;
+                    
+                    if (userElem) userElem.textContent = isSelf ? _0xa1b2(0x102) : payload.new.username;
+                    if (avatarElem) {
+                        const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue(_0xa1b2(0xd9)).trim() : _0xa1b2(0x103);
+                        avatarElem.src = getAvatarUrl(payload.new.username, avatarColor);
+                        avatarElem.alt = payload.new.username;
+                    }
+                }
+            })
+            .on(_0xa1b2(0xfc), { event: _0xa1b2(0x104), schema: _0xa1b2(0xfe), table: _0xa1b2(0xff) }, (payload) => {
+                const rowElem = document.getElementById(`msg-${payload.old.id}`); if (rowElem) rowElem.remove();
+            })
+            .on(_0xa1b2(0xfc), { event: _0xa1b2(0x101), schema: _0xa1b2(0xfe), table: _0xa1b2(0x105) }, (payload) => {
+                const updatedRoom = payload.new;
+                if (activeRoomId === updatedRoom.id && updatedRoom.name.includes(_0xa1b2(0x106))) {
+                    const members = updatedRoom.name.split(_0xa1b2(0x106))[1].replace(_0xa1b2(0x107), '').split(_0xa1b2(0x108)).map(s => s.trim());
+                    if (!members.includes(currentUser.user_metadata?.username)) {
+                        activeRoomId = null; chatPlaceholder.style.display = _0xa1b2(0xdc); chatBox.style.display = _0xa1b2(0xe2); messageForm.style.display = _0xa1b2(0xe2); chatActions.style.display = _0xa1b2(0xe2); currentChannelName.textContent = _0xa1b2(0x109); currentChannelDesc.textContent = _0xa1b2(0x10a);
+                        alert(_0xa1b2(0x10b));
+                    } else { activeRoomRawName = updatedRoom.name; currentChannelDesc.textContent = `${_0xa1b2(0x10d)}${activeRoomRawName.split(_0xa1b2(0x10c))[1]}`; }
+                }
+                fetchRooms();
+            })
+            .subscribe();
+    }
+
+    async function checkSession() {
+        const { data: { session } } = await supabase2.auth.getSession();
+        if (session) {
+            currentUser = session.user; authModal.style.display = _0xa1b2(0xe2); mainApp.style.display = _0xa1b2(0xdc);
+            const uname = currentUser.user_metadata?.username || currentUser.email.split(_0xa1b2(0xc1))[0];
+            currentUserName.textContent = uname; currentUserAvatar.src = getAvatarUrl(uname, getComputedStyle(document.documentElement).getPropertyValue(_0xa1b2(0xd9)).trim());
+            fetchRooms(); requestNotificationPermission(); initRealtime(); initPresence();
+        } else { authModal.style.display = _0xa1b2(0xdc); mainApp.style.display = _0xa1b2(0xe2); }
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener(_0xa1b2(0xe1), async () => {
+            await supabase2.auth.signOut(); 
+            if (window.msgChannel) supabase2.removeChannel(window.msgChannel);
+            if (typingChannel) supabase2.removeChannel(typingChannel);
+            if (presenceChannel) supabase2.removeChannel(presenceChannel);
+            
+            window.msgChannel = null;
+            typingChannel = null;
+            presenceChannel = null;
+            onlineUsers.clear();
+            
+            checkSession();
+        });
+    }
+
+    async function sendSystemMessage(roomId, text) {
+        try {
+            const { error } = await supabase2.from(_0xa1b2(0xff)).insert([
+                {
+                    room_id: roomId,
+                    username: _0xa1b2(0x10e),
+                    content: text,
+                    created_at: new Date().toISOString()
+                }
+            ]);
+
+            if (error) {
+                alert(_0xa1b2(0x10f) + error.message);
+            }
+        } catch (err) {
+            alert(_0xa1b2(0x110) + err.message);
+        }
+    }
+
+    if (addUserBtn) {
+        addUserBtn.addEventListener(_0xa1b2(0xe1), async () => {
+            if (!activeRoomId) return;
+            const newUsers = prompt(_0xa1b2(0x111));
+            if (!newUsers) return;
+
+            let updatedName = activeRoomRawName;
+            if (updatedName.includes(_0xa1b2(0x106))) {
+                const base = updatedName.split(_0xa1b2(0x106))[0], existing = updatedName.split(_0xa1b2(0x106))[1].replace(_0xa1b2(0x107), '');
+                updatedName = `${base}${_0xa1b2(0x106)}${existing}, ${newUsers}]`;
+            } else { updatedName = `${updatedName}${_0xa1b2(0x106)}${newUsers}]`; }
+
+            const { error } = await supabase2.from(_0xa1b2(0x105)).update({ name: updatedName }).eq('id', activeRoomId);
+            if (error) alert(_0xa1b2(0x112) + error.message);
+            else {
+                activeRoomRawName = updatedName; currentChannelDesc.textContent = `${_0xa1b2(0x10d)}${updatedName.split(_0xa1b2(0x10c))[1]}`;
+                sendSystemMessage(activeRoomId, `${currentUser.user_metadata?.username}${_0xa1b2(0x113)}${newUsers}`);
+                fetchRooms();
+            }
+        });
+    }
+
+    if (createChatBtn) {
+        createChatBtn.addEventListener(_0xa1b2(0xe1), async () => {
+            const roomName = prompt(_0xa1b2(0x114)); if (!roomName) return;
+            const invitees = prompt(_0xa1b2(0x115)), myUsername = currentUser.user_metadata?.username;
+            const finalInvitees = invitees ? `${myUsername}, ${invitees}` : myUsername;
+            const finalRoomName = `${roomName}${_0xa1b2(0x106)}${finalInvitees}]`;
+
+            const { error } = await supabase2.from(_0xa1b2(0x105)).insert([{ name: finalRoomName }]);
+            if (error) alert(_0xa1b2(0x116) + error.message); else fetchRooms();
+        });
+    }
+
+    async function fetchRooms() {
+        const { data: rooms, error } = await supabase2.from(_0xa1b2(0x105)).select('*').order(_0xa1b2(0x117), { ascending: true });
+        if (error) return console.error(_0xa1b2(0x118), error);
+
+        channelsList.innerHTML = ''; 
+        if (rooms && rooms.length > 0) {
+            const myUsername = currentUser.user_metadata?.username;
+            rooms.forEach((room) => {
+                if (room.name.includes(_0xa1b2(0x106))) {
+                    const membersStr = room.name.split(_0xa1b2(0x106))[1].replace(_0xa1b2(0x107), '');
+                    if (!membersStr.split(_0xa1b2(0x108)).map(s => s.trim()).includes(myUsername)) return; 
+                }
+
+                const roomEl = document.createElement('div'); 
+                roomEl.classList.add(_0xa1b2(0x119)); 
+                roomEl.setAttribute(_0xa1b2(0x11a), room.id);
+                roomEl.innerHTML = `${_0xa1b2(0x11b)}${room.name.split(_0xa1b2(0x10c))[0]}`;
+                roomEl.addEventListener(_0xa1b2(0xe1), () => { switchRoom(room.id, room.name); roomEl.classList.remove(_0xa1b2(0x100)); });
+                channelsList.appendChild(roomEl);
+            });
+            if (activeRoomId) document.querySelectorAll('.channel-item').forEach(el => { if (el.getAttribute(_0xa1b2(0x11a)) === activeRoomId) el.classList.add(_0xa1b2(0x11c)); });
+        }
+    }
+
+    async function switchRoom(roomId, roomName) {
+        if (activeRoomId === roomId) return;
+        activeRoomId = roomId; activeRoomRawName = roomName;
+        typingIndicator.style.display = _0xa1b2(0xe2);
+        chatPlaceholder.style.display = _0xa1b2(0xe2); chatBox.style.display = _0xa1b2(0xdc); messageForm.style.display = _0xa1b2(0xdc); chatActions.style.display = _0xa1b2(0xdc);
+        currentChannelName.textContent = `${_0xa1b2(0x11d)}${roomName.split(_0xa1b2(0x10c))[0]}`;
+        currentChannelDesc.textContent = roomName.includes(_0xa1b2(0x10c)) ? `${_0xa1b2(0x10d)}${roomName.split(_0xa1b2(0x10c))[1]}` : _0xa1b2(0x11e);
+        
+        document.querySelectorAll('.channel-item').forEach(el => { if (el.getAttribute(_0xa1b2(0x11a)) === roomId) el.classList.add(_0xa1b2(0x11c)); else el.classList.remove(_0xa1b2(0x11c)); });
+        chatBox.innerHTML = ''; await fetchMessages();
+    }
+
+    async function fetchMessages() {
+        if (!activeRoomId) return;
+        const { data, error } = await supabase2.from(_0xa1b2(0xff)).select('*').eq(_0xa1b2(0x11f), activeRoomId).order(_0xa1b2(0x120), { ascending: true });
+        if (error) console.error(_0xa1b2(0x121), error); else {
+            chatBox.innerHTML = '';
+            data.forEach(msg => appendMessage(msg));
+        }
+    }
+
+    function appendMessage(msg) {
+        if (!currentUser) return;
+        const msgUsername = msg.username || _0xa1b2(0xc2);
+        const isSelf = msgUsername === currentUser.user_metadata?.username; 
+        
+        const timeString = msg.created_at 
+            ? new Date(msg.created_at).toLocaleString([], { weekday: _0xa1b2(0x122), month: _0xa1b2(0x122), day: _0xa1b2(0x123), hour: _0xa1b2(0x124), minute: _0xa1b2(0x124) }) 
+            : new Date().toLocaleString([], { weekday: _0xa1b2(0x122), month: _0xa1b2(0x122), day: _0xa1b2(0x123), hour: _0xa1b2(0x124), minute: _0xa1b2(0x124) });
+        
+        const rowElement = document.createElement('div'); 
+        rowElement.classList.add(_0xa1b2(0x125)); 
+        rowElement.setAttribute(_0xa1b2(0x126), `${_0xa1b2(0x127)}${msg.id}`);
+        if (isSelf) rowElement.classList.add(_0xa1b2(0x128));
+        if (msgUsername === _0xa1b2(0x10e)) rowElement.classList.add(_0xa1b2(0x129));
+
+        const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue(_0xa1b2(0xd9)).trim() : _0xa1b2(0x103);
+        const actionsHtml = isSelf && msgUsername !== _0xa1b2(0x10e) ? `${_0xa1b2(0x12a)}${msg.id}${_0xa1b2(0x12b)}${encodeURIComponent(msg.content)}${_0xa1b2(0x12c)}${msg.id}${_0xa1b2(0x12d)}` : '';
+
+        let formattedContent = msg.content || '';
+        let pendingIframeLoad = null;
+
+        if (typeof formattedContent === _0xa1b2(0x12e)) {
+            if (formattedContent.startsWith(_0xa1b2(0x12f)) && formattedContent.endsWith(_0xa1b2(0x130))) {
+                const imgUrl = formattedContent.replace(_0xa1b2(0x12f), '').replace(_0xa1b2(0x130), '');
+                formattedContent = `${_0xa1b2(0x131)}${imgUrl}${_0xa1b2(0x132)}`;
+            } else if (formattedContent.match(new RegExp(_0xa1b2(0x133)))) {
+                const match = formattedContent.match(new RegExp(_0xa1b2(0x133)));
+                if (match) {
+                    const fileName = match[1];
+                    const fileUrl = match[2];
+                    const iframeId = `${_0xa1b2(0x134)}${msg.id || Math.random().toString(36).substring(2)}`;
+
+                    formattedContent = `
+                    <div class="html-preview-container">
+                        <div class="html-preview-header">
+                            <span style="font-size: 0.82rem; color: var(--text-muted);"><i class="fa-solid fa-code"></i> Preview: <b>${fileName}</b></span>
+                            <a href="${fileUrl}" target="_blank" class="msg-attachment-link" style="margin-top: 0;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Tab</a>
+                        </div>
+                        <iframe id="${iframeId}" class="html-preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+                    </div>`;
+
+                    pendingIframeLoad = () => {
+                        fetch(fileUrl)
+                            .then(res => res.text())
+                            .then(html => {
+                                const iframe = document.getElementById(iframeId);
+                                if (iframe) iframe.srcdoc = html;
+                            })
+                            .catch(err => console.error(_0xa1b2(0x135), err));
+                    };
+                }
+            } else if (formattedContent.startsWith(_0xa1b2(0x136)) && formattedContent.endsWith(_0xa1b2(0x137))) {
+                const match = formattedContent.match(new RegExp(_0xa1b2(0x138)));
+                if (match) formattedContent = `${_0xa1b2(0x139)}${match[2]}${_0xa1b2(0x13a)}${match[1]}${_0xa1b2(0x13b)}`;
+            } else { 
+                const tempDiv = document.createElement('div'); 
+                tempDiv.textContent = formattedContent; 
+                formattedContent = tempDiv.innerHTML; 
+            }
+        }
+
+        const isOnline = onlineUsers.has(msgUsername);
+        const avatarUrl = getAvatarUrl(msgUsername, avatarColor);
+
+        rowElement.innerHTML = `
+            <div class="avatar-wrapper" data-username="${msgUsername}">
+                <img src="${avatarUrl}" alt="${msgUsername}" class="chat-avatar">
+                <span class="online-badge ${isOnline ? '' : _0xa1b2(0x13e)}"></span>
+            </div>
+            <div class="message">
+                ${actionsHtml}
+                <div class="msg-header">
+                    <span class="msg-user">${isSelf ? _0xa1b2(0x102) : msgUsername}</span>
+                    <span class="msg-time">${timeString}</span>
+                </div>
+                <span class="msg-text" id="msg-text-${msg.id}">${formattedContent}</span>
+            </div>
+        `;
+
+        chatBox.appendChild(rowElement);
+        if (pendingIframeLoad) pendingIframeLoad();
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function editMessage(msgId, encodedContent) {
+        const currentContent = decodeURIComponent(encodedContent), newContent = prompt(_0xa1b2(0x13f), currentContent);
+        if (!newContent || newContent === currentContent) return;
+        const { error } = await supabase2.from(_0xa1b2(0xff)).update({ content: newContent }).eq('id', msgId);
+        if (error) alert(_0xa1b2(0x140) + error.message);
+    }
+
+    async function deleteMessage(msgId) {
+        if (!confirm(_0xa1b2(0x141))) return;
+        const { error } = await supabase2.from(_0xa1b2(0xff)).delete().eq('id', msgId);
+        if (error) alert(_0xa1b2(0x142) + error.message);
+    }
+
+    function initPresence() {
+        if (presenceChannel || !currentUser) return;
+        
+        const uname = currentUser.user_metadata?.username || currentUser.email.split(_0xa1b2(0xc1))[0];
+
+        presenceChannel = supabase2.channel(_0xa1b2(0x143), {
+            config: { presence: { key: uname } }
+        });
+
+        presenceChannel
+            .on(_0xa1b2(0x144), { event: _0xa1b2(0x145) }, () => {
+                const state = presenceChannel.presenceState();
+                onlineUsers.clear();
+                
+                Object.keys(state).forEach(username => {
+                    onlineUsers.add(username);
+                });
+
+                updateOnlineStatusUI();
+            })
+            .subscribe(async (status) => {
+                if (status === _0xa1b2(0x146)) {
+                    await presenceChannel.track({
+                        online_at: new Date().toISOString(),
+                        username: uname
+                    });
+                }
+            });
+    }
+
+    function updateOnlineStatusUI() {
+        document.querySelectorAll('.avatar-wrapper').forEach(wrapper => {
+            const username = wrapper.getAttribute(_0xa1b2(0x13c));
+            const badge = wrapper.querySelector(`.${_0xa1b2(0x13d)}`);
+            if (badge && username) {
+                if (onlineUsers.has(username)) {
+                    badge.classList.remove(_0xa1b2(0x13e));
+                } else {
+                    badge.classList.add(_0xa1b2(0x13e));
+                }
+            }
+        });
+    }
+
+    if (messageForm) {
+        messageForm.addEventListener(_0xa1b2(0xe9), async (e) => {
+            e.preventDefault(); 
+            const content = messageInput.value.trim();
+            if (!content || !activeRoomId || !currentUser) return;
+
+            const { data: { user } } = await supabase2.auth.getUser(); 
+            currentUser = user;
+            const myUsername = currentUser.user_metadata?.username;
+            const { data: roleData } = await supabase2.from(_0xa1b2(0x147)).select(_0xa1b2(0x148)).eq(_0xa1b2(0x149), myUsername).single();
+            const userRole = roleData?.role || _0xa1b2(0x14a);
+            const adkjnhdsfhfsdkjhsdj = myUsername === _0xa1b2(0x14b);
+            const dalkjadfksljfdsjkhaskjdjkfh = adkjnhdsfhfsdkjhsdj || userRole === _0xa1b2(0x14c);
+            const isMod = dalkjadfksljfdsjkhaskjdjkfh || userRole === _0xa1b2(0x14d);
+
+            async function handleCommand(inputString) {
+                const parts = inputString.trim().replace(new RegExp(_0xa1b2(0x14e)), '').split(/\s+/), command = parts[0].toLowerCase(), target = parts[1];
+                
+                switch (command) {
+                    case _0xa1b2(0x14f):
+                        if (!isMod) return alert(_0xa1b2(0x150));
+                        let helpMsg = _0xa1b2(0x151);
+                        if (dalkjadfksljfdsjkhaskjdjkfh) helpMsg += _0xa1b2(0x152);
+                        if (adkjnhdsfhfsdkjhsdj) helpMsg += _0xa1b2(0x153);
+                        alert(helpMsg);
+                        break;
+                    case _0xa1b2(0x154):
+                        if (!isMod) return alert(_0xa1b2(0x155));
+                        const oldUser = parts[1];
+                        const newUser = parts[2];
+                        if (!oldUser || !newUser) return alert(_0xa1b2(0x156));
+                    
+                        try {
+                            const { error: msgErr } = await supabase2.from(_0xa1b2(0xff)).update({ username: newUser }).eq('username', oldUser);
+                            if (msgErr) alert(_0xa1b2(0x157) + msgErr.message);
+                    
+                            await supabase2.from(_0xa1b2(0x147)).update({ username: newUser }).eq('username', oldUser);
+                    
+                            const { data: rooms } = await supabase2.from(_0xa1b2(0x105)).select('*');
+                            if (rooms) {
+                                for (const r of rooms) {
+                                    if (r.name.includes(_0xa1b2(0x106))) {
+                                        const roomParts = r.name.split(_0xa1b2(0x106));
+                                        const members = roomParts[1].replace(_0xa1b2(0x107), '').split(_0xa1b2(0x108)).map(s => s.trim());
+                                        if (members.includes(oldUser)) {
+                                            const updatedMembers = members.map(m => m === oldUser ? newUser : m).join(', ');
+                                            const updatedRoomName = `${roomParts[0]}${_0xa1b2(0x106)}${updatedMembers}]`;
+                                            await supabase2.from(_0xa1b2(0x105)).update({ name: updatedRoomName }).eq('id', r.id);
+                                        }
+                                    }
+                                }
+                            }
+                    
+                            if (currentUser?.user_metadata?.username === oldUser) {
+                                await supabase2.auth.updateUser({ data: { username: newUser } });
+                                currentUser.user_metadata.username = newUser;
+                                currentUserName.textContent = newUser;
+                                currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue(_0xa1b2(0xd9)).trim());
+                            }
+                    
+                            if (typingChannel) {
+                                typingChannel.send({
+                                    type: _0xa1b2(0xc4),
+                                    event: _0xa1b2(0xfa),
+                                    payload: { oldUser, newUser }
+                                });
+                            }
+                    
+                            await sendSystemMessage(activeRoomId, `${_0xa1b2(0x158)}${oldUser}${_0xa1b2(0x159)}${newUser}${_0xa1b2(0x15a)}`);
+                            alert(`${_0xa1b2(0x15b)}${oldUser}${_0xa1b2(0x15c)}${newUser}${_0xa1b2(0x15a)}`);
+                            
+                            fetchRooms();
+                            if (activeRoomId) fetchMessages();
+                        } catch (err) {
+                            alert(_0xa1b2(0x15d) + err.message);
+                        }
+                        break;
+                
+                    case _0xa1b2(0x15e): 
+                        if (!isMod) return alert(_0xa1b2(0x15f));
+                        if (!target) return alert(_0xa1b2(0x160));
+                        const { error: blockErr } = await supabase2.from(_0xa1b2(0x161)).upsert({ username: target }, { onConflict: 'username', ignoreDuplicates: true });
+                        if (!blockErr) { alert(`${target}${_0xa1b2(0x162)}`); sendSystemMessage(activeRoomId, `${_0xa1b2(0x158)}${target}${_0xa1b2(0x163)}`); }
+                        break;
+
+                    case _0xa1b2(0x164):
+                        if (!isMod) return alert(_0xa1b2(0x165));
+                        if (!target) return alert(_0xa1b2(0x166));
+                        await supabase2.from(_0xa1b2(0x161)).delete().eq('username', target); alert(`${target}${_0xa1b2(0x167)}`);
+                        break;
+
+                    case _0xa1b2(0x168): 
+                        if (!isMod) return alert(_0xa1b2(0x169));
+                        await supabase2.from(_0xa1b2(0x105)).update({ is_locked: true }).eq('id', activeRoomId); alert(_0xa1b2(0x16b)); sendSystemMessage(activeRoomId, _0xa1b2(0x16c)); 
+                        break;
+
+                    case _0xa1b2(0x16d): 
+                        if (!isMod) return alert(_0xa1b2(0x16e));
+                        await supabase2.from(_0xa1b2(0x105)).update({ is_locked: false }).eq('id', activeRoomId); alert(_0xa1b2(0x16f)); sendSystemMessage(activeRoomId, _0xa1b2(0x170)); 
+                        break;
+                    
+                    case 'system':
+                        if (!isMod) return alert(_0xa1b2(0x171));
+                        const sysMsg = inputString.replace(new RegExp(_0xa1b2(0x172)), '').trim();
+                        if (!sysMsg) return alert(_0xa1b2(0x173));
+                        await sendSystemMessage(activeRoomId, sysMsg);
+                        break;
+                    case _0xa1b2(0x174):
+                        if (!isMod) return alert(_0xa1b2(0x175)); if (!target) return alert(_0xa1b2(0x176));
+                        if (!activeRoomRawName.includes(_0xa1b2(0x106))) return alert(_0xa1b2(0x177));
+                        let addUpdatedName = `${activeRoomRawName.split(_0xa1b2(0x106))[0]}${_0xa1b2(0x106)}${activeRoomRawName.split(_0xa1b2(0x106))[1].replace(_0xa1b2(0x107), '')}, ${target}]`;
+                        const { error: addGcErr } = await supabase2.from(_0xa1b2(0x105)).update({ name: addUpdatedName }).eq('id', activeRoomId);
+                        if (!addGcErr) { activeRoomRawName = addUpdatedName; currentChannelDesc.textContent = `${_0xa1b2(0x10d)}${activeRoomRawName.split(_0xa1b2(0x10c))[1]}`; sendSystemMessage(activeRoomId, `${_0xa1b2(0x158)}${target}${_0xa1b2(0x178)}`); fetchRooms(); }
+                        break;
+
+                    case _0xa1b2(0x179):
+                        if (!isMod) return alert(_0xa1b2(0x17a)); if (!target) return alert(_0xa1b2(0x17b));
+                        if (!activeRoomRawName.includes(_0xa1b2(0x106))) return alert(_0xa1b2(0x177));
+                        let rmFiltered = activeRoomRawName.split(_0xa1b2(0x106))[1].replace(_0xa1b2(0x107), '').split(_0xa1b2(0x108)).map(s => s.trim()).filter(u => u !== target);
+                        let rmUpdatedName = `${activeRoomRawName.split(_0xa1b2(0x106))[0]}${_0xa1b2(0x106)}${rmFiltered.join(', ')}]`;
+                        const { error: rmGcErr } = await supabase2.from(_0xa1b2(0x105)).update({ name: rmUpdatedName }).eq('id', activeRoomId);
+                        if (!rmGcErr) { activeRoomRawName = rmUpdatedName; currentChannelDesc.textContent = `${_0xa1b2(0x10d)}${activeRoomRawName.split(_0xa1b2(0x10c))[1]}`; sendSystemMessage(activeRoomId, `${_0xa1b2(0x158)}${target}${_0xa1b2(0x17c)}`); fetchRooms(); }
+                        break;
+
+                    case _0xa1b2(0x14d):
+                        if (!dalkjadfksljfdsjkhaskjdjkfh) return alert(_0xa1b2(0x17d));
+                        if (!target) return alert(_0xa1b2(0x17e));
+                        await supabase2.from(_0xa1b2(0x147)).upsert({ username: target, role: _0xa1b2(0x14d) });
+                        alert(`${target}${_0xa1b2(0x17f)}`);
+                        break;
+
+                    case _0xa1b2(0x180):
+                        if (!dalkjadfksljfdsjkhaskjdjkfh) return alert(_0xa1b2(0x181));
+                        if (!target) return alert(_0xa1b2(0x182));
+                        await supabase2.from(_0xa1b2(0x147)).delete().eq('username', target);
+                        alert(`${target}${_0xa1b2(0x183)}`);
+                        break;
+
+                    case _0xa1b2(0x14c):
+                        if (!dalkjadfksljfdsjkhaskjdjkfh) return alert(_0xa1b2(0x184));
+                        if (!target) return alert(_0xa1b2(0x185));
+                        await supabase2.from(_0xa1b2(0x147)).upsert({ username: target, role: _0xa1b2(0x14c) });
+                        alert(`${target}${_0xa1b2(0x186)}`);
+                        break;
+
+                    case _0xa1b2(0x187):
+                        if (!adkjnhdsfhfsdkjhsdj) return alert(_0xa1b2(0x188));
+                        if (!target) return alert(_0xa1b2(0x189));
+                        await supabase2.from(_0xa1b2(0x147)).delete().eq('username', target);
+                        alert(`${target}${_0xa1b2(0x18a)}`);
+                        break;
+
+                    default: alert(`${_0xa1b2(0x18b)}${command}`);
+                }
+            }
+
+            if (content.startsWith('/')) { 
+                messageInput.value = ''; 
+                messageInput.style.height = _0xa1b2(0xc6); 
+                await handleCommand(content); 
+                return; 
+            }
+
+            typingIndicator.style.display = _0xa1b2(0xe2);
+            messageInput.value = ''; 
+            messageInput.style.height = _0xa1b2(0xc6);
+            
+            const { data, error } = await supabase2.from(_0xa1b2(0xff))
+                .insert([{ room_id: activeRoomId, content: content, username: myUsername }])
+                .select()
+                .single();
+
+            if (error) {
+                alert(_0xa1b2(0x18c) + error.message);
+            } else {
+                if (!document.getElementById(`msg-${data.id}`)) {
+                    appendMessage(data);
+                }
+            }
+        });
+    }
+
+    if (attachBtn) {
+        attachBtn.addEventListener(_0xa1b2(0xe1), () => { if (!activeRoomId) return alert(_0xa1b2(0x18d)); fileInput.click(); });
+    }
+
+    if (fileInput) {
+        fileInput.addEventListener(_0xa1b2(0xda), async (e) => {
+            const file = e.target.files[0]; if (!file || !activeRoomId || !currentUser) return;
+            attachBtn.innerHTML = _0xa1b2(0x18e); attachBtn.disabled = true;
+            const filePath = `${activeRoomId}/${Date.now()}-${Math.random().toString(36).substring(2)}.${file.name.split('.').pop()}`;
+            
+            const { error: uploadError } = await supabase2.storage.from(_0xa1b2(0x18f)).upload(filePath, file, {
+                contentType: file.type || _0xa1b2(0x190),
+                upsert: true
+            });
+            
+            if (uploadError) alert(_0xa1b2(0x191) + uploadError.message);
+            else {
+                const fileUrl = supabase2.storage.from(_0xa1b2(0x18f)).getPublicUrl(filePath).data.publicUrl;
+                let msgFormat = '';
+                
+                if (file.type.startsWith(_0xa1b2(0x192))) {
+                    msgFormat = `${_0xa1b2(0x12f)}${fileUrl}${_0xa1b2(0x130)}`;
+                } else if (file.name.toLowerCase().endsWith(_0xa1b2(0x193)) || file.type === _0xa1b2(0x190)) {
+                    msgFormat = `[HTML=${file.name}]${fileUrl}[/HTML]`;
+                } else {
+                    msgFormat = `[FILE=${file.name}]${fileUrl}[/FILE]`;
+                }
+                
+                await supabase2.from(_0xa1b2(0xff)).insert([{ room_id: activeRoomId, content: msgFormat, username: currentUser.user_metadata?.username }]);
+            }
+            attachBtn.innerHTML = _0xa1b2(0x194); attachBtn.disabled = false; fileInput.value = ''; 
+        });
+    }
+
+    applySavedPreferences(); 
+    checkSession();
   </script>
 </body>
 </html>
