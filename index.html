@@ -322,7 +322,7 @@
         .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); padding: 0 4px; }
         .pulse-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
 
-        .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--panel-bg); }
+        .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--panel-bg); position: relative; }
         .chat-header { 
           padding: 14px 20px; 
           border-bottom: 1px solid var(--border-color); 
@@ -434,6 +434,7 @@
           background: var(--panel-bg); 
           gap: 8px; 
           align-items: flex-end; 
+          position: relative;
         }
         .input-dock {
           flex: 1;
@@ -499,9 +500,59 @@
         }
         .send-btn:hover { background: var(--accent-hover); }
 
-        .chat-box::-webkit-scrollbar, .channels-section::-webkit-scrollbar, .input-dock textarea::-webkit-scrollbar { width: 5px; }
-        .chat-box::-webkit-scrollbar-track, .channels-section::-webkit-scrollbar-track, .input-dock textarea::-webkit-scrollbar-track { background: transparent; }
-        .chat-box::-webkit-scrollbar-thumb, .channels-section::-webkit-scrollbar-thumb, .input-dock textarea::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        /* Emoji Picker Popover */
+        .emoji-picker {
+          position: absolute;
+          bottom: 70px;
+          left: 20px;
+          width: 310px;
+          max-height: 240px;
+          background: var(--sidebar-bg);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-md);
+          box-shadow: var(--glass-shadow);
+          display: none;
+          flex-direction: column;
+          z-index: 100;
+          padding: 10px;
+        }
+        .emoji-picker.active { display: flex; }
+        .emoji-picker-header {
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          font-weight: 700;
+          margin-bottom: 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .emoji-picker-grid {
+          display: grid;
+          grid-template-columns: repeat(8, 1fr);
+          gap: 4px;
+          overflow-y: auto;
+          max-height: 190px;
+          padding-right: 2px;
+        }
+        .emoji-chip {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+          padding: 5px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background 0.12s ease;
+          user-select: none;
+        }
+        .emoji-chip:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-box::-webkit-scrollbar, .channels-section::-webkit-scrollbar, .input-dock textarea::-webkit-scrollbar, .emoji-picker-grid::-webkit-scrollbar { width: 5px; }
+        .chat-box::-webkit-scrollbar-track, .channels-section::-webkit-scrollbar-track, .input-dock textarea::-webkit-scrollbar-track, .emoji-picker-grid::-webkit-scrollbar-track { background: transparent; }
+        .chat-box::-webkit-scrollbar-thumb, .channels-section::-webkit-scrollbar-thumb, .input-dock textarea::-webkit-scrollbar-thumb, .emoji-picker-grid::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
 
         @keyframes typingBounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
 
@@ -600,12 +651,20 @@
             </div>
 
             <form class="chat-input-container" id="messageForm" style="display: none;">
+                <div class="emoji-picker" id="emojiPicker">
+                    <div class="emoji-picker-header">
+                        <span>Select Emoji</span>
+                        <button type="button" class="icon-btn" id="closeEmojiBtn" style="padding: 2px 6px;"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="emoji-picker-grid" id="emojiGrid"></div>
+                </div>
+
                 <input type="file" id="fileInput" style="display: none;" accept="image/*, .pdf, .doc, .txt, .zip, .html">
                 <div class="input-dock">
                     <button type="button" id="attachBtn" class="dock-btn" title="Attach File">
                         <i class="fa-solid fa-paperclip"></i>
                     </button>
-                    <button type="button" id="emojiBtn" class="dock-btn" title="Quick Emoji">
+                    <button type="button" id="emojiBtn" class="dock-btn" title="Emoji Picker">
                         <i class="fa-solid fa-face-smile"></i>
                     </button>
                     <textarea id="messageInput" placeholder="Write a message... (Shift+Enter for new line)" rows="1"></textarea>
@@ -628,6 +687,7 @@
     const uiSelector = document.getElementById('uiSelector'), accentColorPicker = document.getElementById('accentColorPicker');
     const startVoiceCallBtn = document.getElementById('startVoiceCallBtn'), startVideoCallBtn = document.getElementById('startVideoCallBtn'), callOverlay = document.getElementById('callOverlay'), endCallBtn = document.getElementById('endCallBtn'), jitsiContainer = document.getElementById('jitsiContainer');
     const attachBtn = document.getElementById('attachBtn'), emojiBtn = document.getElementById('emojiBtn'), fileInput = document.getElementById('fileInput'), typingIndicator = document.getElementById('typingIndicator'), typingText = document.getElementById('typingText');
+    const emojiPicker = document.getElementById('emojiPicker'), emojiGrid = document.getElementById('emojiGrid'), closeEmojiBtn = document.getElementById('closeEmojiBtn');
     
     const userRoomsMap = new Map(); 
     let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null, lastTypingTime = 0;
@@ -638,6 +698,41 @@
     const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     notificationSound.volume = 0.4;
 
+    const popularEmojis = [
+        '😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👋','🤚','🖐️','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','💔','❣️','💕','💞','💓','💗','💖','💘','💝','🔥','✨','🌟','💯','🎉','🎊','🚀','👀','👑','💎'
+    ];
+
+    popularEmojis.forEach(emoji => {
+        const span = document.createElement('span');
+        span.classList.add('emoji-chip');
+        span.textContent = emoji;
+        span.addEventListener('click', (e) => {
+            e.stopPropagation();
+            messageInput.value += emoji;
+            messageInput.focus();
+        });
+        emojiGrid.appendChild(span);
+    });
+
+    if (emojiBtn) {
+        emojiBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            emojiPicker.classList.toggle('active');
+        });
+    }
+
+    if (closeEmojiBtn) {
+        closeEmojiBtn.addEventListener('click', () => {
+            emojiPicker.classList.remove('active');
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if (emojiPicker && !emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+            emojiPicker.classList.remove('active');
+        }
+    });
+
     function getCurrentUsername() {
         return currentUser?.user_metadata?.username || currentUser?.email?.split('@')[0] || 'Anonymous';
     }
@@ -647,16 +742,6 @@
         formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         formatted = formatted.replace(/\*(.*?)\*/g, '<i>$1</i>');
         return formatted;
-    }
-
-    if (emojiBtn) {
-        emojiBtn.addEventListener('click', () => {
-            const emojis = ['💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','❤️‍','🔥','❤️‍','🩹','💯','♨️','💢','💬','👁️‍🗨️','🗨️','🗯️','💭','💤','🌐','♠️','♥️','♦️','♣️','🃏','🀄️','🎴','🎭️','🔇','🔈️','🔉','🔊','🔔','🔕','🎼','🎵','🎶','💹','🏧','🚮','🚰','♿️','🚹️','🚺️','🚻','🚼️','🚾','🛂','🛃','🛄','🛅','⚠️','🚸','⛔️','🚫','🚳','🚭️','🚯','🚱','🚷','📵','🔞','☢️','☣️','⬆️','↗️','➡️','↘️','⬇️','↙️','⬅️','↖️','↕️','↔️','↩️','↪️','⤴️','⤵️','🔃','🔄','🔙','🔚','🔛','🔜','🔝','🛐','⚛️','🕉️','✡️','☸️','☯️','✝️','☦️','☪️','☮️','🕎','🔯','♈️','♉️','♊️','♋️','♌️','♍️','♎️','♏️','♐️','♑️','♒️','♓️','⛎','🔀','🔁','🔂','▶️','⏩️','⏭️','⏯️','◀️','⏪️','⏮️','🔼','⏫','🔽','⏬','⏸️','⏹️','⏺️','⏏️','🎦','🔅','🔆','📶','📳','📴','♀️','♂️','⚧','✖️','➕','➖','➗','♾️','‼️','⁉️','❓️','❔','❕','❗️','〰️','💱','💲','⚕️','♻️','⚜️','🔱','📛','🔰','⭕️','✅','☑️','✔️','❌','❎','➰','➿','〽️','✳️','✴️','❇️','©️','®️','™️','#️⃣','*️⃣','0️⃣','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟','🔠','🔡','🔢','🔣','🔤','🅰️','🆎','🅱️','🆑','🆒','🆓','ℹ️','🆔','Ⓜ️','🆕','🆖','🅾️','🆗','🅿️','🆘','🆙','🆚','🈁','🈂️','🈷️','🈶','🈯️','🉐','🈹','🈚️','🈲','🉑','🈸','🈴','🈳','㊗️','㊙️','🈺','🈵','🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚫️','⚪️','🟥','🟧','🟨','🟩','🟦','🟪','🟫','⬛️','⬜️','◼️','◻️','◾️','◽️','▪️','▫️','🔶','🔷','🔸','🔹','🔺','🔻','💠','🔘','🔳','🔲','🕛️','🕧️','🕐️','🕜️','🕑️','🕝️','🕒️','🕞️','🕓️','🕟️','🕔️','🕠️','🕕️','🕡️','🕖️','🕢️','🕗️','🕣️','🕘️','🕤️','🕙️','🕥️','🕚️','🕦️','*️','#️','0️','1️','2️','3️','4️','5️','6️','7️','8️','9️','🛎️','🧳','⌛️','⏳️','⌚️','⏰','⏱️','⏲️','🕰️','🌡️','🗺️','🧭','🎃','🎄','🧨','🎈','🎉','🎊','🎎','🎏','🎐','🎀','🎁','🎗️','🎟️','🎫','🔮','🧿','🎮️','🕹️','🎰','🎲','♟️','🧩','🧸','🖼️','🎨','🧵','🧶','👓️','🕶️','🥽','🥼','🦺','👔','👕','👖','🧣','🧤','🧥','🧦','👗','👘','🥻','🩱','🩲','🩳','👙','👚','👛','👜','👝','🛍️','🎒','👞','👟','🥾','🥿','👠','👡','🩰','👢','👑','👒','🎩','🎓️','🧢','⛑️','📿','💄','💍','💎','📢','📣','📯','🎙️','🎚️','🎛️','🎤','🎧️','📻️','🎷','🎸','🎹','🎺','🎻','🪕','🥁','📱','📲','☎️','📞','📟️','📠','🔋','🔌','💻️','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿️','📀','🧮','🎥','🎞️','📽️','🎬️','📺️','📷️','📸','📹️','📼','🔍️','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚️','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','💰️','💴','💵','💶','💷','💸','💳️','🧾','✉️','💌','📧','🧧','📨','📩','📤️','📥️','📦️','📫️','📪️','📬️','📭️','📮','🗳️','✏️','✒️','🖋️','🖊️','🖌️','🖍️','📝','💼','📁','📂','🗂️','📅','📆','🗒️','🗓️','📇','📈','📉','📊','📋️','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','🔒️','🔓️','🔏','🔐','🔑','🗝️','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','💣️','🏹','🛡️','🔧','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️','🧰','🧲','⚗️','🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','🩹','🩺','🚪','🛏️','🛋️','🪑','🚽','🚿','🛁','🪒','🧴','🧷','🧹','🧺','🧻','🧼','🧽','🧯','🛒','🚬','⚰️','⚱️','🏺','🕳️','🏔️','⛰️','🌋','🗻','🏕️','🏖️','🏜️','🏝️','🏟️','🏛️','🏗️','🧱','🏘️','🏚️','🏠️','🏡','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪','🏫','🏬','🏭️','🏯','🏰','💒','🗼','🗽','⛪️','🕌','🛕','🕍','⛩️','🕋','⛲️','⛺️','🌁','🌃','🏙️','🌄','🌅','🌆','🌇','🌉','🗾','🏞️','🎠','🎡','🎢','💈','🎪','🚂','🚃','🚄','🚅','🚆','🚇️','🚈','🚉','🚊','🚝','🚞','🚋','🚌','🚍️','🚎','🚐','🚑️','🚒','🚓','🚔️','🚕','🚖','🚗','🚘️','🚙','🚚','🚛','🚜','🏎️','🏍️','🛵','🦽','🦼','🛺','🚲️','🛴','🛹','🚏','🛣️','🛤️','🛢️','⛽️','🚨','🚥','🚦','🛑','🚧','⚓️','⛵️','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸','🎆','🎇','🎑','🗿','⚽️','⚾️','🥎','🏀','🏐','🏈','🏉','🎾','🥏','🎳','🏏','🏑','🏒','🥍','🏓','🏸','🥊','🥋','🥅','⛳️','⛸️','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🪀','🪁','🎱','🎖️','🏆️','🏅','🥇','🥈','🥉','🍇','🍈','🍉','🍊','🍋','🍌','🍍','🥭','🍎','🍏','🍐','🍑','🍒','🍓','🥝','🍅','🥥','🥑','🍆','🥔','🥕','🌽','🌶️','🥒','🥬','🥦','🧄','🧅','🍄','🥜','🌰','🍞','🥐','🥖','🥨','🥯','🥞','🧇','🧀','🍖','🍗','🥩','🥓','🍔','🍟','🍕','🌭','🥪','🌮','🌯','🥙','🧆','🥚','🍳','🥘','🍲','🥣','🥗','🍿','🧈','🧂','🥫','🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍠','🍢','🍣','🍤','🍥','🥮','🍡','🥟','🥠','🥡','🍦','🍧','🍨','🍩','🍪','🎂','🍰','🧁','🥧','🍫','🍬','🍭','🍮','🍯','🍼','🥛','☕️','🍵','🍶','🍾','🍷','🍸️','🍹','🍺','🍻','🥂','🥃','🥤','🧃','🧉','🧊','🥢','🍽️','🍴','🥄','🔪','🐵','🐒','🦍','🦧','🐶','🐕️','🦮','🐕‍','🦺','🐩','🐺','🦊','🦝','🐱','🐈️','🐈‍','🦁','🐯','🐅','🐆','🐴','🐎','🦄','🦓','🦌','🐮','🐂','🐃','🐄','🐷','🐖','🐗','🐽','🐏','🐑','🐐','🐪','🐫','🦙','🦒','🐘','🦏','🦛','🐭','🐁','🐀','🐹','🐰','🐇','🐿️','🦔','🦇','🐻','🐻‍','❄️','🐨','🐼','🦥','🦦','🦨','🦘','🦡','🐾','🦃','🐔','🐓','🐣','🐤','🐥','🐦️','🐧','🕊️','🦅','🦆','🦢','🦉','🦩','🦚','🦜','🐸','🐊','🐢','🦎','🐍','🐲','🐉','🦕','🦖','🐳','🐋','🐬','🐟️','🐠','🐡','🦈','🐙','🦑','🦀','🦞','🦐','🦪','🐚','🐌','🦋','🐛','🐜','🐝','🐞','🦗','🕷️','🕸️','🦂','🦟','🦠','💐','🌸','💮','🏵️','🌹','🥀','🌺','🌻','🌼','🌷','🌱','🌲','🌳','🌴','🌵','🎋','🎍','🌾','🌿','☘️','🍀','🍁','🍂','🍃','🌍️','🌎️','🌏️','🌑','🌒','🌓','🌔','🌕️','🌖','🌗','🌘','🌙','🌚','🌛','🌜️','☀️','🌝','🌞','🪐','💫','⭐️','🌟','✨','🌠','🌌','☁️','⛅️','⛈️','🌤️','🌥️','🌦️','🌧️','🌨️','🌩️','🌪️','🌫️','🌬️','🌀','🌈','🌂','☂️','☔️','⛱️','⚡️','❄️','☃️','⛄️','☄️','🔥','💧','🌊','💥','💦','💨','😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐️','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','😮‍','💨','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','😶‍','🌫️','🥴','😵‍','💫','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽️','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊','👋','🤚','🖐️','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👈️','👉️','👆️','🖕','👇️','☝️','👍️','👎️','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂️','🦻','👃','🧠','🦷','🦴','👀','👁️','👅','👄','💋','👶','🧒','👦','👧','🧑','👨','👩','🧔','🧔‍♀️','🧔‍♂️','🧑','👨‍','🦰','👩‍','🦰','🧑','👨‍','🦱','👩‍','🦱','🧑','👨‍','🦳','👩‍','🦳','🧑','👨‍','🦲','👩‍','🦲','👱','👱‍♂️','👱‍♀️','🧓','👴','👵','🙍','🙍‍♂️','🙍‍♀️','🙎','🙎‍♂️','🙎‍♀️','🙅','🙅‍♂️','🙅‍♀️','🙆','🙆‍♂️','🙆‍♀️','💁','💁‍♂️','💁‍♀️','🙋','🙋‍♂️','🙋‍♀️','🧏','🧏‍♂️','🧏‍♀️','🙇','🙇‍♂️','🙇‍♀️','🤦','🤦‍♂️','🤦‍♀️','🤷','🤷‍♂️','🤷‍♀️','🧑‍⚕️','👨‍⚕️','👩‍⚕️','🧑‍🎓','👨‍🎓','👩‍🎓','🧑‍🏫','👨‍🏫','👩‍🏫','🧑‍⚖️','👨‍⚖️','👩‍⚖️','🧑‍🌾','👨‍🌾','👩‍🌾','🧑‍🍳','👨‍🍳','👩‍🍳','🧑‍🔧','👨‍🔧','👩‍🔧','🧑‍🏭','👨‍🏭','👩‍🏭','🧑‍💼','👨‍💼','👩‍💼','🧑‍🔬','👨‍🔬','👩‍🔬','🧑‍💻','👨‍💻','👩‍💻','🧑‍🎤','👨‍🎤','👩‍🎤','🧑‍🎨','👨‍🎨','👩‍🎨','🧑‍✈️','👨‍✈️','👩‍✈️','🧑‍🚀','👨‍🚀','👩‍🚀','🧑‍🚒','👨‍🚒','👩‍🚒','👮','👮‍♂️','👮‍♀️','🕵️','🕵️‍♂️','🕵️‍♀️','💂','💂‍♂️','💂‍♀️','👷','👷‍♂️','👷‍♀️','🤴','👸','👳','👳‍♂️','👳‍♀️','👲','🧕','🤵','🤵‍♂️','🤵‍♀️','👰','👰‍♂️','👰‍♀️','🤰','🤱','👩‍','🍼','👨‍','🍼','🧑‍','🍼','👼','🎅','🤶','🧑‍','🎄','🦸','🦸‍♂️','🦸‍♀️','🦹','🦹‍♂️','🦹‍♀️','🧙','🧙‍♂️','🧙‍♀️','🧚','🧚‍♂️','🧚‍♀️','🧛','🧛‍♂️','🧛‍♀️','🧜','🧜‍♂️','🧜‍♀️','🧝','🧝‍♂️','🧝‍♀️','🧞','🧞‍♂️','🧞‍♀️','🧟','🧟‍♂️','🧟‍♀️','💆','💆‍♂️','💆‍♀️','💇','💇‍♂️','💇‍♀️','🚶','🚶‍♂️','🚶‍♀️','🧍','🧍‍♂️','🧍‍♀️','🧎','🧎‍♂️','🧎‍♀️','🧑‍','🦯','👨‍','🦯','👩‍','🦯','🧑‍','🦼','👨‍','🦼','👩‍','🦼','🧑‍','🦽','👨‍','🦽','👩‍','🦽','🏃','🏃‍♂️','🏃‍♀️','💃','🕺','🕴️','👯','👯‍♂️','👯‍♀️','🧖','🧖‍♂️','🧖‍♀️','🧗','🧗‍♂️','🧗‍♀️','🤺','🏇','⛷️','🏂️','🏌️','🏌️‍♂️','🏌️‍♀️','🏄️','🏄‍♂️','🏄‍♀️','🚣','🚣‍♂️','🚣‍♀️','🏊️','🏊‍♂️','🏊‍♀️','⛹️','⛹️‍♂️','⛹️‍♀️','🏋️','🏋️‍♂️','🏋️‍♀️','🚴','🚴‍♂️','🚴‍♀️','🚵','🚵‍♂️','🚵‍♀️','🤸','🤸‍♂️','🤸‍♀️','🤼','🤼‍♂️','🤼‍♀️','🤽','🤽‍♂️','🤽‍♀️','🤾','🤾‍♂️','🤾‍♀️','🤹','🤹‍♂️','🤹‍♀️','🧘','🧘‍♂️','🧘‍♀️','🛀','🛌','🧑‍','🤝‍','🧑','👭','👫','👬','💏','👩‍❤️‍💋‍👨','👨‍❤️‍💋‍👨','👩‍❤️‍💋‍👩','💑','👩‍❤️‍👨','👨‍❤️‍👨','👩‍❤️‍👩','👪️','👨‍👩‍👦','👨‍👩‍👧','👨‍👩‍👧‍👦','👨‍👩‍👦‍👦','👨‍👩‍👧‍👧','👨‍👨‍👦','👨‍👨‍👧','👨‍👨‍👧‍👦','👨‍👨‍👦‍👦','👨‍👨‍👧‍👧','👩‍👩‍👦','👩‍👩‍👧','👩‍👩‍👧‍👦','👩‍👩‍👦‍👦','👩‍👩‍👧‍👧','👨‍👦','👨‍👦‍👦','👨‍👧','👨‍👧‍👦','👨‍👧‍👧','👩‍👦','👩‍👦‍👦','👩‍👧','👩‍👧‍👦','👩‍👧‍👧','🗣️','👤','👥','👣'];
-
-            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-            messageInput.value += randomEmoji;
-            messageInput.focus();
-        });
     }
 
     messageInput.addEventListener('input', () => {
@@ -849,7 +934,11 @@
                 }
             })
             .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
-                const rowElem = document.getElementById(`msg-${payload.old.id}`); if (rowElem) rowElem.remove();
+                const deletedId = payload.old?.id;
+                if (deletedId) {
+                    const rowElem = document.getElementById(`msg-${deletedId}`); 
+                    if (rowElem) rowElem.remove();
+                }
             })
             .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms' }, (payload) => {
                 const updatedRoom = payload.new;
@@ -1082,8 +1171,17 @@
 
     async function deleteMessage(msgId) {
         if (!confirm("Are you sure you want to delete this message?")) return;
-        const { error } = await supabase2.from('messages').delete().eq('id', msgId);
-        if (error) alert("Failed to delete message: " + error.message);
+        try {
+            const { error } = await supabase2.from('messages').delete().eq('id', msgId);
+            if (error) {
+                alert("Failed to delete message: " + error.message);
+            } else {
+                const rowElem = document.getElementById(`msg-${msgId}`);
+                if (rowElem) rowElem.remove();
+            }
+        } catch (err) {
+            alert("Error deleting message: " + err.message);
+        }
     }
 
     function initPresence() {
