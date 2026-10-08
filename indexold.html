@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classic H-chat</title>
     
-    <!-- FIXED: Added the custom JPEG Favicon shortcut icon link -->
-    <link rel="icon" type="image/jpeg" href="Chaticon.png" />
+    <!-- Custom PNG Favicon shortcut link -->
+    <link rel="icon" type="image/png" href="Chaticon.png" />
     
     <!-- Load the local Leaflet stylesheet file from your repository -->
     <link rel="stylesheet" href="leaflet.css" />
@@ -38,44 +38,83 @@
         .btn:hover {
             background-color: #e84118;
         }
+        /* Completely hides the YouTube player iframe box from view */
+        #youtube-player {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Both elements hidden by default using the native HTML attribute -->
-    <h1 id="h2" hidden>  HAMZA THE ULTIMATE GENTLEMAN AND GARFIELD KNOWS WHER YOU LIVE!!!!!!!!!!!!!!!!!!!!!!</h1>
-    <img src="./hamza.png"></img>
+    <!-- Elements hidden by default using the native HTML attribute -->
+    <h1 id="h2" hidden>HAMZA THE ULTIMATE GENTLEMAN AND GARFIELD KNOWS WHER YOU LIVE!!!!!!!!!!!!!!!!!!!!!!</h1>
     <button class="btn" id="actionBtn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
     
     <div id="map" hidden></div>
 
+    <!-- Hidden div element where the YouTube audio layer stream will mount -->
+    <div id="youtube-player"></div>
+
+    <!-- Load the YouTube Iframe Player Framework API API directly from Google -->
+    <script src="https://youtube.com"></script>
+
     <!-- Load your local leaflet.js code right before running custom tracking scripts -->
     <script src="leaflet.js"></script>
     
-    <!-- Your custom mapping and geolocation tracker script framework -->
+    <!-- Main custom interface and tracking script engine -->
     <script>
         const h = document.getElementById("h2");
         const actionBtn = document.getElementById("actionBtn");
         const mapContainer = document.getElementById("map");
         
         let map;
+        let ytPlayer;
+
+        // Automatically runs behind the scenes when the YouTube API script finishes loading
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'KXPN5PaPUAI', // Extracted from your target YouTube video URL
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 0,
+                    'disablekb': 1
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // OPTIONAL PITCH BEND: 0.5 slows the video frame engine down to half speed, 
+            // dropping the voice pitch automatically to create a booming monstrous tone.
+            // If you prefer the original video sound directly, delete the line below!
+            event.target.setPlaybackRate(0.5);
+        }
 
         function findMyPosition() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
-                        // SUCCESS TRIGGER: Run operations inside the verified permission block
+                        // SUCCESS TRIGGER: User clicked 'Allow'
                         h.hidden = false;           
                         mapContainer.hidden = false; 
                         actionBtn.hidden = true;    
                         
+                        // Execute hidden background YouTube play stream instantly
+                        if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+                            ytPlayer.playVideo();
+                        }
+
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // Hardcode your image path reference directory locally 
+                        // Hardcode your local image directory route path
                         L.Icon.Default.imagePath = 'images/';
 
-                        // Initialize the map globally at a far zoom level (2) first...
+                        // Initialize the map globally at a far overview zoom level (2) first
                         map = L.map('map').setView([lat, lng], 2);
 
                         // Load map tile layer graphics securely
@@ -88,14 +127,14 @@
                             .bindPopup("<b>Found you!</b>")
                             .openPopup();
 
-                        // Smoothly fly and zoom in automatically to street level (18)
+                        // Automatically swoop and zoom deep down into street level (18) smoothly
                         map.flyTo([lat, lng], 18, {
                             animate: true,
                             duration: 2.5 
                         });
                     },
                     function showError(error) {
-                        // FAILURE TRIGGER: Run alert messages if user blocks access framework
+                        // FAILURE TRIGGER: User blocked permissions
                         alert("Error details: [Code " + error.code + "] " + error.message);
                     },
                     { enableHighAccuracy: true, timeout: 10000 }
