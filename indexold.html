@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classic H-chat</title>
-    <!-- Include Leaflet CSS file in the <head> -->
-    <link rel="stylesheet" href="https://unpkg.com" />
-
-    <!-- Include Leaflet JavaScript file inside <head> -->
-    <script src="https://unpkg.com"></script>
-
+    <!-- 1. Load the Leaflet CSS first -->
+    <link rel="stylesheet" href="https://unpkg.com" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,7 +16,7 @@
             width: 100%;
             height: 500px;
             margin-top: 15px;
-            background-color: #d0d0d0; /* Changed background color so you can tell when tiles load */
+            background-color: #d0d0d0; 
             border: 2px solid #333;
         }
         .btn {
@@ -41,12 +37,16 @@
 </head>
 <body>
 
-    <!-- Both elements hidden by default via HTML attribute -->
+    <!-- Elements hidden by default via HTML attribute -->
     <h2 id="h2" hidden>P.DIDDY IS COMING FOR YOU!</h2>
     <button class="btn" id="actionBtn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
     
     <div id="map" hidden></div>
 
+    <!-- 2. CRUCIAL: Load Leaflet JS right here BEFORE your custom script runs -->
+    <script src="https://unpkg.com" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- 3. Your custom mapping and geolocation script -->
     <script>
         const h = document.getElementById("h2");
         const actionBtn = document.getElementById("actionBtn");
@@ -65,22 +65,13 @@
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // Create the map container instance
+                        // Now 'L' is fully defined because Leaflet JS loaded first!
                         map = L.map('map').setView([lat, lng], 15);
 
-                        // Primary Tile Layer: OpenStreetMap
-                        const primaryTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        // Load map tile layers securely
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; OpenStreetMap contributors'
                         }).addTo(map);
-
-                        // FALLBACK: If OpenStreetMap tiles fail to load (blocked by ad-blocker), switch to CARTO tiles
-                        primaryTiles.on('tileerror', function() {
-                            console.warn("Primary tiles failed. Switching to fallback server...");
-                            map.removeLayer(primaryTiles);
-                            L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
-                                attribution: '&copy; CARTO'
-                            }).addTo(map);
-                        });
 
                         // Drop the pin marker
                         L.marker([lat, lng]).addTo(map)
