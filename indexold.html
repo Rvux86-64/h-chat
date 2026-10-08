@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C H-chat</title>
+    <title>Classic H-chat</title>
     <!-- Include Leaflet CSS file in the <head> -->
     <link rel="stylesheet" href="https://unpkg.com" />
 
@@ -51,40 +51,37 @@
         const h = document.getElementById("h2");
         const actionBtn = document.getElementById("actionBtn");
         const mapContainer = document.getElementById("map");
-
-        // Set up the map engine immediately in the background
-        const map = L.map('map').setView([0, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        
+        let map; // Define map placeholder variable globally
 
         // This only runs when you click the button
         function findMyPosition() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
-                        // SUCCESS: User pressed 'Allow'
+                        // 1. FIRST: Unhide the text and map container completely
                         h.hidden = false;           
                         mapContainer.hidden = false; 
                         actionBtn.hidden = true;    
                         
-                        // FIXED: Added a 150ms timeout delay.
-                        // This allows the map container to fully exist on screen before Leaflet recalculates sizes.
-                        setTimeout(function() {
-                            map.invalidateSize();
-                            
-                            const lat = position.coords.latitude;
-                            const lng = position.coords.longitude;
-                            
-                            // Move view smoothly and drop the pin
-                            map.flyTo([lat, lng], 15);
-                            L.marker([lat, lng]).addTo(map)
-                                .bindPopup("<b>Found you!</b>")
-                                .openPopup();
-                        }, 150);
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        // 2. SECOND: Create the Leaflet map NOW that the container is visible and has size!
+                        // This prevents the grey box bug entirely.
+                        map = L.map('map').setView([lat, lng], 15);
+
+                        // 3. THIRD: Load map tile layers on top of the newly built view
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+
+                        // 4. FOURTH: Drop the pin marker
+                        L.marker([lat, lng]).addTo(map)
+                            .bindPopup("<b>Found you!</b>")
+                            .openPopup();
                     },
                     function showError(error) {
-                        // FAILURE: User pressed 'Block' or error occurred
                         alert("Error details: [Code " + error.code + "] " + error.message);
                     },
                     { enableHighAccuracy: true, timeout: 10000 }
