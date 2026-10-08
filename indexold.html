@@ -6,7 +6,7 @@
     <title>Classic H-chat</title>
     
     <!-- Custom PNG Favicon shortcut link -->
-    <link rel="icon" type="image/png" href="/hamza.png" />
+    <link rel="icon" type="image/png" href="Chaticon.png" />
     
     <!-- Load the local Leaflet stylesheet file from your repository -->
     <link rel="stylesheet" href="leaflet.css" />
@@ -38,24 +38,31 @@
         .btn:hover {
             background-color: #e84118;
         }
-        /* Completely hides the YouTube player iframe box from view */
+        
+        /* FIXED: Moves the player completely outside visible layout limits */
+        /* This keeps the tracking audio engine fully active in the background */
         #youtube-player {
-            display: none;
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
         }
     </style>
 </head>
 <body>
 
     <!-- Elements hidden by default using the native HTML attribute -->
-    <h1 id="h2" hidden>HAMZA THE ULTIMATE GENTLEMAN AND GARFIELD KNOWS WHER YOU LIVE!!!!!!!!!!!!!!!!!!!!!!</h1>
+    <h2 id="h2" hidden>P.DIDDY IS COMING FOR YOU!</h2>
     <button class="btn" id="actionBtn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
     
     <div id="map" hidden></div>
 
-    <!-- Hidden div element where the YouTube audio layer stream will mount -->
+    <!-- The invisible mounting node where the YouTube frame renders -->
     <div id="youtube-player"></div>
 
-    <!-- Load the YouTube Iframe Player Framework API API directly from Google -->
+    <!-- Load the YouTube Iframe Player Framework API directly from Google -->
     <script src="https://youtube.com"></script>
 
     <!-- Load your local leaflet.js code right before running custom tracking scripts -->
@@ -73,13 +80,16 @@
         // Automatically runs behind the scenes when the YouTube API script finishes loading
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
+                height: '1',
+                width: '1',
                 videoId: 'KXPN5PaPUAI', // Extracted from your target YouTube video URL
                 playerVars: {
-                    'playsinline': 1,
+                    'autoplay': 0,
+                    'mute': 0,
                     'controls': 0,
-                    'disablekb': 1
+                    'disablekb': 1,
+                    'playsinline': 1,
+                    'origin': window.location.origin
                 },
                 events: {
                     'onReady': onPlayerReady
@@ -88,9 +98,8 @@
         }
 
         function onPlayerReady(event) {
-            // OPTIONAL PITCH BEND: 0.5 slows the video frame engine down to half speed, 
-            // dropping the voice pitch automatically to create a booming monstrous tone.
-            // If you prefer the original video sound directly, delete the line below!
+            // Drops video tracking frame playback down to half speed 
+            // to force an organic deep villain vocal pitch bend transformation
             event.target.setPlaybackRate(0.5);
         }
 
