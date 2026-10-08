@@ -562,6 +562,50 @@
 <body>
 
     <div id="authModal" class="auth-modal">
+        <div id="modPanelModal" class="auth-modal" style="display: none; z-index: 1500;">
+    <div class="auth-box" style="max-width: 450px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h2><i class="fa-solid fa-shield-halved" style="color: var(--accent);"></i> Mod Panel</h2>
+            <button class="icon-btn" id="closeModPanel"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="mod-section">
+            <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Target User / Input</label>
+            <input type="text" id="modTargetInput" placeholder="Enter username or message..." autocomplete="off">
+        </div>
+
+        <div class="mod-section" style="margin-top: 10px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Moderator</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+                <button onclick="dispatchCmd('/block')">Block User</button>
+                <button onclick="dispatchCmd('/unblock')">Unblock User</button>
+                <button onclick="dispatchCmd('/lock')">Lock Room</button>
+                <button onclick="dispatchCmd('/unlock')">Unlock Room</button>
+                <button onclick="dispatchCmd('/addtogc')">Add to GC</button>
+                <button onclick="dispatchCmd('/removefromgc')">Remove from GC</button>
+                <button onclick="dispatchCmd('/system')" style="grid-column: span 2;">Send System Message</button>
+            </div>
+        </div>
+
+        <div class="mod-section" style="margin-top: 10px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Super Moderator</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+                <button onclick="dispatchCmd('/mod')">Make Mod</button>
+                <button onclick="dispatchCmd('/unmod')">Remove Mod</button>
+                <button onclick="dispatchCmd('/supermod')" style="grid-column: span 2;">Make Supermod</button>
+            </div>
+        </div>
+        
+        <div class="mod-section" style="margin-top: 10px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Rename User</label>
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <input type="text" id="renameOldInput" placeholder="Old Name" style="flex: 1;">
+                <input type="text" id="renameNewInput" placeholder="New Name" style="flex: 1;">
+                <button onclick="dispatchRenameCmd()" style="width: auto; padding: 0 15px;">Rename</button>
+            </div>
+        </div>
+    </div>
+</div>
         <div class="auth-box">
             <h2 id="authTitle">Create Account</h2>
             <form id="authForm">
@@ -627,6 +671,7 @@
                     <p id="currentChannelDesc">Select a chat to begin messaging</p>
                 </div>
                 <div class="chat-header-actions" id="chatActions" style="display: none;">
+                    <button id="modPanelBtn" class="icon-btn" title="Mod Panel"><i class="fa-solid fa-shield-halved"></i></button>
                     <button id="addUserBtn" class="icon-btn" title="Add User to Chat"><i class="fa-solid fa-user-plus"></i></button>
                     <button id="startVoiceCallBtn" class="icon-btn" title="Start Voice Call"><i class="fa-solid fa-phone"></i></button>
                     <button id="startVideoCallBtn" class="icon-btn" title="Start Video Call"><i class="fa-solid fa-video"></i></button>
@@ -1456,6 +1501,72 @@
 
     applySavedPreferences(); 
     checkSession();
+    // Mod Panel Element References
+const modPanelBtn = document.getElementById('modPanelBtn');
+const modPanelModal = document.getElementById('modPanelModal');
+const closeModPanel = document.getElementById('closeModPanel');
+const modTargetInput = document.getElementById('modTargetInput');
+const renameOldInput = document.getElementById('renameOldInput');
+const renameNewInput = document.getElementById('renameNewInput');
+
+// Open and Close Mod Panel
+modPanelBtn.addEventListener('click', () => {
+    modPanelModal.style.display = 'flex';
+});
+
+closeModPanel.addEventListener('click', () => {
+    modPanelModal.style.display = 'none';
+});
+
+// Hide panel if user clicks outside of it
+modPanelModal.addEventListener('click', (e) => {
+    if (e.target === modPanelModal) {
+        modPanelModal.style.display = 'none';
+    }
+});
+
+// Function to route commands into the existing chat input logic
+window.dispatchCmd = function(baseCmd) {
+    const target = modTargetInput.value.trim();
+    
+    // Commands that don't need a target parameter
+    const noTargetCmds = ['/lock', '/unlock'];
+    
+    if (!noTargetCmds.includes(baseCmd) && !target) {
+        alert("Please enter a target username or message in the input field above.");
+        return;
+    }
+
+    // Format the command string (e.g. "/block username")
+    let fullCommand = baseCmd;
+    if (target && !noTargetCmds.includes(baseCmd)) {
+        fullCommand = `${baseCmd} ${target}`;
+    }
+
+    // Inject into existing input and simulate form submission
+    messageInput.value = fullCommand;
+    messageForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    
+    // Clear input after execution
+    modTargetInput.value = '';
+};
+
+// Special function for renaming since it requires two parameters
+window.dispatchRenameCmd = function() {
+    const oldName = renameOldInput.value.trim();
+    const newName = renameNewInput.value.trim();
+    
+    if (!oldName || !newName) {
+        alert("Please provide both the old username and the new username.");
+        return;
+    }
+    
+    messageInput.value = `/rename ${oldName} ${newName}`;
+    messageForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    
+    renameOldInput.value = '';
+    renameNewInput.value = '';
+};
   </script>
 </body>
 </html>
