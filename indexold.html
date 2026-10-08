@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C H-chat</title>
+    <title>Classic H-chat</title>
     
-    <!-- 1. FIXED CLOUDFLARE CDN: Load the full, exact Leaflet CSS path -->
-    <link rel="stylesheet" href="https://cloudflare.com" integrity="sha512-Zcn6dE621WQNf58Z696SreidHbt5700oKAtf95O47Ld+4wNmd1C4WxfW86SffZpWSOAnP24IAnF63jZ9i9Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- 1. FIXED: Pull the style sheet from your local repository files instead of external URLs -->
+    <link rel="stylesheet" href="leaflet.css" />
     
     <style>
         body {
@@ -45,8 +45,8 @@
     
     <div id="map" hidden></div>
 
-    <!-- 2. FIXED CLOUDFLARE CDN: Load the full, exact Leaflet JS library path -->
-    <script src="https://cloudflare.com" integrity="sha512-Bw3bTcx97me6L9cT3zG4oYf18R4A8bJbY5iXW63mX8S58o9iN6K8F8N0W2zHwKz8f18k1C6E668nO5mK2r1uSw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- 2. FIXED: Load your local leaflet.js script right here from your project tree -->
+    <script src="leaflet.js"></script>
     
     <!-- 3. Your custom mapping and geolocation script -->
     <script>
@@ -67,7 +67,7 @@
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // Create the Leaflet map instance
+                        // Create the Leaflet map instance securely using the local file
                         map = L.map('map').setView([lat, lng], 15);
 
                         // Load map tile layers securely
