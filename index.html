@@ -346,7 +346,31 @@
         .message-row.system .avatar-wrapper, .message-row.system .msg-header, .message-row.system .msg-actions { display: none; }
 
         .chat-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-color); }
+        /* Smooth message hover interactions */
+        .message {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
         
+        /* Modernize the scrollbar */
+        .chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-box::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-box::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            opacity: 0.5;
+            border-radius: 10px;
+            border: 2px solid var(--panel-bg);
+        }
+        .chat-box::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-hover);
+        }
         .message { 
           padding: 12px 16px; 
           border-radius: 16px; 
@@ -573,6 +597,9 @@
                 <button type="button" id="attachBtn" title="Attach File" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);">
                     <i class="fa-solid fa-paperclip"></i>
                 </button>
+                <button type="button" id="emojiBtn" title="Quick Emoji" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);">
+                    <i class="fa-solid fa-face-smile"></i>
+                </button>
                 <textarea id="messageInput" placeholder="Write a message... (Shift+Enter for new line)" rows="1"></textarea>
                 <button type="submit" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
             </form>
@@ -592,12 +619,18 @@
     const uiSelector = document.getElementById('uiSelector'), accentColorPicker = document.getElementById('accentColorPicker');
     const startVoiceCallBtn = document.getElementById('startVoiceCallBtn'), startVideoCallBtn = document.getElementById('startVideoCallBtn'), callOverlay = document.getElementById('callOverlay'), endCallBtn = document.getElementById('endCallBtn'), jitsiContainer = document.getElementById('jitsiContainer');
     const attachBtn = document.getElementById('attachBtn'), fileInput = document.getElementById('fileInput'), typingIndicator = document.getElementById('typingIndicator'), typingText = document.getElementById('typingText');
-
+    const userRoomsMap = new Map(); 
     let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null, lastTypingTime = 0;
     let typingChannel = null;
     let presenceChannel = null;
     const onlineUsers = new Set();
-
+    
+    function formatMessageText(text) {
+        let formatted = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="msg-attachment-link" style="margin-top: 0; display: inline;">$1</a>');
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        formatted = formatted.replace(/\*(.*?)\*/g, '<i>$1</i>');
+        return formatted;
+    }
    // Helper to safely get current username with fallback
 function getCurrentUsername() {
     return currentUser?.user_metadata?.username || currentUser?.email?.split('@')[0] || 'Anonymous';
@@ -708,7 +741,14 @@ messageInput.addEventListener('input', () => {
 
     function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission().catch(err => console.log("Permission skipped:", err)); }
     function showNotification(username, message) { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(`New message from ${username}`, { body: message, icon: getAvatarUrl(username) }); }
-
+    const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    notificationSound.volume = 0.4;
+    try { 
+        if (currentUser && payload.new.username !== currentUser.user_metadata?.username) {
+            showNotification(payload.new.username, payload.new.content); 
+            notificationSound.play().catch(e => console.log("Audio play blocked by browser interaction rules"));
+        }
+    } catch (err) {alert(err);}
   function initRealtime() {
     if (window.msgChannel) return;
 
@@ -746,13 +786,25 @@ messageInput.addEventListener('input', () => {
         window.msgChannel = supabase2
             .channel('db-changes')
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-                if (activeRoomId && payload.new.room_id == activeRoomId) {
+                const msgRoomId = String(payload.new.room_id);
+            
+                // Stop processing if you are not a member of this GC/channel
+                if (!userRoomsMap.has(msgRoomId)) return;
+            
+                if (activeRoomId && msgRoomId === String(activeRoomId)) {
                     if (!document.getElementById(`msg-${payload.new.id}`)) appendMessage(payload.new);
                 } else {
                     const unreadEl = document.querySelector(`.channel-item[data-id="${payload.new.room_id}"]`);
                     if (unreadEl) unreadEl.classList.add('unread');
                 }
-                try { if (currentUser && payload.new.username !== currentUser.user_metadata?.username) showNotification(payload.new.username, payload.new.content); } catch (err) {}
+            
+                try { 
+                    if (currentUser && payload.new.username !== getCurrentUsername()) {
+                        const channelName = userRoomsMap.get(msgRoomId) || '';
+                        showNotification(payload.new.username, payload.new.content, channelName); 
+                        notificationSound.play().catch(e => console.log("Audio play blocked by browser interaction rules"));
+                    }
+                } catch (err) {}
             })
             .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, (payload) => {
                 const rowElem = document.getElementById(`msg-${payload.new.id}`);
@@ -812,7 +864,12 @@ messageInput.addEventListener('input', () => {
         
         checkSession();
     });
-
+    document.getElementById('emojiBtn').addEventListener('click', () => {
+        const emojis = ['😂', '🔥', '👍', '❤️', '💀', '👀', '✨', '💯'];
+        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+        messageInput.value += randomEmoji;
+        messageInput.focus();
+    });
    async function sendSystemMessage(roomId, text) {
     try {
         const { error } = await supabase2.from('messages').insert([
@@ -865,8 +922,10 @@ messageInput.addEventListener('input', () => {
     async function fetchRooms() {
         const { data: rooms, error } = await supabase2.from('rooms').select('*').order('name', { ascending: true });
         if (error) return console.error('Error loading chat groups:', error);
-
+    
         channelsList.innerHTML = ''; 
+        userRoomsMap.clear();
+    
         if (rooms && rooms.length > 0) {
             const myUsername = currentUser.user_metadata?.username;
             rooms.forEach((room) => {
@@ -874,11 +933,14 @@ messageInput.addEventListener('input', () => {
                     const membersStr = room.name.split(' — [')[1].replace(']', '');
                     if (!membersStr.split(',').map(s => s.trim()).includes(myUsername)) return; 
                 }
-
+    
+                const cleanName = room.name.split(' — ')[0];
+                userRoomsMap.set(String(room.id), cleanName);
+    
                 const roomEl = document.createElement('div'); 
                 roomEl.classList.add('channel-item'); 
                 roomEl.setAttribute('data-id', room.id);
-                roomEl.innerHTML = `<i class="fa-solid fa-hashtag" style="margin-right: 8px; opacity: 0.6;"></i> ${room.name.split(' — ')[0]}`;
+                roomEl.innerHTML = `<i class="fa-solid fa-hashtag" style="margin-right: 8px; opacity: 0.6;"></i> ${cleanName}`;
                 roomEl.addEventListener('click', () => { switchRoom(room.id, room.name); roomEl.classList.remove('unread'); });
                 channelsList.appendChild(roomEl);
             });
@@ -964,7 +1026,7 @@ messageInput.addEventListener('input', () => {
             } else { 
                 const tempDiv = document.createElement('div'); 
                 tempDiv.textContent = formattedContent; 
-                formattedContent = tempDiv.innerHTML; 
+                formattedContent = formatMessageText(tempDiv.innerHTML);
             }
         }
 
