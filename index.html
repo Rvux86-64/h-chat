@@ -9,74 +9,79 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://meet.jit.si/external_api.js"></script>
     
     <style>
         :root {
-          --bg-main: #090d16;
-          --panel-bg: rgba(17, 24, 39, 0.75);
+          --bg-main: #09090b;
+          --panel-bg: #121215;
+          --sidebar-bg: #16161a;
           --panel-border: rgba(255, 255, 255, 0.08);
           --accent: #10b981;
           --accent-hover: #059669;
-          --border-color: rgba(255, 255, 255, 0.1);
-          --text-main: #f3f4f6;
-          --text-muted: #9ca3af;
+          --border-color: rgba(255, 255, 255, 0.08);
+          --text-main: #f4f4f5;
+          --text-muted: #71717a;
           --msg-self: #10b981;
-          --msg-other: rgba(31, 41, 55, 0.8);
-          --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-          --radius-lg: 16px;
-          --radius-md: 10px;
-          --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+          --msg-other: #18181b;
+          --glass-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+          --radius-lg: 14px;
+          --radius-md: 8px;
+          --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         } 
 
         body.theme-ocean {
-          --bg-main: #0b1329;
-          --panel-bg: rgba(30, 41, 59, 0.8);
+          --bg-main: #080d1a;
+          --panel-bg: #0f172a;
+          --sidebar-bg: #131d33;
           --accent: #0ea5e9;
           --accent-hover: #0284c7;
-          --border-color: rgba(255, 255, 255, 0.12);
+          --border-color: rgba(255, 255, 255, 0.09);
           --text-main: #f8fafc;
-          --text-muted: #94a3b8;
+          --text-muted: #64748b;
           --msg-self: #0ea5e9;
-          --msg-other: rgba(30, 41, 59, 0.9);
+          --msg-other: #1e293b;
         }
 
         body.theme-hacker {
           --bg-main: #050505;
-          --panel-bg: rgba(12, 12, 12, 0.9);
+          --panel-bg: #0c0c0c;
+          --sidebar-bg: #111111;
           --accent: #22c55e;
           --accent-hover: #16a34a;
-          --border-color: rgba(34, 197, 94, 0.25);
+          --border-color: rgba(34, 197, 94, 0.2);
           --text-main: #4ade80;
           --text-muted: #15803d;
           --msg-self: #15803d;
-          --msg-other: rgba(10, 20, 10, 0.9);
+          --msg-other: #121a12;
           --font-family: 'Fira Code', monospace;
         }
 
         body.theme-sunset {
-          --bg-main: #1f1216;
-          --panel-bg: rgba(63, 42, 38, 0.8);
+          --bg-main: #140d10;
+          --panel-bg: #1f1418;
+          --sidebar-bg: #271a1f;
           --accent: #f97316;
           --accent-hover: #ea580c;
-          --border-color: rgba(255, 255, 255, 0.1);
+          --border-color: rgba(255, 255, 255, 0.08);
           --text-main: #fffbeb;
-          --text-muted: #d97706;
+          --text-muted: #a16207;
           --msg-self: #f97316;
-          --msg-other: rgba(63, 42, 38, 0.9);
+          --msg-other: #2e1d23;
         }
 
         body.light-mode {
-          --bg-main: #f1f5f9;
-          --panel-bg: rgba(255, 255, 255, 0.85);
-          --border-color: rgba(0, 0, 0, 0.1);
+          --bg-main: #e2e8f0;
+          --panel-bg: #ffffff;
+          --sidebar-bg: #f8fafc;
+          --border-color: rgba(0, 0, 0, 0.08);
           --text-main: #0f172a;
           --text-muted: #64748b;
           --msg-self: var(--accent);
-          --msg-other: #ffffff;
-          --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+          --msg-other: #f1f5f9;
+          --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); }
@@ -87,19 +92,17 @@
           align-items: center; 
           height: 100vh; 
           background-color: var(--bg-main); 
-          background-image: 
-            radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
-            radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.12) 0px, transparent 50%);
           color: var(--text-main); 
           overflow: hidden;
-          transition: background-color 0.3s, color 0.3s;
+          transition: background-color 0.25s, color 0.25s;
+          letter-spacing: -0.01em;
         }
 
         .auth-modal { 
           position: fixed; 
           inset: 0; 
-          background: rgba(5, 8, 15, 0.85); 
-          backdrop-filter: blur(16px); 
+          background: rgba(0, 0, 0, 0.75); 
+          backdrop-filter: blur(8px); 
           display: flex; 
           justify-content: center; 
           align-items: center; 
@@ -107,73 +110,70 @@
         }
         .auth-box { 
           background: var(--panel-bg); 
-          backdrop-filter: blur(20px); 
-          padding: 36px; 
+          padding: 32px; 
           border-radius: var(--radius-lg); 
           border: 1px solid var(--border-color); 
           width: 100%; 
-          max-width: 420px; 
+          max-width: 380px; 
           display: flex; 
           flex-direction: column; 
-          gap: 16px; 
+          gap: 14px; 
           box-shadow: var(--glass-shadow); 
         }
         .auth-box h2 { 
           color: var(--text-main); 
-          font-size: 1.6rem;
+          font-size: 1.4rem;
           font-weight: 700;
           text-align: center; 
-          margin-bottom: 4px;
+          margin-bottom: 2px;
         }
         .auth-box input { 
           width: 100%; 
-          background: rgba(0, 0, 0, 0.2); 
+          background: rgba(255, 255, 255, 0.03); 
           border: 1px solid var(--border-color); 
           color: var(--text-main); 
-          padding: 12px 16px; 
+          padding: 11px 14px; 
           border-radius: var(--radius-md); 
-          margin-bottom: 8px; 
           outline: none; 
-          font-size: 0.95rem; 
-          transition: all 0.2s ease; 
+          font-size: 0.9rem; 
+          transition: all 0.15s ease; 
         }
         .auth-box input:focus { 
           border-color: var(--accent); 
-          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); 
+          box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); 
         }
         .auth-box button { 
           width: 100%; 
-          padding: 14px; 
+          padding: 12px; 
           background: var(--accent); 
           color: white; 
           border: none; 
           border-radius: var(--radius-md); 
           cursor: pointer; 
           font-weight: 600; 
-          font-size: 1rem; 
-          transition: all 0.2s ease; 
+          font-size: 0.95rem; 
+          transition: all 0.15s ease; 
+          margin-top: 4px;
         }
         .auth-box button:hover { 
           background: var(--accent-hover); 
-          transform: translateY(-1px);
         }
         .auth-toggle { 
           text-align: center; 
           color: var(--text-muted); 
-          font-size: 0.9rem; 
+          font-size: 0.85rem; 
           cursor: pointer; 
-          transition: color 0.2s; 
+          transition: color 0.15s; 
         }
-        .auth-toggle:hover { color: var(--accent); }
+        .auth-toggle:hover { color: var(--text-main); }
 
         .chat-wrapper { 
           display: flex; 
-          width: 1000px; 
-          height: 750px; 
-          max-width: 95vw;
-          max-height: 92vh;
+          width: 1040px; 
+          height: 760px; 
+          max-width: 96vw;
+          max-height: 94vh;
           background: var(--panel-bg); 
-          backdrop-filter: blur(24px); 
           border: 1px solid var(--border-color); 
           border-radius: var(--radius-lg); 
           box-shadow: var(--glass-shadow); 
@@ -181,23 +181,24 @@
         }
 
         .sidebar { 
-          width: 290px; 
-          background: rgba(0, 0, 0, 0.15); 
+          width: 270px; 
+          background: var(--sidebar-bg); 
           border-right: 1px solid var(--border-color); 
-          padding: 20px; 
+          padding: 18px 16px; 
           display: flex; 
           flex-direction: column; 
-          gap: 20px; 
+          gap: 16px; 
         }
         .brand { 
           display: flex; 
           align-items: center; 
-          gap: 12px; 
-          font-size: 1.35rem; 
+          gap: 10px; 
+          font-size: 1.15rem; 
           font-weight: 700; 
-          color: var(--accent); 
-          letter-spacing: -0.5px;
+          color: var(--text-main); 
+          padding: 0 4px;
         }
+        .brand i { color: var(--accent); font-size: 1.25rem; }
 
         .avatar-wrapper {
           position: relative;
@@ -207,296 +208,302 @@
         
         .online-badge {
           position: absolute;
-          bottom: 1px;
-          right: 1px;
-          width: 10px;
-          height: 10px;
+          bottom: 0px;
+          right: 0px;
+          width: 9px;
+          height: 9px;
           background-color: #10b981; 
-          border: 2px solid var(--bg-main);
+          border: 2px solid var(--panel-bg);
           border-radius: 50%;
-          transition: background-color 0.3s ease;
         }
         .online-badge.offline {
           background-color: #6b7280; 
         }
 
-        .channels-section { display: flex; flex-direction: column; gap: 10px; flex: 1; overflow-y: auto; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; }
-        .section-title { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; }
+        .channels-section { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: auto; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; }
+        .section-title { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
         
         .icon-btn { 
           background: transparent; 
           color: var(--text-muted); 
           border: none; 
           cursor: pointer; 
-          padding: 8px; 
-          border-radius: 8px; 
-          transition: all 0.2s ease; 
+          padding: 6px 8px; 
+          border-radius: 6px; 
+          transition: all 0.15s ease; 
         }
-        .icon-btn:hover { color: var(--accent); background: rgba(255, 255, 255, 0.05); }
-        .channels-list { display: flex; flex-direction: column; gap: 4px; }
+        .icon-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+        .channels-list { display: flex; flex-direction: column; gap: 2px; }
 
         .channel-item { 
           display: flex; 
           align-items: center; 
-          padding: 10px 12px; 
+          padding: 8px 10px; 
           border-radius: var(--radius-md); 
           cursor: pointer; 
           color: var(--text-muted); 
-          font-size: 0.92rem; 
+          font-size: 0.88rem; 
           font-weight: 500;
-          transition: all 0.2s ease; 
+          transition: all 0.15s ease; 
           position: relative; 
         }
-        .channel-item:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
-        .channel-item.active { background: rgba(255, 255, 255, 0.08); color: var(--accent); font-weight: 600; }
+        .channel-item:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
+        .channel-item.active { background: rgba(255, 255, 255, 0.07); color: var(--text-main); font-weight: 600; }
+        .channel-item.active::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 6px;
+          bottom: 6px;
+          width: 3px;
+          background: var(--accent);
+          border-radius: 0 2px 2px 0;
+        }
         .channel-item.unread { font-weight: 700; color: var(--text-main); }
-        .channel-item.unread::after { content: ''; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; background: #ef4444; border-radius: 50%; box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+        .channel-item.unread::after { content: ''; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 7px; height: 7px; background: #ef4444; border-radius: 50%; }
 
         .user-card { 
           display: flex; 
           flex-direction: column; 
           gap: 10px; 
           background: rgba(0, 0, 0, 0.15); 
-          padding: 14px; 
+          padding: 12px; 
           border-radius: var(--radius-md); 
           border: 1px solid var(--border-color); 
         }
-        .user-card label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; }
-        .current-user-text { font-weight: 600; color: var(--text-main); font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
-        .mini-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+        .user-card label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+        .current-user-text { font-weight: 600; color: var(--text-main); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .mini-avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
         
-        .user-actions { display: flex; gap: 8px; }
+        .user-actions { display: flex; gap: 6px; }
         .settings-btn { 
-          background: rgba(0,0,0,0.2); 
+          background: rgba(255,255,255,0.03); 
           border: 1px solid var(--border-color); 
           color: var(--text-main); 
-          padding: 8px; 
+          padding: 6px 8px; 
           border-radius: 6px; 
           cursor: pointer; 
           flex: 1; 
-          font-size: 0.85rem;
-          transition: background 0.2s; 
+          font-size: 0.8rem;
+          transition: background 0.15s; 
+          outline: none;
         }
-        .settings-btn:hover { background: rgba(255, 255, 255, 0.05); }
-        .color-picker-wrapper { position: relative; width: 34px; height: 34px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
-        .color-picker-wrapper input[type="color"] { position: absolute; inset: -10px; width: 60px; height: 60px; cursor: pointer; border: none; }
+        .settings-btn:hover { background: rgba(255, 255, 255, 0.08); }
+        .color-picker-wrapper { position: relative; width: 30px; height: 30px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
+        .color-picker-wrapper input[type="color"] { position: absolute; inset: -10px; width: 50px; height: 50px; cursor: pointer; border: none; }
         
         .logout-btn { 
-          background: rgba(239, 68, 68, 0.1); 
-          border: 1px solid rgba(239, 68, 68, 0.3); 
+          background: rgba(239, 68, 68, 0.08); 
+          border: 1px solid rgba(239, 68, 68, 0.2); 
           color: #ef4444; 
-          padding: 8px; 
+          padding: 6px; 
           border-radius: 6px; 
           cursor: pointer; 
-          font-size: 0.85rem; 
-          transition: all 0.2s; 
+          font-size: 0.8rem; 
+          transition: all 0.15s; 
           flex: 1; 
         }
-        .logout-btn:hover { background: rgba(239, 68, 68, 0.2); }
+        .logout-btn:hover { background: rgba(239, 68, 68, 0.18); }
         .old-version-btn { 
           display: block; 
           text-align: center; 
-          padding: 10px; 
-          border: 1px dashed var(--border-color); 
+          padding: 8px; 
+          border: 1px solid var(--border-color); 
           color: var(--text-muted); 
           text-decoration: none; 
           border-radius: var(--radius-md); 
-          font-size: 0.85rem; 
+          font-size: 0.8rem; 
           font-weight: 500; 
-          transition: all 0.2s ease; 
+          transition: all 0.15s ease; 
         }
-        .old-version-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .old-version-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-main); }
         
-        .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-muted); }
-        .pulse-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); animation: pulse 1.8s infinite; }
+        .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); padding: 0 4px; }
+        .pulse-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
 
-        .main-chat { flex: 1; display: flex; flex-direction: column; background: rgba(0, 0, 0, 0.05); }
+        .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--panel-bg); }
         .chat-header { 
-          padding: 18px 24px; 
+          padding: 14px 20px; 
           border-bottom: 1px solid var(--border-color); 
-          background: rgba(0, 0, 0, 0.1); 
           display: flex; 
           justify-content: space-between; 
           align-items: center; 
         }
-        .header-info h3 { font-size: 1.15rem; font-weight: 600; color: var(--text-main); }
-        .header-info p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-        .chat-header-actions { display: flex; gap: 8px; }
+        .header-info h3 { font-size: 1.05rem; font-weight: 600; color: var(--text-main); }
+        .header-info p { font-size: 0.78rem; color: var(--text-muted); margin-top: 1px; }
+        .chat-header-actions { display: flex; gap: 6px; }
         
-        .chat-placeholder { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted); gap: 14px; text-align: center; padding: 40px; }
-        .chat-placeholder i { font-size: 3.5rem; color: var(--accent); opacity: 0.6; }
-        .chat-placeholder h2 { color: var(--text-main); font-weight: 600; }
+        .chat-placeholder { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted); gap: 12px; text-align: center; padding: 40px; }
+        .chat-placeholder i { font-size: 2.8rem; color: var(--text-muted); opacity: 0.4; }
+        .chat-placeholder h2 { color: var(--text-main); font-weight: 600; font-size: 1.2rem; }
+        .chat-placeholder p { font-size: 0.88rem; }
         
         .chat-box { 
           flex: 1; 
-          padding: 24px; 
+          padding: 20px; 
           overflow-y: auto; 
           display: flex; 
           flex-direction: column; 
-          gap: 16px; 
+          gap: 12px; 
           scroll-behavior: smooth; 
         }
         
-        .message-row { display: flex; gap: 12px; align-items: flex-start; max-width: 80%; animation: slideUp 0.2s ease-out forwards; position: relative; }
+        .message-row { display: flex; gap: 10px; align-items: flex-start; max-width: 82%; position: relative; }
         .message-row.self { align-self: flex-end; flex-direction: row-reverse; }
         
-        .message-row.system { max-width: 100%; justify-content: center; align-self: center; margin: 8px 0; }
-        .message-row.system .message { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-color); font-style: italic; }
+        .message-row.system { max-width: 100%; justify-content: center; align-self: center; margin: 4px 0; }
+        .message-row.system .message { background: rgba(255, 255, 255, 0.03); color: var(--text-muted); font-size: 0.78rem; text-align: center; padding: 4px 14px; border-radius: 12px; border: 1px solid var(--border-color); font-style: italic; }
         .message-row.system .avatar-wrapper, .message-row.system .msg-header, .message-row.system .msg-actions { display: none; }
 
-        .chat-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-color); }
-        /* Smooth message hover interactions */
-        .message {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .message:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
+        .chat-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
         
-        /* Modernize the scrollbar */
-        .chat-box::-webkit-scrollbar {
-            width: 8px;
-        }
-        .chat-box::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .chat-box::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            opacity: 0.5;
-            border-radius: 10px;
-            border: 2px solid var(--panel-bg);
-        }
-        .chat-box::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-hover);
-        }
         .message { 
-          padding: 12px 16px; 
-          border-radius: 16px; 
+          padding: 10px 14px; 
+          border-radius: 12px; 
           background: var(--msg-other); 
           color: var(--text-main); 
           word-break: break-word; 
           position: relative; 
           border: 1px solid var(--border-color);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .message-row.self .message { 
           background: var(--msg-self); 
           color: white; 
-          border-bottom-right-radius: 4px; 
+          border-top-right-radius: 2px; 
           border: none;
         }
-        .message-row:not(.self):not(.system) .message { border-bottom-left-radius: 4px; }
+        .message-row:not(.self):not(.system) .message { border-top-left-radius: 2px; }
         
-        .msg-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; gap: 12px; }
-        .msg-user { font-weight: 600; font-size: 0.8rem; color: var(--accent); }
-        .msg-time { font-size: 0.68rem; color: var(--text-muted); opacity: 0.8; white-space: nowrap; }
+        .msg-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 10px; }
+        .msg-user { font-weight: 600; font-size: 0.78rem; color: var(--accent); }
+        .msg-time { font-size: 0.65rem; color: var(--text-muted); opacity: 0.85; white-space: nowrap; }
         .message-row.self .msg-user, .message-row.self .msg-time { color: rgba(255,255,255,0.85); }
-        .msg-text { font-size: 0.95rem; line-height: 1.45; display: block; white-space: pre-wrap; }
+        .msg-text { font-size: 0.9rem; line-height: 1.45; display: block; white-space: pre-wrap; }
         
-        .msg-attachment-img { max-width: 100%; max-height: 280px; border-radius: 10px; margin-top: 8px; display: block; border: 1px solid var(--border-color); }
-        .msg-attachment-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 500; word-break: break-all; }
+        .msg-attachment-img { max-width: 100%; max-height: 260px; border-radius: 8px; margin-top: 6px; display: block; border: 1px solid var(--border-color); }
+        .msg-attachment-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500; word-break: break-all; }
         .msg-attachment-link:hover { text-decoration: underline; }
 
         .html-preview-container {
-            margin-top: 8px;
+            margin-top: 6px;
             width: 100%;
-            min-width: 280px;
+            min-width: 260px;
             background: rgba(0,0,0,0.2);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px;
+            border-radius: 8px;
+            padding: 8px;
         }
         .html-preview-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .html-preview-iframe {
             width: 100%;
-            height: 280px;
+            height: 250px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 6px;
             background: #ffffff;
         }
 
-        .msg-actions { display: none; position: absolute; top: -12px; right: 10px; background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px 6px; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .msg-actions { display: none; position: absolute; top: -10px; right: 8px; background: var(--sidebar-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px 4px; gap: 2px; }
         .message-row.self:not(.system):hover .msg-actions { display: flex; }
-        .msg-action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.75rem; padding: 4px; }
-        .msg-action-btn:hover { color: var(--accent); }
+        .msg-action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.72rem; padding: 3px 5px; border-radius: 4px; }
+        .msg-action-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.08); }
         .msg-action-btn.delete-btn:hover { color: #ef4444; }
 
         .typing-indicator { 
           display: none; 
           align-items: center; 
           gap: 6px; 
-          padding: 8px 24px; 
-          font-size: 0.82rem; 
-          color: var(--accent); 
-          font-style: italic; 
+          padding: 6px 20px; 
+          font-size: 0.78rem; 
+          color: var(--text-muted); 
         }
-        .typing-dots { display: inline-flex; gap: 4px; }
-        .typing-dot { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out; }
+        .typing-dots { display: inline-flex; gap: 3px; }
+        .typing-dot { width: 3px; height: 3px; background: var(--text-muted); border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out; }
         .typing-dot:nth-child(1) { animation-delay: 0s; }
         .typing-dot:nth-child(2) { animation-delay: 0.2s; }
         .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
         .chat-input-container { 
           display: flex; 
-          padding: 16px 24px; 
-          background: rgba(0, 0, 0, 0.15); 
-          border-top: 1px solid var(--border-color); 
-          gap: 12px; 
+          padding: 12px 20px 16px; 
+          background: var(--panel-bg); 
+          gap: 8px; 
           align-items: flex-end; 
         }
-        .chat-input-container textarea { 
+        .input-dock {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-md);
+          padding: 4px 8px;
+          gap: 4px;
+          transition: border-color 0.15s ease;
+        }
+        .input-dock:focus-within {
+          border-color: var(--accent);
+        }
+        .input-dock textarea { 
           flex: 1; 
-          background: rgba(0, 0, 0, 0.2); 
-          border: 1px solid var(--border-color); 
+          background: transparent; 
+          border: none; 
           color: var(--text-main); 
-          padding: 12px 16px; 
-          border-radius: var(--radius-md); 
+          padding: 8px 6px; 
           outline: none; 
-          font-size: 0.95rem; 
-          transition: all 0.2s ease; 
+          font-size: 0.9rem; 
           resize: none; 
-          min-height: 46px; 
-          max-height: 120px; 
+          min-height: 38px; 
+          max-height: 110px; 
           overflow-y: auto; 
           line-height: 1.4; 
         }
-        .chat-input-container textarea:focus { 
-          border-color: var(--accent); 
-          box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15); 
+        .dock-btn {
+          background: transparent;
+          border: none;
+          color: var(--text-muted);
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 0.95rem;
+          transition: all 0.15s ease;
+          flex-shrink: 0;
         }
-        
-        .chat-input-container button { 
+        .dock-btn:hover {
+          color: var(--text-main);
+          background: rgba(255, 255, 255, 0.06);
+        }
+        .send-btn { 
           background: var(--accent); 
           border: none; 
           color: white; 
-          width: 46px; 
-          height: 46px; 
+          width: 38px; 
+          height: 38px; 
           border-radius: var(--radius-md); 
           cursor: pointer; 
           display: flex; 
           justify-content: center; 
           align-items: center; 
-          font-size: 1.1rem; 
-          transition: all 0.2s ease; 
+          font-size: 0.95rem; 
+          transition: all 0.15s ease; 
           flex-shrink: 0; 
         }
-        .chat-input-container button:hover { background: var(--accent-hover); }
-        .chat-input-container button:active { transform: scale(0.96); }
+        .send-btn:hover { background: var(--accent-hover); }
 
-        .chat-box::-webkit-scrollbar, .channels-section::-webkit-scrollbar, .chat-input-container textarea::-webkit-scrollbar { width: 6px; }
-        .chat-box::-webkit-scrollbar-track, .channels-section::-webkit-scrollbar-track, .chat-input-container textarea::-webkit-scrollbar-track { background: transparent; }
-        .chat-box::-webkit-scrollbar-thumb, .channels-section::-webkit-scrollbar-thumb, .chat-input-container textarea::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+        .chat-box::-webkit-scrollbar, .channels-section::-webkit-scrollbar, .input-dock textarea::-webkit-scrollbar { width: 5px; }
+        .chat-box::-webkit-scrollbar-track, .channels-section::-webkit-scrollbar-track, .input-dock textarea::-webkit-scrollbar-track { background: transparent; }
+        .chat-box::-webkit-scrollbar-thumb, .channels-section::-webkit-scrollbar-thumb, .input-dock textarea::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
 
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes typingBounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
+        @keyframes typingBounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
 
         @media(max-width: 768px) { .chat-wrapper { width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; border-radius: 0; border: none; } .sidebar { display: none; } }
     </style>
@@ -521,18 +528,18 @@
 
     <div id="callOverlay" class="auth-modal" style="display: none; z-index: 2000; flex-direction: column;">
         <div id="jitsiContainer" style="width: 85%; height: 85%; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);"></div>
-        <button id="endCallBtn" style="background: #ef4444; padding: 12px 24px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: filter 0.2s;">
+        <button id="endCallBtn" style="background: #ef4444; padding: 10px 20px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
             <i class="fa-solid fa-phone-slash"></i> Close Call Window
         </button>
     </div>
 
     <div class="chat-wrapper" id="mainApp" style="display: none;">
         <div class="sidebar">
-            <div class="brand"><i class="fa-solid fa-circle-nodes"></i><span>h-chat</span></div>
+            <div class="brand"><i class="fa-solid fa-comments"></i><span>h-chat</span></div>
             
             <div class="channels-section">
                 <div class="section-header">
-                    <label class="section-title"><i class="fa-solid fa-comments"></i> Your Chats</label>
+                    <label class="section-title">Your Chats</label>
                     <button id="createChatBtn" class="icon-btn" title="Create new chat"><i class="fa-solid fa-plus"></i></button>
                 </div>
                 <div class="channels-list" id="channelsList"></div>
@@ -541,7 +548,7 @@
             <a href="./indexold.html" class="old-version-btn" title="Go to the classic layout"><i class="fa-solid fa-clock-rotate-left"></i> Classic Mode</a>
 
             <div class="user-card">
-                <label><i class="fa-solid fa-user-shield"></i> Profile</label>
+                <label>Profile</label>
                 <div id="currentUserDisplay" class="current-user-text">
                     <img src="" alt="User" class="mini-avatar" id="currentUserAvatar">
                     <span id="currentUserName">Loading...</span>
@@ -594,14 +601,16 @@
 
             <form class="chat-input-container" id="messageForm" style="display: none;">
                 <input type="file" id="fileInput" style="display: none;" accept="image/*, .pdf, .doc, .txt, .zip, .html">
-                <button type="button" id="attachBtn" title="Attach File" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);">
-                    <i class="fa-solid fa-paperclip"></i>
-                </button>
-                <button type="button" id="emojiBtn" title="Quick Emoji" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);">
-                    <i class="fa-solid fa-face-smile"></i>
-                </button>
-                <textarea id="messageInput" placeholder="Write a message... (Shift+Enter for new line)" rows="1"></textarea>
-                <button type="submit" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+                <div class="input-dock">
+                    <button type="button" id="attachBtn" class="dock-btn" title="Attach File">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                    <button type="button" id="emojiBtn" class="dock-btn" title="Quick Emoji">
+                        <i class="fa-solid fa-face-smile"></i>
+                    </button>
+                    <textarea id="messageInput" placeholder="Write a message... (Shift+Enter for new line)" rows="1"></textarea>
+                </div>
+                <button type="submit" id="sendBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
             </form>
         </div>
     </div>
@@ -618,41 +627,53 @@
     const messageInput = document.getElementById('messageInput'), channelsList = document.getElementById('channelsList'), currentChannelName = document.getElementById('currentChannelName'), currentChannelDesc = document.getElementById('currentChannelDesc');
     const uiSelector = document.getElementById('uiSelector'), accentColorPicker = document.getElementById('accentColorPicker');
     const startVoiceCallBtn = document.getElementById('startVoiceCallBtn'), startVideoCallBtn = document.getElementById('startVideoCallBtn'), callOverlay = document.getElementById('callOverlay'), endCallBtn = document.getElementById('endCallBtn'), jitsiContainer = document.getElementById('jitsiContainer');
-    const attachBtn = document.getElementById('attachBtn'), fileInput = document.getElementById('fileInput'), typingIndicator = document.getElementById('typingIndicator'), typingText = document.getElementById('typingText');
+    const attachBtn = document.getElementById('attachBtn'), emojiBtn = document.getElementById('emojiBtn'), fileInput = document.getElementById('fileInput'), typingIndicator = document.getElementById('typingIndicator'), typingText = document.getElementById('typingText');
+    
     const userRoomsMap = new Map(); 
     let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null, lastTypingTime = 0;
     let typingChannel = null;
     let presenceChannel = null;
     const onlineUsers = new Set();
     
+    const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    notificationSound.volume = 0.4;
+
+    function getCurrentUsername() {
+        return currentUser?.user_metadata?.username || currentUser?.email?.split('@')[0] || 'Anonymous';
+    }
+
     function formatMessageText(text) {
         let formatted = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="msg-attachment-link" style="margin-top: 0; display: inline;">$1</a>');
         formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         formatted = formatted.replace(/\*(.*?)\*/g, '<i>$1</i>');
         return formatted;
     }
-   // Helper to safely get current username with fallback
-function getCurrentUsername() {
-    return currentUser?.user_metadata?.username || currentUser?.email?.split('@')[0] || 'Anonymous';
-}
 
-// Fixed Input Listener
-messageInput.addEventListener('input', () => {
-    const now = Date.now();
-    const username = getCurrentUsername();
-    
-    if (activeRoomId && username && typingChannel && (now - lastTypingTime > 1200)) {
-        lastTypingTime = now;
-        typingChannel.send({
-            type: 'broadcast',
-            event: 'typing',
-            payload: { room_id: String(activeRoomId), username: username }
+    if (emojiBtn) {
+        emojiBtn.addEventListener('click', () => {
+            const emojis = ['😂', '🔥', '👍', '❤️', '💀', '👀', '✨', '💯'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            messageInput.value += randomEmoji;
+            messageInput.focus();
         });
     }
-    
-    messageInput.style.height = 'auto';
-    messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
-});
+
+    messageInput.addEventListener('input', () => {
+        const now = Date.now();
+        const username = getCurrentUsername();
+        
+        if (activeRoomId && username && typingChannel && (now - lastTypingTime > 1200)) {
+            lastTypingTime = now;
+            typingChannel.send({
+                type: 'broadcast',
+                event: 'typing',
+                payload: { room_id: String(activeRoomId), username: username }
+            });
+        }
+        
+        messageInput.style.height = 'auto';
+        messageInput.style.height = Math.min(messageInput.scrollHeight, 110) + 'px';
+    });
 
     messageInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) { 
@@ -740,64 +761,66 @@ messageInput.addEventListener('input', () => {
     });
 
     function requestNotificationPermission() { if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission().catch(err => console.log("Permission skipped:", err)); }
-    function showNotification(username, message) { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(`New message from ${username}`, { body: message, icon: getAvatarUrl(username) }); }
-    const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-    notificationSound.volume = 0.4;
-    try { 
-        if (currentUser && payload.new.username !== currentUser.user_metadata?.username) {
-            showNotification(payload.new.username, payload.new.content); 
-            notificationSound.play().catch(e => console.log("Audio play blocked by browser interaction rules"));
-        }
-    } catch (err) {alert(err);}
-  function initRealtime() {
-    if (window.msgChannel) return;
-
-    typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
     
-    typingChannel.on('broadcast', { event: 'typing' }, ({ payload }) => {
-        const myUsername = getCurrentUsername();
+    function showNotification(username, message, channelName = '') { 
+        if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
+            let displayMsg = message;
+            if (displayMsg.startsWith('[IMG]')) displayMsg = '📷 Sent an image';
+            else if (displayMsg.startsWith('[FILE=')) displayMsg = '📎 Sent a file';
+            else if (displayMsg.includes('[HTML=')) displayMsg = '📄 Sent an HTML document';
+
+            const title = channelName ? `#${channelName} • ${username}` : `New message from ${username}`;
+            new Notification(title, { body: displayMsg, icon: getAvatarUrl(username) }); 
+        }
+    }
+
+    function initRealtime() {
+        if (window.msgChannel) return;
+
+        typingChannel = supabase2.channel('typing-room', { config: { broadcast: { self: false } } });
         
-        // Ensure room matches and ignore self-broadcasts
-        if (String(payload.room_id) === String(activeRoomId) && payload.username !== myUsername) {
-            typingText.textContent = `${payload.username} is typing`;
-            typingIndicator.style.display = 'flex';
+        typingChannel.on('broadcast', { event: 'typing' }, ({ payload }) => {
+            const myUsername = getCurrentUsername();
+            if (String(payload.room_id) === String(activeRoomId) && payload.username !== myUsername) {
+                typingText.textContent = `${payload.username} is typing`;
+                typingIndicator.style.display = 'flex';
+                
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => { 
+                    typingIndicator.style.display = 'none'; 
+                }, 2500);
+            }
+        }).on('broadcast', { event: 'user_renamed' }, ({ payload }) => {
+            const { oldUser, newUser } = payload;
             
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => { 
-                typingIndicator.style.display = 'none'; 
-            }, 2500);
-        }
-    }).on('broadcast', { event: 'user_renamed' }, ({ payload }) => {
-        const { oldUser, newUser } = payload;
-        
-        if (getCurrentUsername() === oldUser) {
-            if (currentUser.user_metadata) currentUser.user_metadata.username = newUser;
-            currentUserName.textContent = newUser;
-            currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
-        }
+            if (getCurrentUsername() === oldUser) {
+                if (currentUser.user_metadata) currentUser.user_metadata.username = newUser;
+                currentUserName.textContent = newUser;
+                currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+            }
 
-        if (typingText.textContent.includes(oldUser)) {
-            typingText.textContent = typingText.textContent.replace(oldUser, newUser);
-        }
+            if (typingText.textContent.includes(oldUser)) {
+                typingText.textContent = typingText.textContent.replace(oldUser, newUser);
+            }
 
-        fetchRooms();
-        if (activeRoomId) fetchMessages();
-    }).subscribe();
+            fetchRooms();
+            if (activeRoomId) fetchMessages();
+        }).subscribe();
+
         window.msgChannel = supabase2
             .channel('db-changes')
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
                 const msgRoomId = String(payload.new.room_id);
-            
-                // Stop processing if you are not a member of this GC/channel
+
                 if (!userRoomsMap.has(msgRoomId)) return;
-            
+
                 if (activeRoomId && msgRoomId === String(activeRoomId)) {
                     if (!document.getElementById(`msg-${payload.new.id}`)) appendMessage(payload.new);
                 } else {
                     const unreadEl = document.querySelector(`.channel-item[data-id="${payload.new.room_id}"]`);
                     if (unreadEl) unreadEl.classList.add('unread');
                 }
-            
+
                 try { 
                     if (currentUser && payload.new.username !== getCurrentUsername()) {
                         const channelName = userRoomsMap.get(msgRoomId) || '';
@@ -861,33 +884,29 @@ messageInput.addEventListener('input', () => {
         typingChannel = null;
         presenceChannel = null;
         onlineUsers.clear();
+        userRoomsMap.clear();
         
         checkSession();
     });
-    document.getElementById('emojiBtn').addEventListener('click', () => {
-        const emojis = ['😂', '🔥', '👍', '❤️', '💀', '👀', '✨', '💯'];
-        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-        messageInput.value += randomEmoji;
-        messageInput.focus();
-    });
-   async function sendSystemMessage(roomId, text) {
-    try {
-        const { error } = await supabase2.from('messages').insert([
-            {
-                room_id: roomId,
-                username: 'System',
-                content: text,
-                created_at: new Date().toISOString()
-            }
-        ]);
 
-        if (error) {
-            alert("Database error sending system message: " + error.message);
+    async function sendSystemMessage(roomId, text) {
+        try {
+            const { error } = await supabase2.from('messages').insert([
+                {
+                    room_id: roomId,
+                    username: 'System',
+                    content: text,
+                    created_at: new Date().toISOString()
+                }
+            ]);
+
+            if (error) {
+                alert("Database error sending system message: " + error.message);
+            }
+        } catch (err) {
+            alert("System message error: " + err.message);
         }
-    } catch (err) {
-        alert("System message error: " + err.message);
     }
-}
 
     addUserBtn.addEventListener('click', async () => {
         if (!activeRoomId) return;
@@ -922,10 +941,10 @@ messageInput.addEventListener('input', () => {
     async function fetchRooms() {
         const { data: rooms, error } = await supabase2.from('rooms').select('*').order('name', { ascending: true });
         if (error) return console.error('Error loading chat groups:', error);
-    
+
         channelsList.innerHTML = ''; 
         userRoomsMap.clear();
-    
+
         if (rooms && rooms.length > 0) {
             const myUsername = currentUser.user_metadata?.username;
             rooms.forEach((room) => {
@@ -933,14 +952,14 @@ messageInput.addEventListener('input', () => {
                     const membersStr = room.name.split(' — [')[1].replace(']', '');
                     if (!membersStr.split(',').map(s => s.trim()).includes(myUsername)) return; 
                 }
-    
+
                 const cleanName = room.name.split(' — ')[0];
                 userRoomsMap.set(String(room.id), cleanName);
-    
+
                 const roomEl = document.createElement('div'); 
                 roomEl.classList.add('channel-item'); 
                 roomEl.setAttribute('data-id', room.id);
-                roomEl.innerHTML = `<i class="fa-solid fa-hashtag" style="margin-right: 8px; opacity: 0.6;"></i> ${cleanName}`;
+                roomEl.innerHTML = `<i class="fa-solid fa-hashtag" style="margin-right: 8px; opacity: 0.5;"></i> ${cleanName}`;
                 roomEl.addEventListener('click', () => { switchRoom(room.id, room.name); roomEl.classList.remove('unread'); });
                 channelsList.appendChild(roomEl);
             });
@@ -1004,7 +1023,7 @@ messageInput.addEventListener('input', () => {
                     formattedContent = `
                     <div class="html-preview-container">
                         <div class="html-preview-header">
-                            <span style="font-size: 0.82rem; color: var(--text-muted);"><i class="fa-solid fa-code"></i> Preview: <b>${fileName}</b></span>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-code"></i> Preview: <b>${fileName}</b></span>
                             <a href="${fileUrl}" target="_blank" class="msg-attachment-link" style="margin-top: 0;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Tab</a>
                         </div>
                         <iframe id="${iframeId}" class="html-preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
@@ -1026,7 +1045,7 @@ messageInput.addEventListener('input', () => {
             } else { 
                 const tempDiv = document.createElement('div'); 
                 tempDiv.textContent = formattedContent; 
-                formattedContent = formatMessageText(tempDiv.innerHTML);
+                formattedContent = formatMessageText(tempDiv.innerHTML); 
             }
         }
 
@@ -1116,13 +1135,15 @@ messageInput.addEventListener('input', () => {
         if (!content || !activeRoomId || !currentUser) return;
 
         const { data: { user } } = await supabase2.auth.getUser(); 
+        if (!user) return;
         currentUser = user;
         const myUsername = currentUser.user_metadata?.username;
+
         const { data: roleData } = await supabase2.from('user_roles').select('role').eq('username', myUsername).single();
         const userRole = roleData?.role || 'user';
-        const adkjnhdsfhfsdkjhsdj = myUsername === 'hamzaperson2026';
-        const dalkjadfksljfdsjkhaskjdjkfh = adkjnhdsfhfsdkjhsdj || userRole === 'supermod';
-        const isMod = dalkjadfksljfdsjkhaskjdjkfh || userRole === 'mod';
+        const isOwner = myUsername === 'hamzaperson2026';
+        const isSuperMod = isOwner || userRole === 'supermod';
+        const isMod = isSuperMod || userRole === 'mod';
 
         async function handleCommand(inputString) {
             const parts = inputString.trim().replace(/^\//, '').split(/\s+/), command = parts[0].toLowerCase(), target = parts[1];
@@ -1131,25 +1152,23 @@ messageInput.addEventListener('input', () => {
                 case 'help':
                     if (!isMod) return alert("Only mods and above can use /help.");
                     let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user], /rename [olduser] [newuser], /system [message]\n";
-                    if (dalkjadfksljfdsjkhaskjdjkfh) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user]\n";
-                    if (adkjnhdsfhfsdkjhsdj) helpMsg += "Owner Commands: /unsupermod [user]";
+                    if (isSuperMod) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user]\n";
+                    if (isOwner) helpMsg += "Owner Commands: /unsupermod [user]";
                     alert(helpMsg);
                     break;
+
                 case 'rename':
                     if (!isMod) return alert("Only mods and above can rename users.");
                     const oldUser = parts[1];
                     const newUser = parts[2];
                     if (!oldUser || !newUser) return alert("Usage: /rename [olduser] [newuser]");
-                
+
                     try {
-                        // 1. Update username in past messages
                         const { error: msgErr } = await supabase2.from('messages').update({ username: newUser }).eq('username', oldUser);
                         if (msgErr) alert("Warning updating messages: " + msgErr.message);
-                
-                        // 2. Update username in user roles
+
                         await supabase2.from('user_roles').update({ username: newUser }).eq('username', oldUser);
-                
-                        // 3. Update room member lists in group chats so users aren't locked out
+
                         const { data: rooms } = await supabase2.from('rooms').select('*');
                         if (rooms) {
                             for (const r of rooms) {
@@ -1164,16 +1183,14 @@ messageInput.addEventListener('input', () => {
                                 }
                             }
                         }
-                
-                        // 4. Update current user session metadata if renaming self
+
                         if (currentUser?.user_metadata?.username === oldUser) {
                             await supabase2.auth.updateUser({ data: { username: newUser } });
                             currentUser.user_metadata.username = newUser;
                             currentUserName.textContent = newUser;
                             currentUserAvatar.src = getAvatarUrl(newUser, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
                         }
-                
-                        // 5. Broadcast rename event to active users
+
                         if (typingChannel) {
                             typingChannel.send({
                                 type: 'broadcast',
@@ -1181,7 +1198,7 @@ messageInput.addEventListener('input', () => {
                                 payload: { oldUser, newUser }
                             });
                         }
-                
+
                         await sendSystemMessage(activeRoomId, `System: ${oldUser} was renamed to ${newUser}.`);
                         alert(`Successfully renamed ${oldUser} to ${newUser}.`);
                         
@@ -1191,42 +1208,51 @@ messageInput.addEventListener('input', () => {
                         alert("Rename failed: " + err.message);
                     }
                     break;
-            
+
                 case 'block': 
                     if (!isMod) return alert("Only mods can block.");
                     if (!target) return alert("Usage: /block [username]");
                     const { error: blockErr } = await supabase2.from('banned_users').upsert({ username: target }, { onConflict: 'username', ignoreDuplicates: true });
-                    if (!blockErr) { alert(`${target} has been blocked.`); sendSystemMessage(activeRoomId, `System: ${target} was banned from the server.`); }
+                    if (blockErr) alert("Permission denied: " + blockErr.message);
+                    else { alert(`${target} has been blocked.`); sendSystemMessage(activeRoomId, `System: ${target} was banned from the server.`); }
                     break;
 
                 case 'unblock':
                     if (!isMod) return alert("Only mods can unblock.");
                     if (!target) return alert("Usage: /unblock [username]");
-                    await supabase2.from('banned_users').delete().eq('username', target); alert(`${target} has been unblocked.`);
+                    const { error: unblockErr } = await supabase2.from('banned_users').delete().eq('username', target);
+                    if (unblockErr) alert("Permission denied: " + unblockErr.message);
+                    else alert(`${target} has been unblocked.`);
                     break;
 
                 case 'lock': 
                     if (!isMod) return alert("Only mods can lock rooms.");
-                    await supabase2.from('rooms').update({ is_locked: true }).eq('id', activeRoomId); alert("Room locked."); sendSystemMessage(activeRoomId, `System: Room has been locked.`); 
+                    const { error: lockErr } = await supabase2.from('rooms').update({ is_locked: true }).eq('id', activeRoomId);
+                    if (lockErr) alert("Permission denied: " + lockErr.message);
+                    else { alert("Room locked."); sendSystemMessage(activeRoomId, `System: Room has been locked.`); }
                     break;
 
                 case 'unlock': 
                     if (!isMod) return alert("Only mods can unlock rooms.");
-                    await supabase2.from('rooms').update({ is_locked: false }).eq('id', activeRoomId); alert("Room unlocked."); sendSystemMessage(activeRoomId, `System: Room has been unlocked.`); 
+                    const { error: unlockErr } = await supabase2.from('rooms').update({ is_locked: false }).eq('id', activeRoomId);
+                    if (unlockErr) alert("Permission denied: " + unlockErr.message);
+                    else { alert("Room unlocked."); sendSystemMessage(activeRoomId, `System: Room has been unlocked.`); }
                     break;
-                
+
                 case 'system':
                     if (!isMod) return alert("Only mods and above can send system messages.");
                     const sysMsg = inputString.replace(/^\/system\s*/i, '').trim();
                     if (!sysMsg) return alert("Usage: /system [message]");
                     await sendSystemMessage(activeRoomId, sysMsg);
                     break;
+
                 case 'addtogc':
                     if (!isMod) return alert("Only mods can add to GC."); if (!target) return alert("Usage: /addtogc [username]");
                     if (!activeRoomRawName.includes(' — [')) return alert("Not a private group chat.");
                     let addUpdatedName = `${activeRoomRawName.split(' — [')[0]} — [${activeRoomRawName.split(' — [')[1].replace(']', '')}, ${target}]`;
                     const { error: addGcErr } = await supabase2.from('rooms').update({ name: addUpdatedName }).eq('id', activeRoomId);
-                    if (!addGcErr) { activeRoomRawName = addUpdatedName; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; sendSystemMessage(activeRoomId, `System: ${target} was added by a moderator.`); fetchRooms(); }
+                    if (addGcErr) alert("Permission denied: " + addGcErr.message);
+                    else { activeRoomRawName = addUpdatedName; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; sendSystemMessage(activeRoomId, `System: ${target} was added by a moderator.`); fetchRooms(); }
                     break;
 
                 case 'removefromgc':
@@ -1235,35 +1261,40 @@ messageInput.addEventListener('input', () => {
                     let rmFiltered = activeRoomRawName.split(' — [')[1].replace(']', '').split(',').map(s => s.trim()).filter(u => u !== target);
                     let rmUpdatedName = `${activeRoomRawName.split(' — [')[0]} — [${rmFiltered.join(', ')}]`;
                     const { error: rmGcErr } = await supabase2.from('rooms').update({ name: rmUpdatedName }).eq('id', activeRoomId);
-                    if (!rmGcErr) { activeRoomRawName = rmUpdatedName; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; sendSystemMessage(activeRoomId, `System: ${target} was removed by a moderator.`); fetchRooms(); }
+                    if (rmGcErr) alert("Permission denied: " + rmGcErr.message);
+                    else { activeRoomRawName = rmUpdatedName; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; sendSystemMessage(activeRoomId, `System: ${target} was removed by a moderator.`); fetchRooms(); }
                     break;
 
                 case 'mod':
-                    if (!dalkjadfksljfdsjkhaskjdjkfh) return alert("Only supermods can make people mods.");
+                    if (!isSuperMod) return alert("Only supermods can make people mods.");
                     if (!target) return alert("Usage: /mod [username]");
-                    await supabase2.from('user_roles').upsert({ username: target, role: 'mod' });
-                    alert(`${target} is now a mod.`);
+                    const { error: modErr } = await supabase2.from('user_roles').upsert({ username: target, role: 'mod' });
+                    if (modErr) alert("Permission denied: " + modErr.message);
+                    else alert(`${target} is now a mod.`);
                     break;
 
                 case 'unmod':
-                    if (!dalkjadfksljfdsjkhaskjdjkfh) return alert("Only supermods can unmod people.");
+                    if (!isSuperMod) return alert("Only supermods can unmod people.");
                     if (!target) return alert("Usage: /unmod [username]");
-                    await supabase2.from('user_roles').delete().eq('username', target);
-                    alert(`${target} is no longer a mod.`);
+                    const { error: unmodErr } = await supabase2.from('user_roles').delete().eq('username', target);
+                    if (unmodErr) alert("Permission denied: " + unmodErr.message);
+                    else alert(`${target} is no longer a mod.`);
                     break;
 
                 case 'supermod':
-                    if (!dalkjadfksljfdsjkhaskjdjkfh) return alert("Only supermods can make people supermods.");
+                    if (!isSuperMod) return alert("Only supermods can make people supermods.");
                     if (!target) return alert("Usage: /supermod [username]");
-                    await supabase2.from('user_roles').upsert({ username: target, role: 'supermod' });
-                    alert(`${target} is now a supermod.`);
+                    const { error: supermodErr } = await supabase2.from('user_roles').upsert({ username: target, role: 'supermod' });
+                    if (supermodErr) alert("Permission denied: " + supermodErr.message);
+                    else alert(`${target} is now a supermod.`);
                     break;
 
                 case 'unsupermod':
-                    if (!adkjnhdsfhfsdkjhsdj) return alert("Only hamzaperson2026 can execute /unsupermod.");
+                    if (!isOwner) return alert("Only hamzaperson2026 can execute /unsupermod.");
                     if (!target) return alert("Usage: /unsupermod [username]");
-                    await supabase2.from('user_roles').delete().eq('username', target);
-                    alert(`${target} is no longer a supermod.`);
+                    const { error: unsupermodErr } = await supabase2.from('user_roles').delete().eq('username', target);
+                    if (unsupermodErr) alert("Permission denied: " + unsupermodErr.message);
+                    else alert(`${target} is no longer a supermod.`);
                     break;
 
                 default: alert(`Unknown command: /${command}`);
