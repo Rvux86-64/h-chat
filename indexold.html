@@ -68,21 +68,28 @@
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // FIX: Hardcode your image path reference directory locally 
+                        // Hardcode your image path reference directory locally 
                         L.Icon.Default.imagePath = 'images/';
 
-                        // Create the Leaflet map layout framework instance
-                        map = L.map('map').setView([lat, lng], 15);
+                        // FIXED: Initialize the map globally at a far zoom level (2) first...
+                        map = L.map('map').setView([lat, lng], 2);
 
                         // Load map tile layer graphics securely
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; OpenStreetMap contributors'
                         }).addTo(map);
 
-                        // Drop the coordinate pin marker down onto the grid view map layout
+                        // Drop the coordinate pin marker down onto your spot
                         L.marker([lat, lng]).addTo(map)
                             .bindPopup("<b>Found you!</b>")
                             .openPopup();
+
+                        // FIXED: Smoothly fly and zoom in automatically to street level (18)
+                        // 'duration' sets how many seconds the zoom animation lasts
+                        map.flyTo([lat, lng], 18, {
+                            animate: true,
+                            duration: 2.5 
+                        });
                     },
                     function showError(error) {
                         // FAILURE TRIGGER: Run alert messages if user blocks access framework
