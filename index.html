@@ -601,7 +601,8 @@
                     <button onclick="dispatchCmd('/addtogc')">Add to GC</button>
                     <button onclick="dispatchCmd('/removefromgc')">Remove from GC</button>
                     <button onclick="dispatchCmd('/language')">Local Lang (/language)</button>
-                    <button onclick="dispatchCmd('/system')">Send System Message</button>
+                    <button onclick="dispatchCmd('/listall')">List All Users (/listall)</button>
+                    <button onclick="dispatchCmd('/system')" style="grid-column: span 2;">Send System Message</button>
                 </div>
             </div>
 
@@ -729,7 +730,6 @@
   <script>
     const SB_URL = "https://jziqxqpvgeiwbthdxbze.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6aXF4cXB2Z2Vpd2J0aGR4YnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NjMwMTEsImV4cCI6MjEwMzMzOTAxMX0.opW1zH8ivEFbPTkn5r1EaINzvfH8fUflU8TPL9QVaw0";
-    const supabase2 = window.supabase.createClient(SB_URL, SB_KEY);
     
     const authModal = document.getElementById('authModal'), mainApp = document.getElementById('mainApp'), authForm = document.getElementById('authForm'), toggleAuthBtn = document.getElementById('toggleAuth'), registerFields = document.getElementById('registerFields'), authTitle = document.getElementById('authTitle'), authBtn = document.getElementById('authBtn');
     const currentUserName = document.getElementById('currentUserName'), currentUserAvatar = document.getElementById('currentUserAvatar');
@@ -1341,10 +1341,51 @@
             switch (command) {
                 case 'help':
                     if (!isMod) return alert("Only mods and above can use /help.");
-                    let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user], /rename [olduser] [newuser], /language [lang_code|off], /system [message]\n";
+                    let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user], /rename [olduser] [newuser], /language [lang_code|off], /listall, /system [message]\n";
                     if (isSuperMod) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user], /languageall [lang_code]\n";
                     if (isOwner) helpMsg += "Owner Commands: /unsupermod [user]";
                     alert(helpMsg);
+                    break;
+
+                case 'listall':
+                case 'listusers':
+                    if (!isMod) return alert("Only mods and above can use /listall.");
+                    try {
+                        const { data: rolesData } = await supabase2.from('user_roles').select('*');
+                        const { data: msgUsers } = await supabase2.from('messages').select('username');
+                        
+                        const roleMap = new Map();
+                        if (rolesData) {
+                            rolesData.forEach(r => roleMap.set(r.username, r.role));
+                        }
+
+                        const allUsernames = new Set();
+                        if (msgUsers) {
+                            msgUsers.forEach(m => {
+                                if (m.username && m.username !== 'System') allUsernames.add(m.username);
+                            });
+                        }
+
+                        allUsernames.add('hamzaperson2026');
+                        if (currentUser?.user_metadata?.username) {
+                            allUsernames.add(currentUser.user_metadata.username);
+                        }
+
+                        let summaryStr = "--- All Users & Roles ---\n";
+                        allUsernames.forEach(uname => {
+                            let roleStr = 'user';
+                            if (uname === 'hamzaperson2026') {
+                                roleStr = 'Owner';
+                            } else if (roleMap.has(uname)) {
+                                roleStr = roleMap.get(uname);
+                            }
+                            summaryStr += `• ${uname} : [${roleStr.toUpperCase()}]\n`;
+                        });
+
+                        alert(summaryStr);
+                    } catch (err) {
+                        alert("Failed to fetch user list: " + err.message);
+                    }
                     break;
 
                 case 'language':
@@ -1620,7 +1661,7 @@
         const target = modTargetInput.value.trim();
         
         // Commands that don't need a target parameter
-        const noTargetCmds = ['/lock', '/unlock'];
+        const noTargetCmds = ['/lock', '/unlock', '/listall'];
         
         if (!noTargetCmds.includes(baseCmd) && !target) {
             alert("Please enter a target username, message, or language code in the input field above.");
