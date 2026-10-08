@@ -562,7 +562,29 @@
 <body>
 
     <div id="authModal" class="auth-modal">
-        <div id="modPanelModal" class="auth-modal" style="display: none; z-index: 1500;">
+       
+        <div class="auth-box">
+            <h2 id="authTitle">Create Account</h2>
+            <form id="authForm">
+                <div id="registerFields">
+                    <input type="text" id="firstName" placeholder="First Name">
+                    <input type="text" id="lastName" placeholder="Last Name">
+                </div>
+                <input type="text" id="authUsername" placeholder="Username" required autocomplete="off">
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" id="authBtn">Sign Up</button>
+            </form>
+            <p class="auth-toggle" id="toggleAuth">Already have an account? Log in.</p>
+        </div>
+    </div>
+
+    <div id="callOverlay" class="auth-modal" style="display: none; z-index: 2000; flex-direction: column;">
+        <div id="jitsiContainer" style="width: 85%; height: 85%; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);"></div>
+        <button id="endCallBtn" style="background: #ef4444; padding: 10px 20px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+            <i class="fa-solid fa-phone-slash"></i> Close Call Window
+        </button>
+    </div>
+<div id="modPanelModal" class="auth-modal" style="display: none; z-index: 1500;">
     <div class="auth-box" style="max-width: 450px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h2><i class="fa-solid fa-shield-halved" style="color: var(--accent);"></i> Mod Panel</h2>
@@ -606,28 +628,6 @@
         </div>
     </div>
 </div>
-        <div class="auth-box">
-            <h2 id="authTitle">Create Account</h2>
-            <form id="authForm">
-                <div id="registerFields">
-                    <input type="text" id="firstName" placeholder="First Name">
-                    <input type="text" id="lastName" placeholder="Last Name">
-                </div>
-                <input type="text" id="authUsername" placeholder="Username" required autocomplete="off">
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit" id="authBtn">Sign Up</button>
-            </form>
-            <p class="auth-toggle" id="toggleAuth">Already have an account? Log in.</p>
-        </div>
-    </div>
-
-    <div id="callOverlay" class="auth-modal" style="display: none; z-index: 2000; flex-direction: column;">
-        <div id="jitsiContainer" style="width: 85%; height: 85%; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);"></div>
-        <button id="endCallBtn" style="background: #ef4444; padding: 10px 20px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
-            <i class="fa-solid fa-phone-slash"></i> Close Call Window
-        </button>
-    </div>
-
     <div class="chat-wrapper" id="mainApp" style="display: none;">
         <div class="sidebar">
             <div class="brand"><i class="fa-solid fa-comments"></i><span>h-chat</span></div>
