@@ -20,7 +20,7 @@
             width: 100%;
             height: 500px;
             margin-top: 15px;
-            background-color: #e5e3df;
+            background-color: #d0d0d0; /* Changed background color so you can tell when tiles load */
             border: 2px solid #333;
         }
         .btn {
@@ -52,14 +52,12 @@
         const actionBtn = document.getElementById("actionBtn");
         const mapContainer = document.getElementById("map");
         
-        let map; // Define map placeholder variable globally
+        let map;
 
-        // This only runs when you click the button
         function findMyPosition() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
-                        // 1. FIRST: Unhide the text and map container completely
                         h.hidden = false;           
                         mapContainer.hidden = false; 
                         actionBtn.hidden = true;    
@@ -67,16 +65,24 @@
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // 2. SECOND: Create the Leaflet map NOW that the container is visible and has size!
-                        // This prevents the grey box bug entirely.
+                        // Create the map container instance
                         map = L.map('map').setView([lat, lng], 15);
 
-                        // 3. THIRD: Load map tile layers on top of the newly built view
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        // Primary Tile Layer: OpenStreetMap
+                        const primaryTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; OpenStreetMap contributors'
                         }).addTo(map);
 
-                        // 4. FOURTH: Drop the pin marker
+                        // FALLBACK: If OpenStreetMap tiles fail to load (blocked by ad-blocker), switch to CARTO tiles
+                        primaryTiles.on('tileerror', function() {
+                            console.warn("Primary tiles failed. Switching to fallback server...");
+                            map.removeLayer(primaryTiles);
+                            L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
+                                attribution: '&copy; CARTO'
+                            }).addTo(map);
+                        });
+
+                        // Drop the pin marker
                         L.marker([lat, lng]).addTo(map)
                             .bindPopup("<b>Found you!</b>")
                             .openPopup();
