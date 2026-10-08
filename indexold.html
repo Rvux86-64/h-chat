@@ -1,3 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic H-chat</title>
+    
+    <!-- 1. Load the local Leaflet stylesheet file from your repository -->
+    <link rel="stylesheet" href="leaflet.css" />
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+            margin-top: 15px;
+            background-color: #d0d0d0; 
+            border: 2px solid #333;
+        }
+        .btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background-color: #e84118;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Both elements hidden by default using the native HTML attribute -->
+    <h2 id="h2" hidden>P.DIDDY IS COMING FOR YOU!</h2>
+    <button class="btn" id="actionBtn" onclick="findMyPosition()">Click me, then press allow to access classic chat</button>
+    
+    <div id="map" hidden></div>
+
+    <!-- 2. Load your local leaflet.js code right before running custom tracking scripts -->
+    <script src="leaflet.js"></script>
+    
+    <!-- 3. Your custom mapping and geolocation tracker script framework -->
+    <script>
         const h = document.getElementById("h2");
         const actionBtn = document.getElementById("actionBtn");
         const mapContainer = document.getElementById("map");
@@ -8,6 +60,7 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function showPosition(position) {
+                        // SUCCESS TRIGGER: Run operations inside the verified permission block
                         h.hidden = false;           
                         mapContainer.hidden = false; 
                         actionBtn.hidden = true;    
@@ -15,23 +68,24 @@
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // FIX: Tell Leaflet exactly where your local marker folder is located!
+                        // FIX: Hardcode your image path reference directory locally 
                         L.Icon.Default.imagePath = 'images/';
 
-                        // Create the Leaflet map instance
+                        // Create the Leaflet map layout framework instance
                         map = L.map('map').setView([lat, lng], 15);
 
-                        // Load map tile layers securely
+                        // Load map tile layer graphics securely
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; OpenStreetMap contributors'
                         }).addTo(map);
 
-                        // Drop the pin marker
+                        // Drop the coordinate pin marker down onto the grid view map layout
                         L.marker([lat, lng]).addTo(map)
                             .bindPopup("<b>Found you!</b>")
                             .openPopup();
                     },
                     function showError(error) {
+                        // FAILURE TRIGGER: Run alert messages if user blocks access framework
                         alert("Error details: [Code " + error.code + "] " + error.message);
                     },
                     { enableHighAccuracy: true, timeout: 10000 }
@@ -40,3 +94,6 @@
                 alert("Geolocation is completely unsupported by this browser.");
             }
         }
+    </script>
+</body>
+</html>
