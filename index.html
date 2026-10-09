@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://meet.jit.si/external_api.js"></script>
     
@@ -27,8 +27,8 @@
           --msg-self: #10b981;
           --msg-other: #18181b;
           --glass-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
-          --radius-lg: 14px;
-          --radius-md: 8px;
+          --radius-lg: 16px;
+          --radius-md: 10px;
           --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         } 
 
@@ -98,6 +98,44 @@
           letter-spacing: -0.01em;
         }
 
+        /* Toast Notifications */
+        #toastContainer {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 9999;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          pointer-events: none;
+        }
+
+        .toast {
+          pointer-events: auto;
+          min-width: 260px;
+          padding: 12px 16px;
+          border-radius: var(--radius-md);
+          background: var(--panel-bg);
+          border: 1px solid var(--border-color);
+          color: var(--text-main);
+          box-shadow: var(--glass-shadow);
+          font-size: 0.88rem;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          animation: toastIn 0.25s ease forwards;
+        }
+
+        .toast.success i { color: #10b981; }
+        .toast.error i { color: #ef4444; }
+        .toast.info i { color: #3b82f6; }
+
+        @keyframes toastIn {
+          from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         .auth-modal { 
           position: fixed; 
           inset: 0; 
@@ -108,6 +146,7 @@
           align-items: center; 
           z-index: 1000; 
         }
+
         .auth-box { 
           background: var(--panel-bg); 
           padding: 32px; 
@@ -120,6 +159,7 @@
           gap: 14px; 
           box-shadow: var(--glass-shadow); 
         }
+
         .auth-box h2 { 
           color: var(--text-main); 
           font-size: 1.4rem;
@@ -127,7 +167,8 @@
           text-align: center; 
           margin-bottom: 2px;
         }
-        .auth-box input { 
+
+        .auth-box input, .mod-section input { 
           width: 100%; 
           background: rgba(255, 255, 255, 0.03); 
           border: 1px solid var(--border-color); 
@@ -138,26 +179,31 @@
           font-size: 0.9rem; 
           transition: all 0.15s ease; 
         }
-        .auth-box input:focus { 
+
+        .auth-box input:focus, .mod-section input:focus { 
           border-color: var(--accent); 
           box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); 
         }
-        .auth-box button { 
+
+        .auth-box button, .mod-section button { 
           width: 100%; 
-          padding: 12px; 
-          background: var(--accent); 
-          color: white; 
-          border: none; 
+          padding: 10px 14px; 
+          background: rgba(255, 255, 255, 0.05); 
+          color: var(--text-main); 
+          border: 1px solid var(--border-color); 
           border-radius: var(--radius-md); 
           cursor: pointer; 
           font-weight: 600; 
-          font-size: 0.95rem; 
+          font-size: 0.88rem; 
           transition: all 0.15s ease; 
-          margin-top: 4px;
         }
-        .auth-box button:hover { 
-          background: var(--accent-hover); 
+
+        .auth-box button:hover, .mod-section button:hover { 
+          background: var(--accent); 
+          color: white;
+          border-color: var(--accent);
         }
+
         .auth-toggle { 
           text-align: center; 
           color: var(--text-muted); 
@@ -169,8 +215,8 @@
 
         .chat-wrapper { 
           display: flex; 
-          width: 1040px; 
-          height: 760px; 
+          width: 1080px; 
+          height: 780px; 
           max-width: 96vw;
           max-height: 94vh;
           background: var(--panel-bg); 
@@ -181,24 +227,49 @@
         }
 
         .sidebar { 
-          width: 270px; 
+          width: 280px; 
           background: var(--sidebar-bg); 
           border-right: 1px solid var(--border-color); 
           padding: 18px 16px; 
           display: flex; 
           flex-direction: column; 
-          gap: 16px; 
+          gap: 14px; 
         }
+
         .brand { 
           display: flex; 
           align-items: center; 
           gap: 10px; 
-          font-size: 1.15rem; 
-          font-weight: 700; 
+          font-size: 1.2rem; 
+          font-weight: 800; 
           color: var(--text-main); 
           padding: 0 4px;
         }
-        .brand i { color: var(--accent); font-size: 1.25rem; }
+        .brand i { color: var(--accent); font-size: 1.3rem; }
+
+        .search-channel-box {
+          position: relative;
+        }
+
+        .search-channel-box input {
+          width: 100%;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-md);
+          padding: 7px 10px 7px 30px;
+          color: var(--text-main);
+          font-size: 0.8rem;
+          outline: none;
+        }
+
+        .search-channel-box i {
+          position: absolute;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 0.75rem;
+          color: var(--text-muted);
+        }
 
         .avatar-wrapper {
           position: relative;
@@ -210,8 +281,8 @@
           position: absolute;
           bottom: 0px;
           right: 0px;
-          width: 9px;
-          height: 9px;
+          width: 10px;
+          height: 10px;
           background-color: #10b981; 
           border: 2px solid var(--panel-bg);
           border-radius: 50%;
@@ -274,7 +345,7 @@
         }
         .user-card label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
         .current-user-text { font-weight: 600; color: var(--text-main); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
-        .mini-avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
+        .mini-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
         
         .user-actions { display: flex; gap: 6px; }
         .settings-btn { 
@@ -320,7 +391,7 @@
         .old-version-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-main); }
         
         .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); padding: 0 4px; }
-        .pulse-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+        .pulse-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); }
 
         .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--panel-bg); position: relative; }
         .chat-header { 
@@ -330,13 +401,13 @@
           justify-content: space-between; 
           align-items: center; 
         }
-        .header-info h3 { font-size: 1.05rem; font-weight: 600; color: var(--text-main); }
+        .header-info h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
         .header-info p { font-size: 0.78rem; color: var(--text-muted); margin-top: 1px; }
         .chat-header-actions { display: flex; gap: 6px; }
         
         .chat-placeholder { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted); gap: 12px; text-align: center; padding: 40px; }
-        .chat-placeholder i { font-size: 2.8rem; color: var(--text-muted); opacity: 0.4; }
-        .chat-placeholder h2 { color: var(--text-main); font-weight: 600; font-size: 1.2rem; }
+        .chat-placeholder i { font-size: 3rem; color: var(--text-muted); opacity: 0.3; }
+        .chat-placeholder h2 { color: var(--text-main); font-weight: 700; font-size: 1.25rem; }
         .chat-placeholder p { font-size: 0.88rem; }
         
         .chat-box { 
@@ -356,7 +427,7 @@
         .message-row.system .message { background: rgba(255, 255, 255, 0.03); color: var(--text-muted); font-size: 0.78rem; text-align: center; padding: 4px 14px; border-radius: 12px; border: 1px solid var(--border-color); font-style: italic; }
         .message-row.system .avatar-wrapper, .message-row.system .msg-header, .message-row.system .msg-actions { display: none; }
 
-        .chat-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+        .chat-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
         
         .message { 
           padding: 10px 14px; 
@@ -375,8 +446,22 @@
         }
         .message-row:not(.self):not(.system) .message { border-top-left-radius: 2px; }
         
-        .msg-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 10px; }
-        .msg-user { font-weight: 600; font-size: 0.78rem; color: var(--accent); }
+        .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; gap: 10px; }
+        .msg-user-badge-wrap { display: flex; align-items: center; gap: 6px; }
+        .msg-user { font-weight: 600; font-size: 0.8rem; color: var(--accent); }
+        
+        .role-badge {
+          font-size: 0.6rem;
+          font-weight: 800;
+          padding: 1px 5px;
+          border-radius: 4px;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .role-badge.owner { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .role-badge.supermod { background: rgba(168, 85, 247, 0.2); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .role-badge.mod { background: rgba(59, 130, 246, 0.2); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.4); }
+
         .msg-time { font-size: 0.65rem; color: var(--text-muted); opacity: 0.85; white-space: nowrap; }
         .message-row.self .msg-user, .message-row.self .msg-time { color: rgba(255,255,255,0.85); }
         .msg-text { font-size: 0.9rem; line-height: 1.45; display: block; white-space: pre-wrap; }
@@ -550,9 +635,11 @@
           background: rgba(255, 255, 255, 0.1);
         }
 
-        .chat-box::-webkit-scrollbar, .channels-section::-webkit-scrollbar, .input-dock textarea::-webkit-scrollbar, .emoji-picker-grid::-webkit-scrollbar { width: 5px; }
-        .chat-box::-webkit-scrollbar-track, .channels-section::-webkit-scrollbar-track, .input-dock textarea::-webkit-scrollbar-track, .emoji-picker-grid::-webkit-scrollbar-track { background: transparent; }
-        .chat-box::-webkit-scrollbar-thumb, .channels-section::-webkit-scrollbar-thumb, .input-dock textarea::-webkit-scrollbar-thumb, .emoji-picker-grid::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
 
         @keyframes typingBounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
 
@@ -560,6 +647,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Toast Notifications Root -->
+    <div id="toastContainer"></div>
 
     <!-- Auth Modal -->
     <div id="authModal" class="auth-modal">
@@ -578,46 +668,46 @@
         </div>
     </div>
 
-    <!-- Mod Panel Modal (Independent from authModal) -->
+    <!-- Mod Panel Modal -->
     <div id="modPanelModal" class="auth-modal" style="display: none; z-index: 1500;">
-        <div class="auth-box" style="max-width: 450px; max-height: 85vh; overflow-y: auto;">
+        <div class="auth-box" style="max-width: 480px; max-height: 85vh; overflow-y: auto;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <h2><i class="fa-solid fa-shield-halved" style="color: var(--accent);"></i> Mod Panel</h2>
                 <button class="icon-btn" id="closeModPanel"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="mod-section">
-                <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Target User / Input</label>
+                <label style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Target User / Input</label>
                 <input type="text" id="modTargetInput" placeholder="Enter username or message / lang..." autocomplete="off">
             </div>
 
             <div class="mod-section" style="margin-top: 10px;">
-                <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Moderator</label>
+                <label style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Moderator Actions</label>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
-                    <button onclick="dispatchCmd('/block')">Block User</button>
-                    <button onclick="dispatchCmd('/unblock')">Unblock User</button>
-                    <button onclick="dispatchCmd('/lock')">Lock Room</button>
-                    <button onclick="dispatchCmd('/unlock')">Unlock Room</button>
-                    <button onclick="dispatchCmd('/addtogc')">Add to GC</button>
-                    <button onclick="dispatchCmd('/removefromgc')">Remove from GC</button>
-                    <button onclick="dispatchCmd('/language')">Local Lang (/language)</button>
-                    <button onclick="dispatchCmd('/listall')">List All Users (/listall)</button>
-                    <button onclick="dispatchCmd('/system')" style="grid-column: span 2;">Send System Message</button>
+                    <button onclick="dispatchCmd('/block')"><i class="fa-solid fa-ban"></i> Block User</button>
+                    <button onclick="dispatchCmd('/unblock')"><i class="fa-solid fa-user-check"></i> Unblock User</button>
+                    <button onclick="dispatchCmd('/lock')"><i class="fa-solid fa-lock"></i> Lock Room</button>
+                    <button onclick="dispatchCmd('/unlock')"><i class="fa-solid fa-lock-open"></i> Unlock Room</button>
+                    <button onclick="dispatchCmd('/addtogc')"><i class="fa-solid fa-user-plus"></i> Add to GC</button>
+                    <button onclick="dispatchCmd('/removefromgc')"><i class="fa-solid fa-user-minus"></i> Remove from GC</button>
+                    <button onclick="dispatchCmd('/language')"><i class="fa-solid fa-language"></i> Local Lang</button>
+                    <button onclick="dispatchCmd('/listall')"><i class="fa-solid fa-users"></i> List All Users</button>
+                    <button onclick="dispatchCmd('/system')" style="grid-column: span 2;"><i class="fa-solid fa-bullhorn"></i> Send System Message</button>
                 </div>
             </div>
 
             <div class="mod-section" style="margin-top: 10px;">
-                <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Super Moderator</label>
+                <label style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Super Moderator Actions</label>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
-                    <button onclick="dispatchCmd('/mod')">Make Mod</button>
-                    <button onclick="dispatchCmd('/unmod')">Remove Mod</button>
-                    <button onclick="dispatchCmd('/languageall')">Global Lang (/languageall)</button>
-                    <button onclick="dispatchCmd('/supermod')">Make Supermod</button>
+                    <button onclick="dispatchCmd('/mod')"><i class="fa-solid fa-shield"></i> Make Mod</button>
+                    <button onclick="dispatchCmd('/unmod')"><i class="fa-solid fa-user-xmark"></i> Remove Mod</button>
+                    <button onclick="dispatchCmd('/languageall')"><i class="fa-solid fa-globe"></i> Global Lang</button>
+                    <button onclick="dispatchCmd('/supermod')"><i class="fa-solid fa-crown"></i> Make Supermod</button>
                 </div>
             </div>
             
             <div class="mod-section" style="margin-top: 10px;">
-                <label style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Rename User</label>
+                <label style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Rename User</label>
                 <div style="display: flex; gap: 8px; margin-top: 6px;">
                     <input type="text" id="renameOldInput" placeholder="Old Name" style="flex: 1;">
                     <input type="text" id="renameNewInput" placeholder="New Name" style="flex: 1;">
@@ -639,6 +729,11 @@
     <div class="chat-wrapper" id="mainApp" style="display: none;">
         <div class="sidebar">
             <div class="brand"><i class="fa-solid fa-comments"></i><span>h-chat</span></div>
+
+            <div class="search-channel-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchChannelInput" placeholder="Search channels...">
+            </div>
             
             <div class="channels-section">
                 <div class="section-header">
@@ -648,7 +743,7 @@
                 <div class="channels-list" id="channelsList"></div>
             </div>
 
-            <a href="./indexold.html?v=2" class="old-version-btn" title="Go to the classic layout"><i class="fa-solid fa-clock-rotate-left"></i> Classic Mode</a>
+            <a href="./indexold.html?v=2" class="old-version-btn" title="Go to classic layout"><i class="fa-solid fa-clock-rotate-left"></i> Classic Mode</a>
 
             <div class="user-card">
                 <label>Profile</label>
@@ -731,25 +826,44 @@
     const SB_URL = "https://jziqxqpvgeiwbthdxbze.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6aXF4cXB2Z2Vpd2J0aGR4YnplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NjMwMTEsImV4cCI6MjEwMzMzOTAxMX0.opW1zH8ivEFbPTkn5r1EaINzvfH8fUflU8TPL9QVaw0";
     const supabase2 = window.supabase.createClient(SB_URL, SB_KEY);
+
     const authModal = document.getElementById('authModal'), mainApp = document.getElementById('mainApp'), authForm = document.getElementById('authForm'), toggleAuthBtn = document.getElementById('toggleAuth'), registerFields = document.getElementById('registerFields'), authTitle = document.getElementById('authTitle'), authBtn = document.getElementById('authBtn');
     const currentUserName = document.getElementById('currentUserName'), currentUserAvatar = document.getElementById('currentUserAvatar');
     const logoutBtn = document.getElementById('logoutBtn'), createChatBtn = document.getElementById('createChatBtn'), addUserBtn = document.getElementById('addUserBtn');
     const chatPlaceholder = document.getElementById('chatPlaceholder'), chatBox = document.getElementById('chatBox'), messageForm = document.getElementById('messageForm'), chatActions = document.getElementById('chatActions');
     const messageInput = document.getElementById('messageInput'), channelsList = document.getElementById('channelsList'), currentChannelName = document.getElementById('currentChannelName'), currentChannelDesc = document.getElementById('currentChannelDesc');
-    const uiSelector = document.getElementById('uiSelector'), accentColorPicker = document.getElementById('accentColorPicker');
+    const uiSelector = document.getElementById('uiSelector'), accentColorPicker = document.getElementById('accentColorPicker'), searchChannelInput = document.getElementById('searchChannelInput');
     const startVoiceCallBtn = document.getElementById('startVoiceCallBtn'), startVideoCallBtn = document.getElementById('startVideoCallBtn'), callOverlay = document.getElementById('callOverlay'), endCallBtn = document.getElementById('endCallBtn'), jitsiContainer = document.getElementById('jitsiContainer');
     const attachBtn = document.getElementById('attachBtn'), emojiBtn = document.getElementById('emojiBtn'), fileInput = document.getElementById('fileInput'), typingIndicator = document.getElementById('typingIndicator'), typingText = document.getElementById('typingText');
-    const emojiPicker = document.getElementById('emojiPicker'), emojiGrid = document.getElementById('emojiGrid'), closeEmojiBtn = document.getElementById('closeEmojiBtn');
+    const emojiPicker = document.getElementById('emojiPicker'), emojiGrid = document.getElementById('emojiGrid'), closeEmojiBtn = document.getElementById('closeEmojiBtn'), toastContainer = document.getElementById('toastContainer');
     
     const userRoomsMap = new Map(); 
+    const userRolesCache = new Map();
     let isLoginMode = false, currentUser = null, activeRoomId = null, activeRoomRawName = "", jitsiAPI = null, typingTimeout = null, lastTypingTime = 0;
     let typingChannel = null;
     let presenceChannel = null;
-    let localLangFilter = null; // Local language preference set by /language
+    let localLangFilter = null; 
     const onlineUsers = new Set();
     
     const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     notificationSound.volume = 0.4;
+
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        let icon = 'fa-info-circle';
+        if (type === 'success') icon = 'fa-circle-check';
+        if (type === 'error') icon = 'fa-circle-exclamation';
+
+        toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 250);
+        }, 3000);
+    }
 
     const popularEmojis = [
         '😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👋','🤚','🖐️','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','💔','❣️','💕','💞','💓','💗','💖','💘','💝','🔥','✨','🌟','💯','🎉','🎊','🚀','👀','👑','💎'
@@ -786,14 +900,15 @@
         }
     });
 
+    // Translation function using MyMemory translation API (CORS friendly)
     async function translateText(text, targetLang) {
         if (!text || !targetLang || targetLang === 'off') return text;
         if (text.startsWith('[IMG]') || text.startsWith('[FILE=') || text.includes('[HTML=')) return text;
         try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(text)}`);
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect\vert{}${encodeURIComponent(targetLang)}`);
             const data = await res.json();
-            if (data && data[0]) {
-                return data[0].map(item => item[0]).join('');
+            if (data && data.responseData && data.responseData.translatedText) {
+                return data.responseData.translatedText;
             }
         } catch (err) {
             console.error('Translation failed:', err);
@@ -809,6 +924,7 @@
         let formatted = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="msg-attachment-link" style="margin-top: 0; display: inline;">$1</a>');
         formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         formatted = formatted.replace(/\*(.*?)\*/g, '<i>$1</i>');
+        formatted = formatted.replace(/`([^`]+)`/g, '<code style="background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; font-family: monospace;">$1</code>');
         return formatted;
     }
 
@@ -880,8 +996,16 @@
         }
     });
 
+    searchChannelInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.channel-item').forEach(item => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(query) ? 'flex' : 'none';
+        });
+    });
+
     function startCall(isVideo) {
-        if (!activeRoomId) return alert("Please select a chat room first!");
+        if (!activeRoomId) return showToast("Please select a chat room first!", "error");
         if (jitsiAPI) jitsiAPI.dispose();
         callOverlay.style.display = "flex";
         const callRoomId = `SupaChat_${activeRoomId}_${currentChannelName.textContent.replace(/[^a-zA-Z0-9]/g, '')}`;
@@ -905,12 +1029,12 @@
         const username = document.getElementById('authUsername').value.trim(), password = document.getElementById('password').value, dummyEmail = `${username}@supachat.com`.toLowerCase();
         if (isLoginMode) {
             const { error } = await supabase2.auth.signInWithPassword({ email: dummyEmail, password });
-            if (error) alert("Login failed: " + error.message); else checkSession();
+            if (error) showToast("Login failed: " + error.message, "error"); else checkSession();
         } else {
             const firstName = document.getElementById('firstName').value.trim(), lastName = document.getElementById('lastName').value.trim();
-            if (!firstName || !lastName) return alert("First and Last name are required to sign up.");
+            if (!firstName || !lastName) return showToast("First and Last name are required to sign up.", "error");
             const { error } = await supabase2.auth.signUp({ email: dummyEmail, password, options: { data: { first_name: firstName, last_name: lastName, username: username } } });
-            if (error) alert("Signup error: " + error.message); else { alert("Account created successfully!"); checkSession(); }
+            if (error) showToast("Signup error: " + error.message, "error"); else { showToast("Account created successfully!", "success"); checkSession(); }
         }
     });
 
@@ -925,6 +1049,17 @@
 
             const title = channelName ? `#${channelName} • ${username}` : `New message from ${username}`;
             new Notification(title, { body: displayMsg, icon: getAvatarUrl(username) }); 
+        }
+    }
+
+    async function loadUserRoles() {
+        try {
+            const { data } = await supabase2.from('user_roles').select('*');
+            if (data) {
+                data.forEach(row => userRolesCache.set(row.username, row.role));
+            }
+        } catch (err) {
+            console.error("Error caching roles:", err);
         }
     }
 
@@ -1020,7 +1155,7 @@
                     const members = updatedRoom.name.split(' — [')[1].replace(']', '').split(',').map(s => s.trim());
                     if (!members.includes(currentUser.user_metadata?.username)) {
                         activeRoomId = null; chatPlaceholder.style.display = 'flex'; chatBox.style.display = 'none'; messageForm.style.display = 'none'; chatActions.style.display = 'none'; currentChannelName.textContent = "No Chat Selected"; currentChannelDesc.textContent = "Select a chat to begin messaging";
-                        alert("You have been removed from this group chat.");
+                        showToast("You have been removed from this group chat.", "info");
                     } else { activeRoomRawName = updatedRoom.name; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; }
                 }
                 fetchRooms();
@@ -1031,11 +1166,32 @@
     async function checkSession() {
         const { data: { session } } = await supabase2.auth.getSession();
         if (session) {
-            currentUser = session.user; authModal.style.display = "none"; mainApp.style.display = "flex";
+            currentUser = session.user; 
+            authModal.style.display = "none"; 
+            mainApp.style.display = "flex";
             const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
-            currentUserName.textContent = uname; currentUserAvatar.src = getAvatarUrl(uname, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
-            fetchRooms(); requestNotificationPermission(); initRealtime(); initPresence();
-        } else { authModal.style.display = "flex"; mainApp.style.display = "none"; }
+
+            // Automatically add every signing-in user into user_roles as 'user' if not present
+            if (uname && uname !== 'System') {
+                await supabase2.from('user_roles').upsert(
+                    { username: uname, role: 'user' },
+                    { onConflict: 'username', ignoreDuplicates: true }
+                );
+            }
+
+            await loadUserRoles();
+
+            currentUserName.textContent = uname; 
+            currentUserAvatar.src = getAvatarUrl(uname, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+            
+            fetchRooms(); 
+            requestNotificationPermission(); 
+            initRealtime(); 
+            initPresence();
+        } else { 
+            authModal.style.display = "flex"; 
+            mainApp.style.display = "none"; 
+        }
     }
 
     logoutBtn.addEventListener('click', async () => {
@@ -1065,10 +1221,10 @@
             ]);
 
             if (error) {
-                alert("Database error sending system message: " + error.message);
+                showToast("Database error sending system message: " + error.message, "error");
             }
         } catch (err) {
-            alert("System message error: " + err.message);
+            showToast("System message error: " + err.message, "error");
         }
     }
 
@@ -1084,7 +1240,7 @@
         } else { updatedName = `${updatedName} — [${newUsers}]`; }
 
         const { error } = await supabase2.from('rooms').update({ name: updatedName }).eq('id', activeRoomId);
-        if (error) alert("Error adding users: " + error.message);
+        if (error) showToast("Error adding users: " + error.message, "error");
         else {
             activeRoomRawName = updatedName; currentChannelDesc.textContent = `Members: ${updatedName.split(' — ')[1]}`;
             sendSystemMessage(activeRoomId, `${currentUser.user_metadata?.username} added: ${newUsers}`);
@@ -1099,7 +1255,7 @@
         const finalRoomName = `${roomName} — [${finalInvitees}]`;
 
         const { error } = await supabase2.from('rooms').insert([{ name: finalRoomName }]);
-        if (error) alert("Error creating room: " + error.message); else fetchRooms();
+        if (error) showToast("Error creating room: " + error.message, "error"); else fetchRooms();
     });
 
     async function fetchRooms() {
@@ -1182,6 +1338,15 @@
         const avatarColor = isSelf ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : '374151';
         const actionsHtml = isSelf && msgUsername !== 'System' ? `<div class="msg-actions"><button class="msg-action-btn" onclick="editMessage('${msg.id}', '${encodeURIComponent(msg.content)}')"><i class="fa-solid fa-pen"></i></button><button class="msg-action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fa-solid fa-trash"></i></button></div>` : '';
 
+        let roleBadgeHtml = '';
+        if (msgUsername === 'hamzaperson2026') {
+            roleBadgeHtml = `<span class="role-badge owner">OWNER</span>`;
+        } else if (userRolesCache.get(msgUsername) === 'supermod') {
+            roleBadgeHtml = `<span class="role-badge supermod">SUPERMOD</span>`;
+        } else if (userRolesCache.get(msgUsername) === 'mod') {
+            roleBadgeHtml = `<span class="role-badge mod">MOD</span>`;
+        }
+
         let formattedContent = msg.content || '';
         let pendingIframeLoad = null;
 
@@ -1236,7 +1401,10 @@
             <div class="message">
                 ${actionsHtml}
                 <div class="msg-header">
-                    <span class="msg-user">${isSelf ? 'You' : msgUsername}</span>
+                    <div class="msg-user-badge-wrap">
+                        <span class="msg-user">${isSelf ? 'You' : msgUsername}</span>
+                        ${roleBadgeHtml}
+                    </div>
                     <span class="msg-time">${timeString}</span>
                 </div>
                 <span class="msg-text" id="msg-text-${msg.id}">${formattedContent}</span>
@@ -1257,7 +1425,7 @@
         const currentContent = decodeURIComponent(encodedContent), newContent = prompt("Edit your message:", currentContent);
         if (!newContent || newContent === currentContent) return;
         const { error } = await supabase2.from('messages').update({ content: newContent }).eq('id', msgId);
-        if (error) alert("Failed to edit message: " + error.message);
+        if (error) showToast("Failed to edit message: " + error.message, "error");
     }
 
     async function deleteMessage(msgId) {
@@ -1265,13 +1433,13 @@
         try {
             const { error } = await supabase2.from('messages').delete().eq('id', msgId);
             if (error) {
-                alert("Failed to delete message: " + error.message);
+                showToast("Failed to delete message: " + error.message, "error");
             } else {
                 const rowElem = document.getElementById(`msg-${msgId}`);
                 if (rowElem) rowElem.remove();
             }
         } catch (err) {
-            alert("Error deleting message: " + err.message);
+            showToast("Error deleting message: " + err.message, "error");
         }
     }
 
@@ -1340,7 +1508,7 @@
             
             switch (command) {
                 case 'help':
-                    if (!isMod) return alert("Only mods and above can use /help.");
+                    if (!isMod) return showToast("Only mods and above can use /help.", "error");
                     let helpMsg = "Mod Commands: /lock, /unlock, /block [user], /unblock [user], /addtogc [user], /removefromgc [user], /rename [olduser] [newuser], /language [lang_code|off], /listall, /system [message]\n";
                     if (isSuperMod) helpMsg += "Supermod Commands: /mod [user], /unmod [user], /supermod [user], /languageall [lang_code]\n";
                     if (isOwner) helpMsg += "Owner Commands: /unsupermod [user]";
@@ -1349,7 +1517,7 @@
 
                 case 'listall':
                 case 'listusers':
-                    if (!isMod) return alert("Only mods and above can use /listall.");
+                    if (!isMod) return showToast("Only mods and above can use /listall.", "error");
                     try {
                         const { data: rolesData } = await supabase2.from('user_roles').select('*');
                         const { data: msgUsers } = await supabase2.from('messages').select('username');
@@ -1384,24 +1552,24 @@
 
                         alert(summaryStr);
                     } catch (err) {
-                        alert("Failed to fetch user list: " + err.message);
+                        showToast("Failed to fetch user list: " + err.message, "error");
                     }
                     break;
 
                 case 'language':
                 case 'lang':
-                    if (!isMod) return alert("Only mods and above can use /language.");
-                    if (!target) return alert("Usage: /language [lang_code] (e.g., /language es, /language fr, or /language off)");
+                    if (!isMod) return showToast("Only mods and above can use /language.", "error");
+                    if (!target) return showToast("Usage: /language [lang_code] (e.g., /language es, /language fr, or /language off)", "info");
                     
                     localLangFilter = target.toLowerCase() === 'off' ? null : target;
-                    alert(localLangFilter ? `Local view translation set to '${localLangFilter}'. Re-rendering messages...` : "Local view translation turned off.");
+                    showToast(localLangFilter ? `Local translation set to '${localLangFilter}'` : "Local translation turned off", "success");
                     if (activeRoomId) fetchMessages();
                     break;
 
                 case 'languageall':
                 case 'langall':
-                    if (!isSuperMod) return alert("Only supermods can translate room messages for everyone.");
-                    if (!target) return alert("Usage: /languageall [lang_code] (e.g., /languageall es, /languageall en)");
+                    if (!isSuperMod) return showToast("Only supermods can translate room messages for everyone.", "error");
+                    if (!target) return showToast("Usage: /languageall [lang_code] (e.g., /languageall es)", "info");
 
                     if (!confirm(`Are you sure you want to translate ALL messages in this chat to '${target}' for everyone?`)) return;
 
@@ -1411,7 +1579,7 @@
                             .select('id, content')
                             .eq('room_id', activeRoomId);
 
-                        if (fetchErr) return alert("Error fetching room messages: " + fetchErr.message);
+                        if (fetchErr) return showToast("Error fetching room messages: " + fetchErr.message, "error");
 
                         let count = 0;
                         for (const msgItem of roomMsgs) {
@@ -1425,21 +1593,21 @@
                         }
 
                         await sendSystemMessage(activeRoomId, `System: All messages in this chat were translated to '${target}' by a Super Moderator.`);
-                        alert(`Successfully translated ${count} message(s) for everyone.`);
+                        showToast(`Successfully translated ${count} message(s) for everyone.`, "success");
                     } catch (err) {
-                        alert("Global translation failed: " + err.message);
+                        showToast("Global translation failed: " + err.message, "error");
                     }
                     break;
 
                 case 'rename':
-                    if (!isMod) return alert("Only mods and above can rename users.");
+                    if (!isMod) return showToast("Only mods and above can rename users.", "error");
                     const oldUser = parts[1];
                     const newUser = parts[2];
-                    if (!oldUser || !newUser) return alert("Usage: /rename [olduser] [newuser]");
+                    if (!oldUser || !newUser) return showToast("Usage: /rename [olduser] [newuser]", "info");
 
                     try {
                         const { error: msgErr } = await supabase2.from('messages').update({ username: newUser }).eq('username', oldUser);
-                        if (msgErr) alert("Warning updating messages: " + msgErr.message);
+                        if (msgErr) console.warn("Warning updating messages: " + msgErr.message);
 
                         await supabase2.from('user_roles').update({ username: newUser }).eq('username', oldUser);
 
@@ -1474,104 +1642,105 @@
                         }
 
                         await sendSystemMessage(activeRoomId, `System: ${oldUser} was renamed to ${newUser}.`);
-                        alert(`Successfully renamed ${oldUser} to ${newUser}.`);
+                        showToast(`Successfully renamed ${oldUser} to ${newUser}.`, "success");
                         
+                        await loadUserRoles();
                         fetchRooms();
                         if (activeRoomId) fetchMessages();
                     } catch (err) {
-                        alert("Rename failed: " + err.message);
+                        showToast("Rename failed: " + err.message, "error");
                     }
                     break;
 
                 case 'block': 
-                    if (!isMod) return alert("Only mods can block.");
-                    if (!target) return alert("Usage: /block [username]");
+                    if (!isMod) return showToast("Only mods can block.", "error");
+                    if (!target) return showToast("Usage: /block [username]", "info");
                     const { error: blockErr } = await supabase2.from('banned_users').upsert({ username: target }, { onConflict: 'username', ignoreDuplicates: true });
-                    if (blockErr) alert("Permission denied: " + blockErr.message);
-                    else { alert(`${target} has been blocked.`); sendSystemMessage(activeRoomId, `System: ${target} was banned from the server.`); }
+                    if (blockErr) showToast("Permission denied: " + blockErr.message, "error");
+                    else { showToast(`${target} has been blocked.`, "success"); sendSystemMessage(activeRoomId, `System: ${target} was banned from the server.`); }
                     break;
 
                 case 'unblock':
-                    if (!isMod) return alert("Only mods can unblock.");
-                    if (!target) return alert("Usage: /unblock [username]");
+                    if (!isMod) return showToast("Only mods can unblock.", "error");
+                    if (!target) return showToast("Usage: /unblock [username]", "info");
                     const { error: unblockErr } = await supabase2.from('banned_users').delete().eq('username', target);
-                    if (unblockErr) alert("Permission denied: " + unblockErr.message);
-                    else alert(`${target} has been unblocked.`);
+                    if (unblockErr) showToast("Permission denied: " + unblockErr.message, "error");
+                    else showToast(`${target} has been unblocked.`, "success");
                     break;
 
                 case 'lock': 
-                    if (!isMod) return alert("Only mods can lock rooms.");
+                    if (!isMod) return showToast("Only mods can lock rooms.", "error");
                     const { error: lockErr } = await supabase2.from('rooms').update({ is_locked: true }).eq('id', activeRoomId);
-                    if (lockErr) alert("Permission denied: " + lockErr.message);
-                    else { alert("Room locked."); sendSystemMessage(activeRoomId, `System: Room has been locked.`); }
+                    if (lockErr) showToast("Permission denied: " + lockErr.message, "error");
+                    else { showToast("Room locked.", "success"); sendSystemMessage(activeRoomId, `System: Room has been locked.`); }
                     break;
 
                 case 'unlock': 
-                    if (!isMod) return alert("Only mods can unlock rooms.");
+                    if (!isMod) return showToast("Only mods can unlock rooms.", "error");
                     const { error: unlockErr } = await supabase2.from('rooms').update({ is_locked: false }).eq('id', activeRoomId);
-                    if (unlockErr) alert("Permission denied: " + unlockErr.message);
-                    else { alert("Room unlocked."); sendSystemMessage(activeRoomId, `System: Room has been unlocked.`); }
+                    if (unlockErr) showToast("Permission denied: " + unlockErr.message, "error");
+                    else { showToast("Room unlocked.", "success"); sendSystemMessage(activeRoomId, `System: Room has been unlocked.`); }
                     break;
 
                 case 'system':
-                    if (!isMod) return alert("Only mods and above can send system messages.");
+                    if (!isMod) return showToast("Only mods and above can send system messages.", "error");
                     const sysMsg = inputString.replace(/^\/system\s*/i, '').trim();
-                    if (!sysMsg) return alert("Usage: /system [message]");
+                    if (!sysMsg) return showToast("Usage: /system [message]", "info");
                     await sendSystemMessage(activeRoomId, sysMsg);
                     break;
 
                 case 'addtogc':
-                    if (!isMod) return alert("Only mods can add to GC."); if (!target) return alert("Usage: /addtogc [username]");
-                    if (!activeRoomRawName.includes(' — [')) return alert("Not a private group chat.");
+                    if (!isMod) return showToast("Only mods can add to GC.", "error"); if (!target) return showToast("Usage: /addtogc [username]", "info");
+                    if (!activeRoomRawName.includes(' — [')) return showToast("Not a private group chat.", "error");
                     let addUpdatedName = `${activeRoomRawName.split(' — [')[0]} — [${activeRoomRawName.split(' — [')[1].replace(']', '')}, ${target}]`;
                     const { error: addGcErr } = await supabase2.from('rooms').update({ name: addUpdatedName }).eq('id', activeRoomId);
-                    if (addGcErr) alert("Permission denied: " + addGcErr.message);
+                    if (addGcErr) showToast("Permission denied: " + addGcErr.message, "error");
                     else { activeRoomRawName = addUpdatedName; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; sendSystemMessage(activeRoomId, `System: ${target} was added by a moderator.`); fetchRooms(); }
                     break;
 
                 case 'removefromgc':
-                    if (!isMod) return alert("Only mods can remove from GC."); if (!target) return alert("Usage: /removefromgc [username]");
-                    if (!activeRoomRawName.includes(' — [')) return alert("Not a private group chat.");
+                    if (!isMod) return showToast("Only mods can remove from GC.", "error"); if (!target) return showToast("Usage: /removefromgc [username]", "info");
+                    if (!activeRoomRawName.includes(' — [')) return showToast("Not a private group chat.", "error");
                     let rmFiltered = activeRoomRawName.split(' — [')[1].replace(']', '').split(',').map(s => s.trim()).filter(u => u !== target);
                     let rmUpdatedName = `${activeRoomRawName.split(' — [')[0]} — [${rmFiltered.join(', ')}]`;
                     const { error: rmGcErr } = await supabase2.from('rooms').update({ name: rmUpdatedName }).eq('id', activeRoomId);
-                    if (rmGcErr) alert("Permission denied: " + rmGcErr.message);
+                    if (rmGcErr) showToast("Permission denied: " + rmGcErr.message, "error");
                     else { activeRoomRawName = rmUpdatedName; currentChannelDesc.textContent = `Members: ${activeRoomRawName.split(' — ')[1]}`; sendSystemMessage(activeRoomId, `System: ${target} was removed by a moderator.`); fetchRooms(); }
                     break;
 
                 case 'mod':
-                    if (!isSuperMod) return alert("Only supermods can make people mods.");
-                    if (!target) return alert("Usage: /mod [username]");
+                    if (!isSuperMod) return showToast("Only supermods can make people mods.", "error");
+                    if (!target) return showToast("Usage: /mod [username]", "info");
                     const { error: modErr } = await supabase2.from('user_roles').upsert({ username: target, role: 'mod' });
-                    if (modErr) alert("Permission denied: " + modErr.message);
-                    else alert(`${target} is now a mod.`);
+                    if (modErr) showToast("Permission denied: " + modErr.message, "error");
+                    else { showToast(`${target} is now a mod.`, "success"); await loadUserRoles(); if (activeRoomId) fetchMessages(); }
                     break;
 
                 case 'unmod':
-                    if (!isSuperMod) return alert("Only supermods can unmod people.");
-                    if (!target) return alert("Usage: /unmod [username]");
+                    if (!isSuperMod) return showToast("Only supermods can unmod people.", "error");
+                    if (!target) return showToast("Usage: /unmod [username]", "info");
                     const { error: unmodErr } = await supabase2.from('user_roles').delete().eq('username', target);
-                    if (unmodErr) alert("Permission denied: " + unmodErr.message);
-                    else alert(`${target} is no longer a mod.`);
+                    if (unmodErr) showToast("Permission denied: " + unmodErr.message, "error");
+                    else { showToast(`${target} is no longer a mod.`, "success"); await loadUserRoles(); if (activeRoomId) fetchMessages(); }
                     break;
 
                 case 'supermod':
-                    if (!isSuperMod) return alert("Only supermods can make people supermods.");
-                    if (!target) return alert("Usage: /supermod [username]");
+                    if (!isSuperMod) return showToast("Only supermods can make people supermods.", "error");
+                    if (!target) return showToast("Usage: /supermod [username]", "info");
                     const { error: supermodErr } = await supabase2.from('user_roles').upsert({ username: target, role: 'supermod' });
-                    if (supermodErr) alert("Permission denied: " + supermodErr.message);
-                    else alert(`${target} is now a supermod.`);
+                    if (supermodErr) showToast("Permission denied: " + supermodErr.message, "error");
+                    else { showToast(`${target} is now a supermod.`, "success"); await loadUserRoles(); if (activeRoomId) fetchMessages(); }
                     break;
 
                 case 'unsupermod':
-                    if (!isOwner) return alert("Only hamzaperson2026 can execute /unsupermod.");
-                    if (!target) return alert("Usage: /unsupermod [username]");
+                    if (!isOwner) return showToast("Only hamzaperson2026 can execute /unsupermod.", "error");
+                    if (!target) return showToast("Usage: /unsupermod [username]", "info");
                     const { error: unsupermodErr } = await supabase2.from('user_roles').delete().eq('username', target);
-                    if (unsupermodErr) alert("Permission denied: " + unsupermodErr.message);
-                    else alert(`${target} is no longer a supermod.`);
+                    if (unsupermodErr) showToast("Permission denied: " + unsupermodErr.message, "error");
+                    else { showToast(`${target} is no longer a supermod.`, "success"); await loadUserRoles(); if (activeRoomId) fetchMessages(); }
                     break;
 
-                default: alert(`Unknown command: /${command}`);
+                default: showToast(`Unknown command: /${command}`, "error");
             }
         }
 
@@ -1592,7 +1761,7 @@
             .single();
 
         if (error) {
-            alert("Failed to send message: " + error.message);
+            showToast("Failed to send message: " + error.message, "error");
         } else {
             if (!document.getElementById(`msg-${data.id}`)) {
                 appendMessage(data);
@@ -1600,7 +1769,7 @@
         }
     });
 
-    attachBtn.addEventListener('click', () => { if (!activeRoomId) return alert("Select a chat first."); fileInput.click(); });
+    attachBtn.addEventListener('click', () => { if (!activeRoomId) return showToast("Select a chat first.", "info"); fileInput.click(); });
     fileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0]; if (!file || !activeRoomId || !currentUser) return;
         attachBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; attachBtn.disabled = true;
@@ -1611,7 +1780,7 @@
             upsert: true
         });
         
-        if (uploadError) alert("Upload failed: " + uploadError.message);
+        if (uploadError) showToast("Upload failed: " + uploadError.message, "error");
         else {
             const fileUrl = supabase2.storage.from('chat-files').getPublicUrl(filePath).data.publicUrl;
             let msgFormat = '';
@@ -1664,7 +1833,7 @@
         const noTargetCmds = ['/lock', '/unlock', '/listall'];
         
         if (!noTargetCmds.includes(baseCmd) && !target) {
-            alert("Please enter a target username, message, or language code in the input field above.");
+            showToast("Please enter a target username, message, or language code in the input field above.", "info");
             return;
         }
 
@@ -1688,7 +1857,7 @@
         const newName = renameNewInput.value.trim();
         
         if (!oldName || !newName) {
-            alert("Please provide both the old username and the new username.");
+            showToast("Please provide both the old username and the new username.", "info");
             return;
         }
         
